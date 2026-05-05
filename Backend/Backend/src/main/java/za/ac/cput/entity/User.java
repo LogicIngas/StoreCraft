@@ -1,6 +1,7 @@
-package ac.za.cput.domain;
+package za.ac.cput.entity;
 
 import java.util.Objects;
+
 
 public class User {
     protected int userID;

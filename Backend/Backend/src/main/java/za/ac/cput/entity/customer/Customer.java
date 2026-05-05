@@ -1,9 +1,11 @@
-package ac.za.cput.domain;
+package za.ac.cput.entity.customer;
+
+import za.ac.cput.entity.User;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Customer extends User{
+public class Customer extends User {
     private String phoneNumber;
     private LocalDate dateOfBirth;
     private LocalDate registrationDate;
