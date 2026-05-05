@@ -17,7 +17,7 @@ function App() {
         </div>
         <div>
           <h1>Get started</h1>
-          <h2>Hello Project 3 Group members for 2026 I am looking foward to be working with you all. Lets chill and not panic we got this</h2>
+          <h2>Hello Frontend!</h2>
           <p>
             Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
           </p>
