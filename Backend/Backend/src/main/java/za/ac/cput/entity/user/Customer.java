@@ -1,6 +1,4 @@
-package za.ac.cput.entity.customer;
-
-import za.ac.cput.entity.User;
+package za.ac.cput.entity.user;
 
 import java.time.LocalDate;
 import java.util.Objects;
