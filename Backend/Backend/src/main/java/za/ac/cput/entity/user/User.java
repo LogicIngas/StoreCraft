@@ -1,4 +1,4 @@
-package za.ac.cput.entity;
+package za.ac.cput.entity.user;
 
 import java.util.Objects;
 
