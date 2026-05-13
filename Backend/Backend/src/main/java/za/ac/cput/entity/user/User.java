@@ -1,103 +1,88 @@
 package za.ac.cput.entity.user;
 
-import java.util.Objects;
+import jakarta.persistence.*;
+import lombok.*;
+import za.ac.cput.entity.address.Address;
+import za.ac.cput.entity.cart.Cart;
 
+import java.util.List;
 
+@Entity
 public class User {
-    protected int userID;
-    protected String firstName;
-    protected String lastName;
-    protected String email;
-    protected String password;
-    protected boolean isActive;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
+
+    private String email;
+    private String password;
+    private String fullName;
+    private String phone;
+
+    @ManyToOne(fetch =  FetchType.LAZY)
+    @JoinColumn(name = "role_id", referencedColumnName = "id")
+    private Role role;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<Address>addresses;
+
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
+    private Cart cart;
+
+    private String shippingAddress;
+    private String storeName;
+    private String bankDetails;
 
     public User() {
     }
 
-    //TODO: A Builder builder constructor here
-    public User(Builder builder) {
-        this.userID = builder.userID;
-        this.firstName = builder.firstName;
-        this.lastName = builder.lastName;
+
+    protected User(Builder builder) {
+        this.id = builder.id;
         this.email = builder.email;
         this.password = builder.password;
-        this.isActive = builder.isActive;
+        this.fullName = builder.fullName;
+        this.phone = builder.phone;
+        this.role = builder.role;
+        this.addresses = builder.addresses;
+        this.cart = builder.cart;
+        this.shippingAddress = builder.shippingAddress;
+        this.storeName = builder.storeName;
+        this.bankDetails = builder.bankDetails;
     }
-
-    public int getUserID() {
-        return userID;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return userID == user.userID && isActive == user.isActive &&
-                Objects.equals(firstName, user.firstName) &&
-                Objects.equals(lastName, user.lastName) &&
-                Objects.equals(email, user.email) &&
-                Objects.equals(password, user.password);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userID, firstName, lastName, email, password, isActive);
-    }
-
 
     @Override
     public String toString() {
         return "User{" +
-                "userID=" + userID +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                "id='" + id + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", isActive=" + isActive +
+                ", fullName='" + fullName + '\'' +
+                ", phone='" + phone + '\'' +
+                ", role=" + role +
+                ", addresses=" + addresses +
+                ", cart=" + cart +
+                ", shippingAddress='" + shippingAddress + '\'' +
+                ", storeName='" + storeName + '\'' +
+                ", bankDetails='" + bankDetails + '\'' +
                 '}';
     }
 
-
     public static class Builder{
-        private int userID;
-        private String firstName;
-        private String lastName;
+        private String id;
         private String email;
         private String password;
-        private boolean isActive;
+        private String fullName;
+        private String phone;
+        private Role role;
+        private List<Address>addresses;
+        private Cart cart;
+        private String shippingAddress;
+        private String storeName;
+        private String bankDetails;
 
-        public Builder setUserID(int userID) {
-            this.userID = userID;
-            return this;
-        }
-
-        public Builder setFirstName(String firstName) {
-            this.firstName = firstName;
-            return this;
-        }
-
-        public Builder setLastName(String lastName) {
-            this.lastName = lastName;
+        public Builder setId(String id) {
+            this.id = id;
             return this;
         }
 
@@ -111,8 +96,58 @@ public class User {
             return this;
         }
 
-        public Builder setActive(boolean active) {
-            isActive = active;
+        public Builder setFullName(String fullName) {
+            this.fullName = fullName;
+            return this;
+        }
+
+        public Builder setPhone(String phone) {
+            this.phone = phone;
+            return this;
+        }
+
+        public Builder setRole(Role role) {
+            this.role = role;
+            return this;
+        }
+
+        public Builder setAddresses(List<Address> addresses) {
+            this.addresses = addresses;
+            return this;
+        }
+
+        public Builder setCart(Cart cart) {
+            this.cart = cart;
+            return this;
+        }
+
+        public Builder setShippingAddress(String shippingAddress) {
+            this.shippingAddress = shippingAddress;
+            return this;
+        }
+
+        public Builder setStoreName(String storeName) {
+            this.storeName = storeName;
+            return this;
+        }
+
+        public Builder setBankDetails(String bankDetails) {
+            this.bankDetails = bankDetails;
+            return this;
+        }
+
+        public Builder copy(User user){
+            this.id = user.id;
+            this.email = user.email;
+            this.password = user.password;
+            this.fullName = user.fullName;
+            this.phone = user.phone;
+            this.role = user.role;
+            this.addresses = user.addresses;
+            this.cart = user.cart;
+            this.shippingAddress = user.shippingAddress;
+            this.storeName = user.storeName;
+            this.bankDetails = user.bankDetails;
             return this;
         }
 
