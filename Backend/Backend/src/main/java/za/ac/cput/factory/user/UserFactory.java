@@ -8,13 +8,13 @@ import za.ac.cput.entity.user.User;
 import java.util.List;
 
 public class UserFactory {
-    public static User createUser(String id,String email,String password,String fullName,String phone,Role role
-            ,List<Address> addresses,Cart cart,String shippingAddress,String storeName,String bankDetails){
+    public static User createUser(String email,String password,String fullName,String phone,Role role
+            ,List<Address> addresses,Cart cart,String shippingAddress,String storeName,String bankDetails){ //String id, its auto gen
 
         //Validate everything using the Helper class
 
         return new User.Builder()
-                .setId(id)
+//                .setId(id)
                 .setEmail(email)
                 .setPassword(password)
                 .setFullName(fullName)

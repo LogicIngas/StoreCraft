@@ -6,12 +6,18 @@ import za.ac.cput.entity.user.User;
 import za.ac.cput.service.impl.user.UserServiceImpl;
 
 @RestController
-@RequestMapping("/user/api")
+@RequestMapping("/user")
 public class UserController {
-    @Autowired
+
     private UserServiceImpl userService;
 
-//    CRUD
+    @Autowired
+    public UserController(UserServiceImpl userService) {
+        this.userService = userService;
+    }
+
+    //    CRUD
+
     @PostMapping("/create")
     public User create(@RequestBody User user){
         return this.userService.create(user);

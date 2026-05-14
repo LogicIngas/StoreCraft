@@ -1,23 +1,22 @@
 package za.ac.cput.entity.user;
 
 import jakarta.persistence.*;
-import lombok.*;
 
+import java.util.List;
 import java.util.Objects;
 
-//@Getter
-//@Setter
-//@NoArgsConstructor
-//@AllArgsConstructor
-//@Builder
 @Entity
 public class Role {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    private String name; // BUYER or SELLER
+    // Example: BUYER or SELLER
+    private String name;
 
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
+    private List<User> users;
 
     public Role() {
     }
@@ -25,6 +24,7 @@ public class Role {
     protected Role(Builder builder) {
         this.id = builder.id;
         this.name = builder.name;
+        this.users = builder.users;
     }
 
     public String getId() {
@@ -35,11 +35,16 @@ public class Role {
         return name;
     }
 
+    public List<User> getUsers() {
+        return users;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Role role = (Role) o;
-        return Objects.equals(id, role.id) && Objects.equals(name, role.name);
+        if (this == o) return true;
+        if (!(o instanceof Role role)) return false;
+        return Objects.equals(id, role.id)
+                && Objects.equals(name, role.name);
     }
 
     @Override
@@ -55,29 +60,36 @@ public class Role {
                 '}';
     }
 
-   public static class Builder{
-       private String id;
-       private String name;
+    public static class Builder {
 
-       public Builder setId(String id) {
-           this.id = id;
-           return this;
-       }
+        private String id;
+        private String name;
+        private List<User> users;
 
-       public Builder setName(String name) {
-           this.name = name;
-           return this;
-       }
+        public Builder setId(String id) {
+            this.id = id;
+            return this;
+        }
 
-       public Builder copy(Role role){
-           this.id = role.id;
-           this.name = role.name;
-           return this;
-       }
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
 
-       public Role build(){
-           return new Role(this);
-       }
-   }
+        public Builder setUsers(List<User> users) {
+            this.users = users;
+            return this;
+        }
 
+        public Builder copy(Role role) {
+            this.id = role.id;
+            this.name = role.name;
+            this.users = role.users;
+            return this;
+        }
+
+        public Role build() {
+            return new Role(this);
+        }
+    }
 }
