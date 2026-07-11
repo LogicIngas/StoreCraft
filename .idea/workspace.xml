@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="7a5a4bd2-851d-4325-9d26-2ea4f6c0cdf1" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/.idea/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/eslint.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/package-lock.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/favicon.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/icons.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/a239a7ff-ee19-4c72-8f2e-af3f7dd67625.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/adidastracksuit.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/camera.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/denimjacket.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/denimjean.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/galaxy.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/headset.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/hoodie.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/hoodie1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/hoodie10.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/hoodie2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/hoodie3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/hoodie5.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/hoodie6.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/hoodie7.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/hoodie8.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/hoodie9.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/ipad.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/jacket.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/jeans.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/laptop.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/poloneck.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/shirt.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/sweater.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/public/images/tshirt.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/src/AddressManager.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/src/App.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/src/App.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/src/PaymentCheckout.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/src/assets/hero.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/src/assets/react.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/src/assets/vite.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/src/components/ProductCard.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/src/components/UploadProduct.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/src/components/UploadProduct.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/src/index.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/src/main.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/vite.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/mvnw" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/mvnw.cmd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/LoginPageApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/config/DataInitializer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/config/WebMvcConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/controller/AddressController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/controller/CartController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/controller/OrderController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/controller/PaymentController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/controller/ProductController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/controller/UserController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/AddToCartRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/AddressDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/CartCountResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/CartDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/CartItemDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/CreateAddressRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/CreateOrderRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/ErrorResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/OrderDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/OrderItemDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/PaymentCheckoutRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/PaymentCheckoutResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/PaymentCountResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/PaymentDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/PaymentErrorResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/PaymentRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/PaymentResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/PaymentTotalPaidResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/PaymentVerifyResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/ProductDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/SuccessResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/UpdateAddressRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/UpdateCartItemRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/UpdateOrderStatusRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/UserRequestDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/dto/UserResponseDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/factory/UserFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/model/Address.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/model/Cart.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/model/CartItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/model/Order.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/model/OrderItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/model/Payment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/model/Product.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/model/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/repository/IAddressRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/repository/ICartItemRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/repository/ICartRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/repository/IOrderRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/repository/IPaymentRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/repository/IProductRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/repository/IUserRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/service/IService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/service/IUserService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/service/impl/AddressService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/service/impl/CartService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/service/impl/FileStorageService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/service/impl/OrderService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/service/impl/PaymentService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/service/impl/ProductService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/service/impl/UserService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/resources/application.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/test/java/com/example/loginpage/LoginPageApplicationTests.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/application.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/LoginPageApplication.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/config/WebMvcConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/controller/AddressController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/controller/AddressCountResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/controller/AddressExistsResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/controller/CartController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/controller/OrderController$CreateOrderFromCartRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/controller/OrderController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/controller/PaymentController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/controller/ProductController$CreateProductRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/controller/ProductController$ErrorResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/controller/ProductController$UpdateProductRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/controller/ProductController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/controller/UserController$LoginRequestDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/controller/UserController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/AddToCartRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/AddressDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/CartCountResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/CartDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/CartItemDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/CreateAddressRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/CreateOrderRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/ErrorResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/OrderDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/OrderItemDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/PaymentCheckoutRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/PaymentCheckoutResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/PaymentCountResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/PaymentDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/PaymentErrorResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/PaymentRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/PaymentResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/PaymentTotalPaidResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/PaymentVerifyResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/ProductDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/SuccessResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/UpdateAddressRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/UpdateCartItemRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/UpdateOrderStatusRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/UserRequestDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/dto/UserResponseDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/factory/UserFactory.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/model/Address$Builder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/model/Address.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/model/Cart.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/model/CartItem.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/model/Order.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/model/OrderItem.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/model/Payment.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/model/Product.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/model/User$Builder.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/model/User.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/repository/IAddressRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/repository/ICartItemRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/repository/ICartRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/repository/IOrderRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/repository/IPaymentRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/repository/IProductRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/repository/IUserRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/service/IService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/service/IUserService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/service/impl/AddressService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/service/impl/CartService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/service/impl/FileStorageService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/service/impl/OrderService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/service/impl/PaymentService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/service/impl/ProductService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/service/impl/UserService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/test-classes/com/example/loginpage/LoginPageApplicationTests.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/a239a7ff-ee19-4c72-8f2e-af3f7dd67625.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/adidastracksuit.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/camera.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/denimjacket.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/denimjean.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/ffb7d901-c794-45c1-b051-43762c88b347.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/galaxy.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/headset.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/hoodie.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/hoodie1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/hoodie10.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/hoodie2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/hoodie3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/hoodie5.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/hoodie6.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/hoodie7.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/hoodie8.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/hoodie9.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/ipad.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/jacket.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/jeans.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/laptop.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/poloneck.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/shirt.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/sweater.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/021fe8e2-84e1-4652-95e1-5891fc7d7e1e.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/6c6eba8a-faa7-4181-852d-405d8e79c77a.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/a92e4377-4311-4807-bb7e-adc5ca7e4d3c.png" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 8
+}]]></component>
+  <component name="ProjectId" id="3GMsqEkHzP3fsszwLkgkYKU9isx" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Spring Boot.LoginPageApplication.executor": "Run",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LoginPageApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="LoginPage" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.loginpage.LoginPageApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7a5a4bd2-851d-4325-9d26-2ea4f6c0cdf1" name="Changes" comment="" />
+      <created>1783792961632</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1783792961632</updated>
+      <workItem from="1783792962718" duration="2392000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+</project>
