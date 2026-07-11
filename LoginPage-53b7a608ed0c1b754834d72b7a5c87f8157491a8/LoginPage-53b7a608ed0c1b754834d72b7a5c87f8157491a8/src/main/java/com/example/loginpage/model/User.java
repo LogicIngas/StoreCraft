@@ -8,31 +8,50 @@ import org.hibernate.annotations.UuidGenerator;
 public class User {
 
     @Id
-    @UuidGenerator // Explicitly tells Hibernate 7 to generate a UUID string for fresh inserts
+    @UuidGenerator
     @Column(name = "user_id", updatable = false, nullable = false)
     private String userId;
 
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
+
+    @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "first_name", length = 100)
     private String firstName;
+
+    @Column(name = "last_name", length = 100)
     private String lastName;
 
-    // MANDATORY: Hibernate requires a completely open public/protected no-arg constructor
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
+
     public User() {}
 
     private User(Builder builder) {
-        this.userId = builder.userId; // Will be null for new signups
+        this.userId = builder.userId;
         this.email = builder.email;
         this.password = builder.password;
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
+        this.role = builder.role;
     }
 
+    // Getters and Setters
     public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
     public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
     public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
     public String getFirstName() { return firstName; }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
     public String getLastName() { return lastName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
 
     public static class Builder {
         private String userId;
@@ -40,6 +59,7 @@ public class User {
         private String password;
         private String firstName;
         private String lastName;
+        private Role role;
 
         public Builder setUserId(String userId) {
             this.userId = userId;
@@ -63,6 +83,11 @@ public class User {
 
         public Builder setLastName(String lastName) {
             this.lastName = lastName;
+            return this;
+        }
+
+        public Builder setRole(Role role) {
+            this.role = role;
             return this;
         }
 

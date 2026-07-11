@@ -3,7 +3,9 @@ package com.example.loginpage.controller;
 import com.example.loginpage.dto.UserRequestDTO;
 import com.example.loginpage.dto.UserResponseDTO;
 import com.example.loginpage.factory.UserFactory;
+import com.example.loginpage.model.Role;
 import com.example.loginpage.model.User;
+import com.example.loginpage.repository.IRoleRepository;
 import com.example.loginpage.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +17,12 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService service;
+    private final IRoleRepository roleRepository;
 
     @Autowired
-    public UserController(UserService service) {
+    public UserController(UserService service, IRoleRepository roleRepository) {
         this.service = service;
+        this.roleRepository = roleRepository;
     }
 
     /**
@@ -41,12 +45,22 @@ public class UserController {
             return ResponseEntity.badRequest().body("Email already registered. Please sign in.");
         }
 
+        // Get role (default to BUYER if not specified)
+        String roleName = requestDTO.roleName() != null ? requestDTO.roleName().toUpperCase() : "BUYER";
+        Role role = roleRepository.findByName(roleName)
+                .orElseGet(() -> roleRepository.findByName("BUYER").orElse(null));
+
+        if (role == null) {
+            return ResponseEntity.badRequest().body("Invalid role specified.");
+        }
+
         // Build and save user
         User userEntity = UserFactory.createUser(
                 requestDTO.email(),
                 requestDTO.password(),
                 requestDTO.firstName(),
-                requestDTO.lastName()
+                requestDTO.lastName(),
+                role
         );
 
         if (userEntity == null) {
@@ -59,7 +73,8 @@ public class UserController {
                 savedUser.getUserId(),
                 savedUser.getEmail(),
                 savedUser.getFirstName(),
-                savedUser.getLastName()
+                savedUser.getLastName(),
+                savedUser.getRole().getName()
         );
 
         return ResponseEntity.ok(response);
@@ -95,7 +110,8 @@ public class UserController {
                 user.getUserId(),
                 user.getEmail(),
                 user.getFirstName(),
-                user.getLastName()
+                user.getLastName(),
+                user.getRole().getName()
         );
 
         return ResponseEntity.ok(response);
@@ -116,7 +132,8 @@ public class UserController {
                 user.getUserId(),
                 user.getEmail(),
                 user.getFirstName(),
-                user.getLastName()
+                user.getLastName(),
+                user.getRole().getName()
         );
         return ResponseEntity.ok(response);
     }

@@ -1,102 +1,118 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-export default function ProductCard({ product, onAddToCart }) {
+export default function ProductCard({
+                                        product,
+                                        onAddToCart,
+                                        onAddToWishlist,
+                                        onRemoveFromWishlist,
+                                        isInWishlist = false,
+                                        showRemoveFromWishlist = false
+                                    }) {
+    const [isHovered, setIsHovered] = useState(false);
+    const [isRemoving, setIsRemoving] = useState(false);
+
+    // Handle wishlist click
+    const handleWishlistClick = async (e) => {
+        e.stopPropagation();
+
+        if (showRemoveFromWishlist && onRemoveFromWishlist) {
+            // Remove from wishlist (on wishlist page)
+            setIsRemoving(true);
+            try {
+                await onRemoveFromWishlist(product.wishlistId || product.productId);
+            } catch (error) {
+                console.error('Error removing from wishlist:', error);
+            } finally {
+                setIsRemoving(false);
+            }
+        } else if (onAddToWishlist) {
+            // Add to wishlist (on storefront)
+            onAddToWishlist(product.productId);
+        }
+    };
+
+    // Handle add to cart
+    const handleAddToCartClick = (e) => {
+        e.stopPropagation();
+        if (onAddToCart) {
+            onAddToCart(product.productId);
+        }
+    };
+
     return (
-        <div style={styles.card}>
-            <div style={styles.imageContainer}>
+        <div
+            className="product-card"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            <div className="product-image-container">
                 <img
-                    src={product.imageUrl}
-                    alt={product.name}
-                    style={styles.image}
-                    // Safely handles missing images or typographical mistakes
+                    src={product.imageUrl || 'https://placehold.co/300x350?text=No+Image+Found'}
+                    alt={product.name || 'Product'}
+                    className="product-image"
                     onError={(e) => {
                         e.target.onerror = null;
                         e.target.src = 'https://placehold.co/300x350?text=No+Image+Found';
                     }}
                 />
+                {isHovered && (
+                    <div className="product-quick-actions">
+                        <button
+                            onClick={handleAddToCartClick}
+                            className="quick-add-button"
+                            disabled={product.stockQuantity <= 0}
+                        >
+                            🛒 Quick Add
+                        </button>
+                    </div>
+                )}
+                {product.stockQuantity <= 0 && (
+                    <div className="out-of-stock-badge">Out of Stock</div>
+                )}
             </div>
-            <div style={styles.info}>
-                <span style={styles.category}>{product.category}</span>
-                <h3 style={styles.title}>{product.name}</h3>
-                <p style={styles.description}>{product.description}</p>
-                <div style={styles.footerRow}>
-                    <span style={styles.price}>R {product.price}</span>
-                    <button
-                        onClick={() => onAddToCart(product.productId)}
-                        style={styles.button}
-                    >
-                        Add To Cart
-                    </button>
+            <div className="product-info">
+                <span className="product-category">{product.category || 'Uncategorized'}</span>
+                <h3 className="product-title">{product.name || 'Unnamed Product'}</h3>
+                <p className="product-description">
+                    {product.description || 'No description available'}
+                </p>
+                <div className="product-rating">
+                    <span>⭐⭐⭐⭐⭐</span>
+                    <span className="review-count">(24 reviews)</span>
                 </div>
+                <div className="product-footer">
+                    <span className="product-price">R {product.price || 0}</span>
+                    <div className="product-actions">
+                        {showRemoveFromWishlist ? (
+                            <button
+                                onClick={handleWishlistClick}
+                                className="wishlist-remove-button"
+                                disabled={isRemoving}
+                            >
+                                {isRemoving ? 'Removing...' : '❌ Remove'}
+                            </button>
+                        ) : (
+                            <button
+                                onClick={handleWishlistClick}
+                                className={`wishlist-button ${isInWishlist ? 'active' : ''}`}
+                                title={isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+                            >
+                                {isInWishlist ? '❤️' : '🤍'}
+                            </button>
+                        )}
+                        <button
+                            onClick={handleAddToCartClick}
+                            className="add-to-cart-button"
+                            disabled={product.stockQuantity <= 0}
+                        >
+                            Add To Cart
+                        </button>
+                    </div>
+                </div>
+                {product.stockQuantity > 0 && product.stockQuantity <= 5 && (
+                    <div className="low-stock-badge">🔥 Only {product.stockQuantity} left!</div>
+                )}
             </div>
         </div>
     );
 }
-
-// Quick modern styles for testing your layout out-of-the-box
-const styles = {
-    card: {
-        background: '#ffffff',
-        borderRadius: '12px',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
-        transition: 'transform 0.2s',
-        border: '1px solid #e2e8f0',
-    },
-    imageContainer: {
-        width: '100%',
-        height: '240px',
-        backgroundColor: '#f8fafc',
-    },
-    image: {
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-    },
-    info: {
-        padding: '16px',
-        display: 'flex',
-        flexDirection: 'column',
-        flexGrow: 1,
-    },
-    category: {
-        fontSize: '11px',
-        textTransform: 'uppercase',
-        color: '#64748b',
-        fontWeight: '700',
-        marginBottom: '4px',
-    },
-    title: {
-        fontSize: '18px',
-        margin: '0 0 8px 0',
-        color: '#1e293b',
-    },
-    description: {
-        fontSize: '13px',
-        color: '#64748b',
-        margin: '0 0 16px 0',
-        lineHeight: '1.4',
-    },
-    footerRow: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginTop: 'auto',
-    },
-    price: {
-        fontSize: '18px',
-        fontWeight: '700',
-        color: '#2563eb',
-    },
-    button: {
-        backgroundColor: '#2563eb',
-        color: '#fff',
-        border: 'none',
-        padding: '8px 16px',
-        borderRadius: '6px',
-        fontWeight: '600',
-        cursor: 'pointer',
-    }
-};
