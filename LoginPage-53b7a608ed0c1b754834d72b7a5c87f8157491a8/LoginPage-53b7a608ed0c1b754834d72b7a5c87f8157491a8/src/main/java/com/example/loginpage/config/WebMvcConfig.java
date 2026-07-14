@@ -1,5 +1,6 @@
 package com.example.loginpage.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -8,10 +9,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
+    @Value("${frontend.url:http://localhost:5173}")
+    private String frontendUrl;
+
+    @Value("${file.upload-dir:uploads}")
+    private String uploadDir;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173", "http://localhost:5174")
+                .allowedOrigins(frontendUrl, "http://localhost:5173", "http://localhost:5174")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true)
@@ -21,8 +28,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // Use relative path from project root (portable across all machines)
-        String uploadDir = System.getProperty("user.dir") + "/uploads/";
-        String fileUri = "file:///" + uploadDir.replace("\\", "/");
+        String uploadPath = System.getProperty("user.dir") + "/" + uploadDir + "/";
+        String fileUri = "file:///" + uploadPath.replace("\\", "/");
 
         System.out.println("Serving images from: " + fileUri);
 
