@@ -3,7 +3,14 @@ import './App.css';
 import ProductCard from './components/ProductCard';
 import UploadProduct from './components/UploadProduct';
 import PaymentCheckout from './PaymentCheckout';
-import AddressManager from "./AddressManager.jsx";
+import AddressManager from './AddressManager';
+import LoginRegisterPage from './components/LoginRegisterPage';
+import Navbar from './components/Navbar';
+import StatusBanner from './components/StatusBanner';
+import Storefront from './components/Storefront';
+import CartPage from './components/CartPage';
+import OrdersPage from './components/OrdersPage';
+import WishlistPage from './components/WishlistPage';
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -470,146 +477,46 @@ export default function App() {
   return (
       <div className="app">
         {/* Header */}
-        <header className="app-header">
-          <div className="header-content">
-            <h1 className="logo">🛍️ E-Marketplace</h1>
-            <nav className="nav">
-              <button
-                  onClick={() => setCurrentPage('storefront')}
-                  className={`nav-button ${currentPage === 'storefront' ? 'active' : ''}`}
-              >
-                🏠 Storefront
-              </button>
-              <button
-                  onClick={() => setCurrentPage('cart')}
-                  className={`nav-button ${currentPage === 'cart' ? 'active' : ''}`}
-              >
-                🛒 Cart <span className="badge">{cartCount}</span>
-              </button>
-              <button
-                  onClick={() => setCurrentPage('wishlist')}
-                  className={`nav-button ${currentPage === 'wishlist' ? 'active' : ''}`}
-              >
-                ❤️ Wishlist <span className="badge">{wishlist.length}</span>
-              </button>
-              <button
-                  onClick={() => setCurrentPage('orders')}
-                  className={`nav-button ${currentPage === 'orders' ? 'active' : ''}`}
-              >
-                📋 Orders
-              </button>
-              <button
-                  onClick={() => setShowAddressManager(true)}
-                  className="nav-button"
-              >
-                📍 Addresses
-              </button>
-              {isSeller && (
-                  <button
-                      onClick={() => setCurrentPage('upload')}
-                      className={`nav-button ${currentPage === 'upload' ? 'active' : ''}`}
-                  >
-                    📤 Upload
-                  </button>
-              )}
-              <span className="user-role-badge">{currentUser.roleName}</span>
-              <button
-                  onClick={handleLogout}
-                  className="logout-button"
-              >
-                🚪 Logout
-              </button>
-            </nav>
-          </div>
-        </header>
+        <Navbar
+            currentUser={currentUser}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            cartCount={cartCount}
+            wishlistCount={wishlist.length}
+            setShowAddressManager={setShowAddressManager}
+            handleLogout={handleLogout}
+            isSeller={isSeller}
+        />
 
         {/* Status Message */}
-        {statusMessage && (
-            <div className={`status-banner ${statusType}`}>
-              {statusMessage}
-            </div>
-        )}
+        <StatusBanner message={statusMessage} type={statusType} />
 
         {/* Main Content */}
         <main className="main-content">
           {currentPage === 'storefront' && (
-              <section className="section">
-                <div className="section-header">
-                  <h2 className="section-title">✨ Featured Products</h2>
-                  <div className="section-actions">
-                    <select
-                        value={selectedCategory}
-                        onChange={(e) => setSelectedCategory(e.target.value)}
-                        className="category-filter"
-                    >
-                      {categories.map(cat => (
-                          <option key={cat} value={cat}>
-                            {cat === 'all' ? 'All Categories' : cat}
-                          </option>
-                      ))}
-                    </select>
-                    <input
-                        type="text"
-                        placeholder="🔍 Search products..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="search-input"
-                    />
-                  </div>
-                </div>
-
-                {loading ? (
-                    <div className="loading">Loading products...</div>
-                ) : filteredProducts.length === 0 ? (
-                    <div className="empty-state">
-                      <div className="empty-state-icon">🔍</div>
-                      <p>No products found matching your criteria.</p>
-                    </div>
-                ) : (
-                    <div className="product-grid">
-                      {filteredProducts.map(product => (
-                          <ProductCard
-                              key={product.productId}
-                              product={product}
-                              onAddToCart={handleAddToCart}
-                              onAddToWishlist={handleAddToWishlist}
-                              onRemoveFromWishlist={handleRemoveFromWishlist}
-                              isInWishlist={wishlist.some(w => w.productId === product.productId)}
-                          />
-                      ))}
-                    </div>
-                )}
-              </section>
+              <Storefront
+                  products={products}
+                  filteredProducts={filteredProducts}
+                  loading={loading}
+                  searchTerm={searchTerm}
+                  setSearchTerm={setSearchTerm}
+                  selectedCategory={selectedCategory}
+                  setSelectedCategory={setSelectedCategory}
+                  categories={categories}
+                  onAddToCart={handleAddToCart}
+                  onAddToWishlist={handleAddToWishlist}
+                  onRemoveFromWishlist={handleRemoveFromWishlist}
+                  wishlist={wishlist}
+              />
           )}
 
           {currentPage === 'wishlist' && (
-              <div className="wishlist-container">
-                <h2 className="section-title">❤️ My Wishlist</h2>
-                {wishlist.length === 0 ? (
-                    <div className="empty-state">
-                      <div className="empty-state-icon">❤️</div>
-                      <p>Your wishlist is empty. Start saving your favorite items!</p>
-                      <button
-                          onClick={() => setCurrentPage('storefront')}
-                          className="empty-state-button"
-                      >
-                        Browse Products
-                      </button>
-                    </div>
-                ) : (
-                    <div className="product-grid">
-                      {wishlist.map(item => (
-                          <ProductCard
-                              key={item.wishlistId || item.productId}
-                              product={item}
-                              onAddToCart={handleAddToCart}
-                              onRemoveFromWishlist={() => handleRemoveFromWishlistById(item.wishlistId)}
-                              showRemoveFromWishlist={true}
-                          />
-                      ))}
-                    </div>
-                )}
-              </div>
+              <WishlistPage
+                  wishlist={wishlist}
+                  onAddToCart={handleAddToCart}
+                  onRemoveFromWishlist={handleRemoveFromWishlistById}
+                  setCurrentPage={setCurrentPage}
+              />
           )}
 
           {currentPage === 'cart' && (
@@ -651,273 +558,6 @@ export default function App() {
                 isProcessing={paymentProcessing}
             />
         )}
-      </div>
-  );
-}
-
-/**
- * Login/Register Component with Role Selection
- */
-function LoginRegisterPage({ onLogin, onRegister }) {
-  const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [selectedRole, setSelectedRole] = useState('BUYER');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (isLogin) {
-      onLogin(email, password);
-    } else {
-      onRegister(email, password, firstName, lastName, selectedRole);
-    }
-  };
-
-  return (
-      <div className="auth-container">
-        <div className="auth-card">
-          <div className="auth-logo">🛍️</div>
-          <h1 className="auth-title">E-Marketplace</h1>
-          <p className="auth-subtitle">{isLogin ? 'Welcome back!' : 'Create your account'}</p>
-
-          <form onSubmit={handleSubmit} className="auth-form">
-            <input
-                type="email"
-                placeholder="📧 Email Address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="auth-input"
-                required
-            />
-
-            <div className="password-input-wrapper">
-              <input
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="🔒 Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="auth-input"
-                  required
-              />
-              <button
-                  type="button"
-                  className="password-toggle"
-                  onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? '🙈' : '👁️'}
-              </button>
-            </div>
-
-            {!isLogin && (
-                <>
-                  <div className="auth-name-row">
-                    <input
-                        type="text"
-                        placeholder="First Name"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
-                        className="auth-input auth-name-input"
-                    />
-                    <input
-                        type="text"
-                        placeholder="Last Name"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                        className="auth-input auth-name-input"
-                    />
-                  </div>
-
-                  <div className="auth-role-selection">
-                    <label className="auth-role-label">Select Account Type:</label>
-                    <div className="auth-role-options">
-                      <label className="auth-role-option">
-                        <input
-                            type="radio"
-                            name="role"
-                            value="BUYER"
-                            checked={selectedRole === 'BUYER'}
-                            onChange={(e) => setSelectedRole(e.target.value)}
-                        />
-                        <span className="role-option-label">
-                      <span className="role-icon">🛒</span>
-                      Buyer
-                      <span className="role-description">Browse & purchase products</span>
-                    </span>
-                      </label>
-                      <label className="auth-role-option">
-                        <input
-                            type="radio"
-                            name="role"
-                            value="SELLER"
-                            checked={selectedRole === 'SELLER'}
-                            onChange={(e) => setSelectedRole(e.target.value)}
-                        />
-                        <span className="role-option-label">
-                      <span className="role-icon">📤</span>
-                      Seller
-                      <span className="role-description">Upload & sell products</span>
-                    </span>
-                      </label>
-                    </div>
-                  </div>
-                </>
-            )}
-
-            <button type="submit" className="auth-button">
-              {isLogin ? 'Sign In' : 'Create Account'}
-            </button>
-
-            <button
-                type="button"
-                onClick={() => setIsLogin(!isLogin)}
-                className="auth-toggle"
-            >
-              {isLogin ? "Don't have an account? Register" : "Already have an account? Login"}
-            </button>
-          </form>
-        </div>
-      </div>
-  );
-}
-
-/**
- * Cart Page Component
- */
-function CartPage({ cart, onRemove, onUpdateQuantity, onCheckout }) {
-  if (!cart || cart.items.length === 0) {
-    return (
-        <div className="empty-state">
-          <div className="empty-state-icon">🛒</div>
-          <h2>Your cart is empty</h2>
-          <p>Start shopping to add items to your cart!</p>
-        </div>
-    );
-  }
-
-  return (
-      <div className="cart-container">
-        <h2 className="section-title">🛒 Shopping Cart</h2>
-        <div className="cart-items">
-          {cart.items.map(item => (
-              <div key={item.cartItemId} className="cart-item">
-                <div className="cart-item-info">
-                  <h3>{item.productName}</h3>
-                  <p className="cart-item-price">R {item.price}</p>
-                </div>
-                <div className="cart-item-controls">
-                  <button
-                      onClick={() => onUpdateQuantity(item.cartItemId, item.quantity - 1)}
-                      className="quantity-button"
-                  >
-                    −
-                  </button>
-                  <span className="quantity-display">{item.quantity}</span>
-                  <button
-                      onClick={() => onUpdateQuantity(item.cartItemId, item.quantity + 1)}
-                      className="quantity-button"
-                  >
-                    +
-                  </button>
-                  <span className="cart-item-subtotal">R {item.subtotal}</span>
-                  <button
-                      onClick={() => onRemove(item.cartItemId)}
-                      className="remove-button"
-                  >
-                    Remove
-                  </button>
-                </div>
-              </div>
-          ))}
-        </div>
-        <div className="cart-summary">
-          <div className="cart-total">
-            <span>Total:</span>
-            <strong>R {cart.total}</strong>
-          </div>
-          <button onClick={onCheckout} className="checkout-button">
-            Proceed to Checkout →
-          </button>
-        </div>
-      </div>
-  );
-}
-
-/**
- * Orders Page Component
- */
-function OrdersPage({ userId }) {
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadOrders = async () => {
-      try {
-        const response = await fetch(`http://localhost:8080/order/user/${userId}`);
-        if (response.ok) {
-          const data = await response.json();
-          setOrders(data);
-        }
-      } catch (error) {
-        console.error('Error loading orders:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadOrders();
-  }, [userId]);
-
-  if (loading) return <div className="loading">Loading orders...</div>;
-
-  if (orders.length === 0) {
-    return (
-        <div className="empty-state">
-          <div className="empty-state-icon">📋</div>
-          <h2>No orders yet</h2>
-          <p>Start shopping to place your first order!</p>
-        </div>
-    );
-  }
-
-  return (
-      <div className="orders-container">
-        <h2 className="section-title">📋 My Orders</h2>
-        {orders.map(order => (
-            <div key={order.orderId} className="order-card">
-              <div className="order-header">
-                <div>
-                  <h3>Order #{order.orderId.substring(0, 8)}</h3>
-                  <p className="order-date">
-                    {new Date(order.createdAt).toLocaleDateString('en-ZA', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
-                  </p>
-                </div>
-                <span className={`order-status ${order.status.toLowerCase()}`}>
-              {order.status}
-            </span>
-              </div>
-              <div className="order-items">
-                {order.items.map(item => (
-                    <div key={item.orderItemId} className="order-item">
-                      <span>{item.productName}</span>
-                      <span>x{item.quantity}</span>
-                      <span>R {item.subtotal}</span>
-                    </div>
-                ))}
-              </div>
-              <div className="order-total">
-                <strong>Total: R {order.totalAmount}</strong>
-              </div>
-            </div>
-        ))}
       </div>
   );
 }
