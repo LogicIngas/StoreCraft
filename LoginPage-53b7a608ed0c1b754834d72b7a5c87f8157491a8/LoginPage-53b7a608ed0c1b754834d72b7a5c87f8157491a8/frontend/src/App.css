@@ -1444,3 +1444,211 @@ body {
     height: 180px;
   }
 }
+
+/* ============================================================================
+   MOBILE NAVIGATION - Hamburger Menu
+   ========================================================================== */
+
+/* Header Layout */
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Hamburger Button */
+.hamburger-button {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.8rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  transition: background var(--transition-base);
+  z-index: 1001;
+}
+
+.hamburger-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.hamburger-icon {
+  display: inline-block;
+  line-height: 1;
+}
+
+/* Navigation Styles */
+.nav {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+  transition: all 0.3s ease;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .header-content {
+    padding: 0 1rem;
+  }
+
+  .header-left {
+    width: 100%;
+  }
+
+  .logo {
+    font-size: 1.25rem;
+    flex: 1;
+  }
+
+  /* Show hamburger button on mobile */
+  .hamburger-button {
+    display: block;
+  }
+
+  /* Mobile Navigation - Hidden by default */
+  .nav {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    padding: 1rem 0;
+    gap: 0.5rem;
+    background: rgba(15, 118, 110, 0.98);
+    border-radius: var(--radius-md);
+    margin-top: 0.5rem;
+    box-shadow: var(--shadow-lg);
+    animation: slideDown 0.3s ease;
+  }
+
+  /* Show when mobile menu is open */
+  .nav.mobile-open {
+    display: flex;
+  }
+
+  /* Mobile nav buttons */
+  .nav-button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    text-align: left;
+    justify-content: flex-start;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-sm);
+  }
+
+  .nav-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .nav-button .badge {
+    margin-left: auto;
+  }
+
+  .logout-button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    text-align: left;
+  }
+
+  .user-role-badge {
+    width: 100%;
+    text-align: left;
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .logo {
+    font-size: 1rem;
+  }
+
+  .hamburger-button {
+    font-size: 1.5rem;
+    padding: 0.3rem;
+  }
+
+  .nav-button {
+    font-size: 0.8rem;
+    padding: 0.6rem 0.8rem;
+  }
+
+  .nav-button .badge {
+    font-size: 0.6rem;
+    padding: 0.05rem 0.35rem;
+  }
+}
+
+/* Animation for mobile menu */
+@keyframes slideDown {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ============================================================================
+   ALTERNATIVE: Dropdown Menu Button Style (If you prefer a dropdown)
+   ========================================================================== */
+
+/* If you want a dropdown that appears from the hamburger */
+.nav-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  min-width: 200px;
+  padding: 0.5rem;
+  display: none;
+  z-index: 1000;
+}
+
+.nav-dropdown.open {
+  display: block;
+  animation: slideDown 0.3s ease;
+}
+
+/* Dropdown items */
+.nav-dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: none;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-base);
+}
+
+.nav-dropdown-item:hover {
+  background: var(--bg-secondary);
+}
+
+.nav-dropdown-item .badge {
+  float: right;
+  margin-left: 0.5rem;
+}

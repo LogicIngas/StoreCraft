@@ -5,16 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7a5a4bd2-851d-4325-9d26-2ea4f6c0cdf1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/docker-compose.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/resources/application-dev.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/resources/application-prod.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/config/WebMvcConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/config/WebMvcConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/config/WebMvcConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/config/WebMvcConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/src/App.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/src/components/Navbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/src/components/Navbar.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,6 +44,9 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;Docker.LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8.backend: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/Dockerfile.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8: Compose Deployment.executor&quot;: &quot;Run&quot;,
     &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
     &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
     &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
@@ -69,7 +65,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Spring Boot.LoginPageApplication">
     <configuration default="true" type="JetRunConfigurationType">
       <method v="2">
         <option name="Make" enabled="true" />
@@ -89,6 +85,54 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="sourceFilePath" value="LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/Dockerfile" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
+      <deployment type="dockerfile">
+        <settings>
+          <option name="sourceFilePath" value="LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/Dockerfile" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8.backend: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="backend" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
+      <deployment type="dockerfile">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Docker.LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8.backend: Compose Deployment" />
+        <item itemvalue="Docker.LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8: Compose Deployment" />
+        <item itemvalue="Docker.LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/Dockerfile" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -101,7 +145,8 @@
       <workItem from="1783792962718" duration="11258000" />
       <workItem from="1783928870474" duration="40000" />
       <workItem from="1783982269382" duration="1279000" />
-      <workItem from="1784013556733" duration="4452000" />
+      <workItem from="1784013556733" duration="7633000" />
+      <workItem from="1784111038670" duration="1873000" />
     </task>
     <servers />
   </component>
