@@ -25,7 +25,7 @@ export default function LoginRegisterPage({ onLogin, onRegister }) {
         <div className="auth-container">
             <div className="auth-card">
                 <div className="auth-logo">🛍️</div>
-                <h1 className="auth-title">Kasi Connect</h1>
+                <h1 className="auth-title">AfriConnect</h1>
                 <p className="auth-subtitle">{isLogin ? 'Welcome back!' : 'Create your account'}</p>
 
                 <form onSubmit={handleSubmit} className="auth-form">

@@ -12,12 +12,10 @@ export default function Navbar({
                                }) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    // Toggle mobile menu
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
     };
 
-    // Close mobile menu when a link is clicked
     const handleNavClick = (page) => {
         setCurrentPage(page);
         setIsMobileMenuOpen(false);
@@ -27,21 +25,19 @@ export default function Navbar({
         <header className="app-header">
             <div className="header-content">
                 <div className="header-left">
-                    <h1 className="logo">🛍️ Kasi Connect</h1>
+                    <h1 className="logo">🌍 AfriConnect</h1>
 
-                    {/* Hamburger Menu Button - Mobile Only */}
                     <button
                         className="hamburger-button"
                         onClick={toggleMobileMenu}
                         aria-label="Toggle navigation menu"
                     >
-            <span className="hamburger-icon">
-              {isMobileMenuOpen ? '✕' : '☰'}
-            </span>
+                        <span className="hamburger-icon">
+                            {isMobileMenuOpen ? '✕' : '☰'}
+                        </span>
                     </button>
                 </div>
 
-                {/* Desktop Navigation */}
                 <nav className={`nav ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
                     <button
                         onClick={() => handleNavClick('storefront')}

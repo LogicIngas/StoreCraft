@@ -1,117 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import ProductCard from './components/ProductCard';
-import UploadProduct from './components/UploadProduct';
-import PaymentCheckout from './PaymentCheckout';
-import AddressManager from './AddressManager';
-import LoginRegisterPage from './components/LoginRegisterPage';
+import './landing-and-footer.css';
 import Navbar from './components/Navbar';
-import StatusBanner from './components/StatusBanner';
+import LoginRegisterPage from './components/LoginRegisterPage';
 import Storefront from './components/Storefront';
 import CartPage from './components/CartPage';
-import OrdersPage from './components/OrdersPage';
 import WishlistPage from './components/WishlistPage';
-
+import OrdersPage from './components/OrdersPage';
+import UploadProduct from './components/UploadProduct';
+import AddressManager from './AddressManager';
+import PaymentCheckout from './PaymentCheckout';
+import ProductCard from './components/ProductCard';
+import StatusBanner from './components/StatusBanner';
+import Footer from './Footer';
+import LandingPage from './LandingPage';
 export default function App() {
   const [currentUser, setCurrentUser] = useState(null);
-  const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState('storefront');
   const [cart, setCart] = useState(null);
-  const [cartCount, setCartCount] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [wishlist, setWishlist] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [categories, setCategories] = useState(['all']);
   const [statusMessage, setStatusMessage] = useState('');
   const [statusType, setStatusType] = useState('');
-  const [currentPage, setCurrentPage] = useState('storefront');
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [showAddressManager, setShowAddressManager] = useState(false);
   const [shippingAddress, setShippingAddress] = useState('');
-  const [paymentProcessing, setPaymentProcessing] = useState(false);
-  const [wishlist, setWishlist] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [categories, setCategories] = useState(['all', 'Clothing', 'Electronics', 'Accessories']);
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [showAddressManager, setShowAddressManager] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // Show status message
-  const showStatus = (msg, type = 'error') => {
-    setStatusMessage(msg);
-    setStatusType(type);
-    setTimeout(() => setStatusMessage(''), 4000);
-  };
+  // ========== USEEFFECTS ==========
+
+  // Load user from localStorage on mount
+  useEffect(() => {
+    const savedUser = localStorage.getItem('currentUser');
+    if (savedUser) {
+      const user = JSON.parse(savedUser);
+      setCurrentUser(user);
+      loadUserData(user.userId);
+    }
+  }, []);
 
   // Load products on mount
   useEffect(() => {
     loadProducts();
   }, []);
 
-  // Load cart when user changes
+  // Filter products based on search and category
   useEffect(() => {
-    if (currentUser) {
-      loadCart();
-      loadWishlist();
-    }
-  }, [currentUser]);
-
-  // Filter products when search or category changes
-  useEffect(() => {
-    filterProducts();
-  }, [products, searchTerm, selectedCategory]);
-
-  /**
-   * Load all products from backend
-   */
-  const loadProducts = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch('http://localhost:8080/product/all');
-      if (!response.ok) throw new Error('Failed to load products');
-      const data = await response.json();
-      setProducts(data);
-      setFilteredProducts(data);
-    } catch (error) {
-      console.error('Error loading products:', error);
-      showStatus('Failed to load products');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  /**
-   * Load user's cart
-   */
-  const loadCart = async () => {
-    try {
-      const response = await fetch(`http://localhost:8080/cart/${currentUser.userId}`);
-      if (response.ok) {
-        const cartData = await response.json();
-        setCart(cartData);
-        setCartCount(cartData.items.length);
-      }
-    } catch (error) {
-      console.error('Error loading cart:', error);
-    }
-  };
-
-  /**
-   * Load user's wishlist
-   */
-  const loadWishlist = async () => {
-    try {
-      const response = await fetch(`http://localhost:8080/api/wishlist/user/${currentUser.userId}`);
-      if (response.ok) {
-        const data = await response.json();
-        setWishlist(data);
-      } else {
-        console.error('Failed to load wishlist:', response.status);
-      }
-    } catch (error) {
-      console.error('Error loading wishlist:', error);
-    }
-  };
-
-  /**
-   * Filter products by search and category
-   */
-  const filterProducts = () => {
     let filtered = products;
 
     if (selectedCategory !== 'all') {
@@ -119,188 +58,126 @@ export default function App() {
     }
 
     if (searchTerm.trim()) {
-      const term = searchTerm.toLowerCase().trim();
       filtered = filtered.filter(p =>
-          p.name.toLowerCase().includes(term) ||
-          p.description.toLowerCase().includes(term) ||
-          p.category.toLowerCase().includes(term)
+          p.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     setFilteredProducts(filtered);
+  }, [products, searchTerm, selectedCategory]);
+
+  // ========== API CALLS ==========
+
+  const loadProducts = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/product/all');
+      const data = await response.json();
+      setProducts(data);
+
+      // Extract unique categories
+      const uniqueCategories = ['all', ...new Set(data.map(p => p.category))];
+      setCategories(uniqueCategories);
+    } catch (error) {
+      console.error('Error loading products:', error);
+    }
   };
 
-  /**
-   * Handle login
-   */
+  const loadUserData = async (userId) => {
+    try {
+      // Load cart
+      const cartResponse = await fetch(`http://localhost:8080/cart/${userId}`);
+      if (cartResponse.ok) {
+        const cartData = await cartResponse.json();
+        setCart(cartData);
+      } else {
+        // Create new cart if doesn't exist
+        const newCart = { cartId: '', userId, items: [], total: 0 };
+        setCart(newCart);
+      }
+
+      // Load wishlist
+      const wishlistResponse = await fetch(`http://localhost:8080/api/wishlist/user/${userId}`);
+      if (wishlistResponse.ok) {
+        const wishlistData = await wishlistResponse.json();
+        setWishlist(wishlistData);
+      }
+    } catch (error) {
+      console.error('Error loading user data:', error);
+    }
+  };
+
+  // ========== HANDLERS ==========
+
   const handleLogin = async (email, password) => {
     try {
+      setLoading(true);
       const response = await fetch('http://localhost:8080/user/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
+
       if (!response.ok) {
-        showStatus(data || 'Login failed');
+        showStatus(data, 'error');
         return;
       }
 
-      setCurrentUser({
-        ...data,
-        roleName: data.roleName || 'BUYER'
-      });
+      setCurrentUser(data);
+      localStorage.setItem('currentUser', JSON.stringify(data));
+      loadUserData(data.userId);
       setCurrentPage('storefront');
-      showStatus('Login successful!', 'success');
+      showStatus('✅ Login successful! Welcome to AfriConnect!', 'success');
     } catch (error) {
-      showStatus('Login error: ' + error.message);
+      showStatus('❌ Login failed. Please try again.', 'error');
+      console.error('Login error:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  /**
-   * Handle registration
-   */
   const handleRegister = async (email, password, firstName, lastName, roleName) => {
     try {
+      setLoading(true);
       const response = await fetch('http://localhost:8080/user/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, firstName, lastName, roleName })
+        body: JSON.stringify({ email, password, firstName, lastName, roleName }),
       });
 
       const data = await response.json();
+
       if (!response.ok) {
-        showStatus(data || 'Registration failed');
+        showStatus(data, 'error');
         return;
       }
 
-      setCurrentUser({
-        ...data,
-        roleName: data.roleName || roleName || 'BUYER'
-      });
+      setCurrentUser(data);
+      localStorage.setItem('currentUser', JSON.stringify(data));
+      loadUserData(data.userId);
       setCurrentPage('storefront');
-      showStatus('Registration successful!', 'success');
+      showStatus('✅ Account created! Welcome to AfriConnect!', 'success');
     } catch (error) {
-      showStatus('Registration error: ' + error.message);
+      showStatus('❌ Registration failed. Please try again.', 'error');
+      console.error('Register error:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  /**
-   * Handle add to wishlist
-   */
-  const handleAddToWishlist = async (productId) => {
-    if (!currentUser) {
-      showStatus('Please login to add to wishlist');
-      return;
-    }
-
-    try {
-      console.log('➕ Adding to wishlist - Product:', productId);
-
-      const response = await fetch('http://localhost:8080/api/wishlist/add', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: currentUser.userId,
-          productId: productId
-        })
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        console.error('❌ Failed to add to wishlist:', error);
-        showStatus(error.message || 'Failed to add to wishlist');
-        return;
-      }
-
-      const result = await response.text();
-      console.log('✅ Added to wishlist:', result);
-
-      showStatus('Added to wishlist! ❤️', 'success');
-      await loadWishlist();
-    } catch (error) {
-      console.error('❌ Error adding to wishlist:', error);
-      showStatus('Error adding to wishlist: ' + error.message);
-    }
+  const handleLogout = () => {
+    setCurrentUser(null);
+    setCart(null);
+    setWishlist([]);
+    localStorage.removeItem('currentUser');
+    setCurrentPage('storefront');
+    showStatus('✅ Logged out successfully!', 'success');
   };
 
-  /**
-   * Handle remove from wishlist
-   */
-  const handleRemoveFromWishlist = async (productId) => {
-    if (!currentUser) {
-      showStatus('Please login to manage wishlist');
-      return;
-    }
-
-    try {
-      console.log('🗑️ Removing product from wishlist:', productId);
-
-      const response = await fetch(
-          `http://localhost:8080/api/wishlist/remove?userId=${currentUser.userId}&productId=${productId}`,
-          { method: 'DELETE' }
-      );
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('❌ Failed to remove from wishlist:', errorText);
-        showStatus('Failed to remove from wishlist');
-        return;
-      }
-
-      const result = await response.text();
-      console.log('✅ Removed from wishlist:', result);
-
-      await loadWishlist();
-      showStatus('Removed from wishlist ❤️', 'success');
-    } catch (error) {
-      console.error('❌ Error removing from wishlist:', error);
-      showStatus('Error removing from wishlist: ' + error.message);
-    }
-  };
-
-  /**
-   * Handle remove from wishlist by ID
-   */
-  const handleRemoveFromWishlistById = async (wishlistId) => {
-    if (!currentUser) {
-      showStatus('Please login to manage wishlist');
-      return;
-    }
-
-    try {
-      console.log('🗑️ Removing wishlist item by ID:', wishlistId);
-
-      const response = await fetch(
-          `http://localhost:8080/api/wishlist/remove/${wishlistId}`,
-          { method: 'DELETE' }
-      );
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('❌ Failed to remove from wishlist:', errorText);
-        showStatus('Failed to remove from wishlist');
-        return;
-      }
-
-      const result = await response.text();
-      console.log('✅ Removed from wishlist:', result);
-
-      await loadWishlist();
-      showStatus('Removed from wishlist ❤️', 'success');
-    } catch (error) {
-      console.error('❌ Error removing from wishlist:', error);
-      showStatus('Error removing from wishlist: ' + error.message);
-    }
-  };
-
-  /**
-   * Handle add to cart
-   */
   const handleAddToCart = async (productId) => {
     if (!currentUser) {
-      showStatus('Please login to add items to cart');
+      showStatus('❌ Please log in to add items to cart', 'error');
       return;
     }
 
@@ -310,59 +187,44 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userId: currentUser.userId,
-          productId: productId,
-          quantity: 1
-        })
+          productId,
+          quantity: 1,
+        }),
       });
 
-      if (!response.ok) {
-        const error = await response.json();
-        showStatus(error.message || 'Failed to add to cart');
-        return;
+      if (response.ok) {
+        const cartData = await response.json();
+        setCart(cartData);
+        showStatus('✅ Added to cart!', 'success');
+      } else {
+        showStatus('❌ Failed to add to cart', 'error');
       }
-
-      const updatedCart = await response.json();
-      setCart(updatedCart);
-      setCartCount(updatedCart.items.length);
-      showStatus('Added to cart! 🛒', 'success');
     } catch (error) {
-      showStatus('Error adding to cart: ' + error.message);
+      showStatus('❌ Error adding to cart', 'error');
+      console.error('Add to cart error:', error);
     }
   };
 
-  /**
-   * Handle remove from cart
-   */
   const handleRemoveFromCart = async (cartItemId) => {
     if (!currentUser) return;
 
     try {
-      const response = await fetch(
-          `http://localhost:8080/cart/remove/${cartItemId}?userId=${currentUser.userId}`,
-          { method: 'DELETE' }
-      );
+      const response = await fetch(`http://localhost:8080/cart/remove/${cartItemId}?userId=${currentUser.userId}`, {
+        method: 'DELETE',
+      });
 
-      if (!response.ok) throw new Error('Failed to remove item');
-
-      const updatedCart = await response.json();
-      setCart(updatedCart);
-      setCartCount(updatedCart.items.length);
-      showStatus('Item removed', 'success');
+      if (response.ok) {
+        const cartData = await response.json();
+        setCart(cartData);
+        showStatus('✅ Removed from cart', 'success');
+      }
     } catch (error) {
-      showStatus('Error removing item: ' + error.message);
+      console.error('Error removing from cart:', error);
     }
   };
 
-  /**
-   * Handle update cart item quantity
-   */
-  const handleUpdateQuantity = async (cartItemId, newQuantity) => {
-    if (!currentUser) return;
-
-    if (newQuantity <= 0) {
-      handleRemoveFromCart(cartItemId);
-      return;
-    }
+  const handleUpdateQuantity = async (cartItemId, quantity) => {
+    if (!currentUser || quantity < 1) return;
 
     try {
       const response = await fetch(`http://localhost:8080/cart/update/${cartItemId}`, {
@@ -370,128 +232,154 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userId: currentUser.userId,
-          quantity: newQuantity
-        })
+          quantity,
+        }),
       });
 
-      if (!response.ok) throw new Error('Failed to update quantity');
-
-      const updatedCart = await response.json();
-      setCart(updatedCart);
-      setCartCount(updatedCart.items.length);
+      if (response.ok) {
+        const cartData = await response.json();
+        setCart(cartData);
+      }
     } catch (error) {
-      showStatus('Error updating quantity: ' + error.message);
+      console.error('Error updating quantity:', error);
     }
   };
 
-  /**
-   * Handle checkout (open payment modal)
-   */
-  const handleCheckout = () => {
+  const handleAddToWishlist = async (productId) => {
     if (!currentUser) {
-      showStatus('Please login to checkout');
+      showStatus('❌ Please log in to add to wishlist', 'error');
       return;
     }
-    if (!cart || cart.items.length === 0) {
-      showStatus('Your cart is empty');
-      return;
-    }
-    setShowPaymentModal(true);
-  };
-
-  /**
-   * Handle payment submission
-   */
-  const handlePayment = async (cardToken, cardLast4, cardHolderName) => {
-    if (!shippingAddress.trim()) {
-      showStatus('Please enter a shipping address');
-      return;
-    }
-
-    setPaymentProcessing(true);
 
     try {
+      const response = await fetch('http://localhost:8080/api/wishlist/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: currentUser.userId,
+          productId,
+        }),
+      });
+
+      if (response.ok) {
+        const updatedWishlist = await fetch(`http://localhost:8080/api/wishlist/user/${currentUser.userId}`);
+        const wishlistData = await updatedWishlist.json();
+        setWishlist(wishlistData);
+        showStatus('✅ Added to wishlist!', 'success');
+      }
+    } catch (error) {
+      console.error('Error adding to wishlist:', error);
+    }
+  };
+
+  const handleRemoveFromWishlist = async (wishlistId) => {
+    if (!currentUser) return;
+
+    try {
+      const response = await fetch(`http://localhost:8080/api/wishlist/remove/${wishlistId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setWishlist(wishlist.filter(w => w.wishlistId !== wishlistId));
+        showStatus('✅ Removed from wishlist', 'success');
+      }
+    } catch (error) {
+      console.error('Error removing from wishlist:', error);
+    }
+  };
+
+  const handleCheckout = async (cardToken, cardLast4, cardHolderName) => {
+    if (!currentUser || !cart || !shippingAddress.trim()) {
+      showStatus('❌ Please provide all required information', 'error');
+      return;
+    }
+
+    try {
+      setIsProcessing(true);
       const response = await fetch('http://localhost:8080/payment/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userId: currentUser.userId,
-          shippingAddress: shippingAddress,
-          cardToken: cardToken,
-          cardLast4: cardLast4,
-          cardHolderName: cardHolderName
-        })
+          shippingAddress,
+          cardToken,
+          cardLast4,
+          cardHolderName,
+        }),
       });
 
       const data = await response.json();
 
-      if (!response.ok) {
-        showStatus(data.message || 'Payment failed');
-        setPaymentProcessing(false);
-        return;
+      if (response.ok) {
+        setShowCheckout(false);
+        setShippingAddress('');
+        setCart(null);
+        showStatus('✅ Payment successful! Order confirmed!', 'success');
+        setCurrentPage('orders');
+      } else {
+        showStatus(`❌ ${data.message || 'Payment failed'}`, 'error');
       }
-
-      showStatus('Payment successful! Order confirmed. 🎉', 'success');
-      setShowPaymentModal(false);
-      setShippingAddress('');
-      setCart(null);
-      setCartCount(0);
-      setCurrentPage('orders');
-      setPaymentProcessing(false);
-
     } catch (error) {
-      showStatus('Payment error: ' + error.message);
-      setPaymentProcessing(false);
+      showStatus('❌ Payment processing failed', 'error');
+      console.error('Checkout error:', error);
+    } finally {
+      setIsProcessing(false);
     }
   };
 
-  /**
-   * Handle product uploaded
-   */
-  const handleProductAdded = (newProduct) => {
-    setProducts([...products, newProduct]);
-    setCurrentPage('storefront');
-    showStatus('Product uploaded successfully!', 'success');
+  const showStatus = (message, type = 'info') => {
+    setStatusMessage(message);
+    setStatusType(type);
+    setTimeout(() => setStatusMessage(''), 4000);
   };
 
-  /**
-   * Handle logout
-   */
-  const handleLogout = () => {
-    setCurrentUser(null);
-    setCart(null);
-    setCartCount(0);
-    setCurrentPage('storefront');
-    showStatus('Logged out', 'success');
-  };
+  // ========== RENDER ==========
 
-  // Render login/register page
+  // If not logged in, show landing page
   if (!currentUser) {
-    return <LoginRegisterPage onLogin={handleLogin} onRegister={handleRegister} />;
+    return (
+        <div className="app-wrapper">
+          <LandingPage
+              onLoginClick={() => setCurrentPage('login')}
+              products={products}
+          />
+          {currentPage === 'login' && (
+              <div className="modal-overlay" onClick={() => setCurrentPage('storefront')}>
+                <div className="modal-content" onClick={e => e.stopPropagation()}>
+                  <button
+                      className="modal-close"
+                      onClick={() => setCurrentPage('storefront')}
+                  >
+                    ✕
+                  </button>
+                  <LoginRegisterPage
+                      onLogin={handleLogin}
+                      onRegister={handleRegister}
+                  />
+                </div>
+              </div>
+          )}
+          <Footer />
+        </div>
+    );
   }
 
-  // Check if user is a seller
-  const isSeller = currentUser.roleName === 'SELLER';
-
-  // Render main app
+  // If logged in, show full app
   return (
-      <div className="app">
-        {/* Header */}
+      <div className="app-wrapper">
+        <StatusBanner message={statusMessage} type={statusType} />
         <Navbar
             currentUser={currentUser}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
-            cartCount={cartCount}
-            wishlistCount={wishlist.length}
+            cartCount={cart?.items?.length || 0}
+            wishlistCount={wishlist?.length || 0}
             setShowAddressManager={setShowAddressManager}
             handleLogout={handleLogout}
-            isSeller={isSeller}
+            isSeller={currentUser.roleName === 'SELLER'}
         />
 
-        {/* Status Message */}
-        <StatusBanner message={statusMessage} type={statusType} />
-
-        {/* Main Content */}
         <main className="main-content">
           {currentPage === 'storefront' && (
               <Storefront
@@ -510,21 +398,21 @@ export default function App() {
               />
           )}
 
-          {currentPage === 'wishlist' && (
-              <WishlistPage
-                  wishlist={wishlist}
-                  onAddToCart={handleAddToCart}
-                  onRemoveFromWishlist={handleRemoveFromWishlistById}
-                  setCurrentPage={setCurrentPage}
-              />
-          )}
-
           {currentPage === 'cart' && (
               <CartPage
                   cart={cart}
                   onRemove={handleRemoveFromCart}
                   onUpdateQuantity={handleUpdateQuantity}
-                  onCheckout={handleCheckout}
+                  onCheckout={() => setShowCheckout(true)}
+              />
+          )}
+
+          {currentPage === 'wishlist' && (
+              <WishlistPage
+                  wishlist={wishlist}
+                  onAddToCart={handleAddToCart}
+                  onRemoveFromWishlist={handleRemoveFromWishlist}
+                  setCurrentPage={setCurrentPage}
               />
           )}
 
@@ -532,32 +420,30 @@ export default function App() {
               <OrdersPage userId={currentUser.userId} />
           )}
 
-          {currentPage === 'upload' && isSeller && (
-              <UploadProduct onProductAdded={handleProductAdded} />
+          {currentPage === 'upload' && currentUser.roleName === 'SELLER' && (
+              <UploadProduct onProductAdded={() => loadProducts()} />
           )}
-        </main>
 
-        {/* Address Manager Modal */}
-        {showAddressManager && (
-            <div className="modal-overlay">
+          {showCheckout && (
+              <PaymentCheckout
+                  cart={cart}
+                  shippingAddress={shippingAddress}
+                  onShippingAddressChange={setShippingAddress}
+                  onPayment={handleCheckout}
+                  onClose={() => setShowCheckout(false)}
+                  isProcessing={isProcessing}
+              />
+          )}
+
+          {showAddressManager && (
               <AddressManager
                   userId={currentUser.userId}
                   onClose={() => setShowAddressManager(false)}
               />
-            </div>
-        )}
+          )}
+        </main>
 
-        {/* Payment Checkout Modal */}
-        {showPaymentModal && (
-            <PaymentCheckout
-                cart={cart}
-                shippingAddress={shippingAddress}
-                onShippingAddressChange={setShippingAddress}
-                onPayment={handlePayment}
-                onClose={() => setShowPaymentModal(false)}
-                isProcessing={paymentProcessing}
-            />
-        )}
+        <Footer />
       </div>
   );
 }
