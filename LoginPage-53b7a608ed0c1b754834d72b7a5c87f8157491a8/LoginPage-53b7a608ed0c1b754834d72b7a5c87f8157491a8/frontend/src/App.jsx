@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import './landing-and-footer.css';
+
+// Components from components/ folder
 import Navbar from './components/Navbar';
 import LoginRegisterPage from './components/LoginRegisterPage';
 import Storefront from './components/Storefront';
@@ -10,11 +12,14 @@ import OrdersPage from './components/OrdersPage';
 import UploadProduct from './components/UploadProduct';
 import AddressManager from './AddressManager';
 import PaymentCheckout from './PaymentCheckout';
-import ProductCard from './components/ProductCard';
 import StatusBanner from './components/StatusBanner';
+
+// New components from src/ root (NOT in components folder)
 import Footer from './Footer';
 import LandingPage from './LandingPage';
+
 export default function App() {
+  // ========== STATE ==========
   const [currentUser, setCurrentUser] = useState(null);
   const [currentPage, setCurrentPage] = useState('storefront');
   const [cart, setCart] = useState(null);
@@ -120,7 +125,7 @@ export default function App() {
       const data = await response.json();
 
       if (!response.ok) {
-        showStatus(data, 'error');
+        showStatus(data.message || 'Login failed', 'error');
         return;
       }
 
@@ -149,7 +154,7 @@ export default function App() {
       const data = await response.json();
 
       if (!response.ok) {
-        showStatus(data, 'error');
+        showStatus(data.message || 'Registration failed', 'error');
         return;
       }
 
@@ -336,7 +341,7 @@ export default function App() {
 
   // ========== RENDER ==========
 
-  // If not logged in, show landing page
+  // ✅ If NOT logged in → Show Landing Page
   if (!currentUser) {
     return (
         <div className="app-wrapper">
@@ -344,12 +349,13 @@ export default function App() {
               onLoginClick={() => setCurrentPage('login')}
               products={products}
           />
+
           {currentPage === 'login' && (
-              <div className="modal-overlay" onClick={() => setCurrentPage('storefront')}>
+              <div className="modal-overlay" onClick={() => setCurrentPage('landing')}>
                 <div className="modal-content" onClick={e => e.stopPropagation()}>
                   <button
                       className="modal-close"
-                      onClick={() => setCurrentPage('storefront')}
+                      onClick={() => setCurrentPage('landing')}
                   >
                     ✕
                   </button>
@@ -360,12 +366,13 @@ export default function App() {
                 </div>
               </div>
           )}
+
           <Footer />
         </div>
     );
   }
 
-  // If logged in, show full app
+  // ✅ If logged in → Show full app with Storefront as default
   return (
       <div className="app-wrapper">
         <StatusBanner message={statusMessage} type={statusType} />

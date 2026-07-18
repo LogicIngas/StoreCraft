@@ -24,11 +24,11 @@ public class WishlistController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> getWishlist(@PathVariable String userId) {
         try {
-            System.out.println("📋 Getting wishlist for user: " + userId);
+            System.out.println("Getting wishlist for user: " + userId);
             List<WishlistDTO> wishlist = wishlistService.getWishlistByUserId(userId);
             return ResponseEntity.ok(wishlist);
         } catch (Exception e) {
-            System.err.println("❌ Error getting wishlist: " + e.getMessage());
+            System.err.println(" Error getting wishlist: " + e.getMessage());
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
