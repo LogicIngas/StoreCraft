@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 export default function Navbar({
                                    currentUser,
@@ -10,44 +10,71 @@ export default function Navbar({
                                    handleLogout,
                                    isSeller
                                }) {
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    const toggleMobileMenu = () => {
+        setIsMobileMenuOpen(!isMobileMenuOpen);
+    };
+
+    const handleNavClick = (page) => {
+        setCurrentPage(page);
+        setIsMobileMenuOpen(false);
+    };
+
     return (
         <header className="app-header">
             <div className="header-content">
-                <h1 className="logo">🛍️ Kasi Connect</h1>
-                <nav className="nav">
+                <div className="header-left">
+                    <h1 className="logo">🌍 AfriConnect</h1>
+
                     <button
-                        onClick={() => setCurrentPage('storefront')}
+                        className="hamburger-button"
+                        onClick={toggleMobileMenu}
+                        aria-label="Toggle navigation menu"
+                    >
+                        <span className="hamburger-icon">
+                            {isMobileMenuOpen ? '✕' : '☰'}
+                        </span>
+                    </button>
+                </div>
+
+                <nav className={`nav ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
+                    <button
+                        onClick={() => handleNavClick('storefront')}
                         className={`nav-button ${currentPage === 'storefront' ? 'active' : ''}`}
                     >
                         🏠 Storefront
                     </button>
                     <button
-                        onClick={() => setCurrentPage('cart')}
+                        onClick={() => handleNavClick('cart')}
                         className={`nav-button ${currentPage === 'cart' ? 'active' : ''}`}
                     >
                         🛒 Cart <span className="badge">{cartCount}</span>
                     </button>
                     <button
-                        onClick={() => setCurrentPage('wishlist')}
+                        onClick={() => handleNavClick('wishlist')}
                         className={`nav-button ${currentPage === 'wishlist' ? 'active' : ''}`}
                     >
                         ❤️ Wishlist <span className="badge">{wishlistCount}</span>
                     </button>
                     <button
-                        onClick={() => setCurrentPage('orders')}
+                        onClick={() => handleNavClick('orders')}
                         className={`nav-button ${currentPage === 'orders' ? 'active' : ''}`}
                     >
                         📋 Orders
                     </button>
                     <button
-                        onClick={() => setShowAddressManager(true)}
+                        onClick={() => {
+                            setShowAddressManager(true);
+                            setIsMobileMenuOpen(false);
+                        }}
                         className="nav-button"
                     >
                         📍 Addresses
                     </button>
                     {isSeller && (
                         <button
-                            onClick={() => setCurrentPage('upload')}
+                            onClick={() => handleNavClick('upload')}
                             className={`nav-button ${currentPage === 'upload' ? 'active' : ''}`}
                         >
                             📤 Upload

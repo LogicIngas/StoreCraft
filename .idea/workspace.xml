@@ -5,16 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7a5a4bd2-851d-4325-9d26-2ea4f6c0cdf1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/docker-compose.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/resources/application-dev.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/resources/application-prod.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/config/WebMvcConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/config/WebMvcConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/config/WebMvcConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/config/WebMvcConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/controller/WishlistController.java" beforeDir="false" afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/src/main/java/com/example/loginpage/controller/WishlistController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/controller/WishlistController.class" beforeDir="false" afterPath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/target/classes/com/example/loginpage/controller/WishlistController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LoginPage-53b7a608ed0c1b754834d72b7a5c87f8157491a8/uploads/021fe8e2-84e1-4652-95e1-5891fc7d7e1e.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/00cf978a-3bf3-465b-bbc9-f7e5b8bdeb50.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/57a7fdb4-20ec-4fe0-a113-d5d4bc158fae.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/bc3454b4-1079-4ef2-9684-d778f3d81624.jpg" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,6 +27,7 @@
         <option value="Interface" />
         <option value="Class" />
         <option value="JSX File" />
+        <option value="CSS File" />
       </list>
     </option>
   </component>
@@ -58,9 +58,10 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;Spring Boot.LoginPageApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;updated&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/mbobo/Downloads/Student Files 2&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -102,6 +103,8 @@
       <workItem from="1783928870474" duration="40000" />
       <workItem from="1783982269382" duration="1279000" />
       <workItem from="1784013556733" duration="4452000" />
+      <workItem from="1784208556985" duration="10158000" />
+      <workItem from="1784359994034" duration="1697000" />
     </task>
     <servers />
   </component>

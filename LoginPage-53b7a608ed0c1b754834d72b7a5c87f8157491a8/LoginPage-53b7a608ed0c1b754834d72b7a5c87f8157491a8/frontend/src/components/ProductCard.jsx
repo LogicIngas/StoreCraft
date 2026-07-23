@@ -1,5 +1,20 @@
 import React, { useState } from 'react';
 
+// ✅ Helper function to construct proper image URL
+function getImageUrl(imageUrl) {
+    if (!imageUrl) {
+        return 'https://placehold.co/300x350?text=No+Image';
+    }
+
+    // If already a full URL, return as is
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+        return imageUrl;
+    }
+
+    // ✅ Prepend backend domain for relative URLs
+    return `http://localhost:8080${imageUrl}`;
+}
+
 export default function ProductCard({
                                         product,
                                         onAddToCart,
@@ -16,7 +31,6 @@ export default function ProductCard({
         e.stopPropagation();
 
         if (showRemoveFromWishlist && onRemoveFromWishlist) {
-            // Remove from wishlist (on wishlist page)
             setIsRemoving(true);
             try {
                 await onRemoveFromWishlist(product.wishlistId || product.productId);
@@ -26,7 +40,6 @@ export default function ProductCard({
                 setIsRemoving(false);
             }
         } else if (onAddToWishlist) {
-            // Add to wishlist (on storefront)
             onAddToWishlist(product.productId);
         }
     };
@@ -47,7 +60,7 @@ export default function ProductCard({
         >
             <div className="product-image-container">
                 <img
-                    src={product.imageUrl || 'https://placehold.co/300x350?text=No+Image+Found'}
+                    src={getImageUrl(product.imageUrl)}
                     alt={product.name || 'Product'}
                     className="product-image"
                     onError={(e) => {
