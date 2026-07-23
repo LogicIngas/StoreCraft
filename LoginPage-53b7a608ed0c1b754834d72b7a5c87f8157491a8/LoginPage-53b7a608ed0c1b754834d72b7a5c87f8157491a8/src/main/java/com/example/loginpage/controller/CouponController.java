@@ -1,10 +1,7 @@
 package com.example.loginpage.controller;
 
-import com.example.loginpage.dto.CouponDTO;
-import com.example.loginpage.dto.ErrorResponse;
+import com.example.loginpage.model.Coupon;
 import com.example.loginpage.service.impl.CouponService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -14,33 +11,30 @@ import java.math.BigDecimal;
 @CrossOrigin(origins = "http://localhost:5173")
 public class CouponController {
 
-    private final CouponService couponService;
+    private final CouponService service;
 
-    @Autowired
-    public CouponController(CouponService couponService) {
-        this.couponService = couponService;
+    public CouponController(CouponService service) {
+        this.service = service;
     }
 
     @PostMapping("/validate")
-    public ResponseEntity<?> validateCoupon(@RequestBody ValidateCouponRequest request) {
-        try {
-            CouponDTO coupon = couponService.validateCoupon(request.code(), request.orderAmount());
-            return ResponseEntity.ok(coupon);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
-        }
+    public Coupon validateCoupon(@RequestBody ValidateRequest request) {
+        return service.validateCoupon(request.code, request.orderAmount);
     }
 
     @PostMapping("/apply/{orderId}")
-    public ResponseEntity<?> applyCoupon(@PathVariable String orderId, @RequestBody ApplyCouponRequest request) {
-        try {
-            CouponDTO applied = couponService.applyCoupon(orderId, request.couponCode());
-            return ResponseEntity.ok(applied);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
-        }
+    public Coupon applyCoupon(@PathVariable String orderId, @RequestBody ApplyRequest request) {
+        return service.applyCoupon(orderId, request.couponCode);
     }
 
-    public record ValidateCouponRequest(String code, BigDecimal orderAmount) {}
-    public record ApplyCouponRequest(String couponCode) {}
+    // ========== Inner DTOs ==========
+
+    public static class ValidateRequest {
+        public String code;
+        public BigDecimal orderAmount;
+    }
+
+    public static class ApplyRequest {
+        public String couponCode;
+    }
 }

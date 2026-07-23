@@ -1,10 +1,7 @@
 package com.example.loginpage.controller;
 
-import com.example.loginpage.dto.ErrorResponse;
-import com.example.loginpage.dto.ReviewDTO;
+import com.example.loginpage.model.Review;
 import com.example.loginpage.service.impl.ReviewService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,45 +11,38 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173")
 public class ReviewController {
 
-    private final ReviewService reviewService;
+    private final ReviewService service;
 
-    @Autowired
-    public ReviewController(ReviewService reviewService) {
-        this.reviewService = reviewService;
+    public ReviewController(ReviewService service) {
+        this.service = service;
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createReview(@RequestBody CreateReviewRequest request) {
-        try {
-            ReviewDTO review = reviewService.createReview(
-                    request.productId(),
-                    request.userId(),
-                    request.rating(),
-                    request.reviewText()
-            );
-            return ResponseEntity.ok(review);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
-        }
+    public Review createReview(@RequestBody CreateRequest request) {
+        return service.createReview(request.productId, request.userId, request.rating, request.reviewText);
     }
 
     @GetMapping("/product/{productId}")
-    public ResponseEntity<?> getProductReviews(@PathVariable String productId) {
-        List<ReviewDTO> reviews = reviewService.getReviewsByProductId(productId);
-        return ResponseEntity.ok(reviews);
+    public List<Review> getProductReviews(@PathVariable String productId) {
+        return service.getReviewsByProductId(productId);
     }
 
     @GetMapping("/product/{productId}/average")
-    public ResponseEntity<?> getAverageRating(@PathVariable String productId) {
-        Double average = reviewService.getAverageRating(productId);
-        return ResponseEntity.ok(average);
+    public Double getAverageRating(@PathVariable String productId) {
+        return service.getAverageRating(productId);
     }
 
     @GetMapping("/product/{productId}/count")
-    public ResponseEntity<?> getReviewCount(@PathVariable String productId) {
-        long count = reviewService.getReviewCount(productId);
-        return ResponseEntity.ok(count);
+    public long getReviewCount(@PathVariable String productId) {
+        return service.getReviewCount(productId);
     }
 
-    public record CreateReviewRequest(String productId, String userId, Integer rating, String reviewText) {}
+    // ========== Inner DTOs ==========
+
+    public static class CreateRequest {
+        public String productId;
+        public String userId;
+        public Integer rating;
+        public String reviewText;
+    }
 }

@@ -12,15 +12,8 @@ public class UserFactory {
             String lastName,
             Role role) {
 
-        if (email == null || email.trim().isEmpty()) {
-            return null;
-        }
 
-        if (password == null || password.trim().isEmpty()) {
-            return null;
-        }
-
-        if (role == null) {
+        if (email.trim().isEmpty() || password.trim().isEmpty() || role == null) {
             return null;
         }
 

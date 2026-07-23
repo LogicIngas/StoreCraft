@@ -1,2 +1,22 @@
-package com.example.loginpage.factory;public class ReviewFactory {
+package com.example.loginpage.factory;
+
+import com.example.loginpage.model.Review;
+
+public class ReviewFactory {
+
+    public static Review createReview(
+            String productId,
+            String userId,
+            Integer rating,
+            String reviewText) {
+
+        if (productId.isEmpty() || userId.isEmpty()) {
+            return null;
+        }
+        if (rating == null || rating < 1 || rating > 5) {
+            return null;
+        }
+
+        return new Review(productId, userId, rating, reviewText);
+    }
 }

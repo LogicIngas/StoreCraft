@@ -16,23 +16,8 @@ public class AddressFactory {
             String country,
             Boolean isDefault) {
 
-        // Return null if any required field is invalid
-        if (userId == null || userId.trim().isEmpty()) {
-            return null;
-        }
-        if (recipientName == null || recipientName.trim().isEmpty()) {
-            return null;
-        }
-        if (streetAddress == null || streetAddress.trim().isEmpty()) {
-            return null;
-        }
-        if (city == null || city.trim().isEmpty()) {
-            return null;
-        }
-        if (postalCode == null || postalCode.trim().isEmpty()) {
-            return null;
-        }
-        if (country == null || country.trim().isEmpty()) {
+
+        if (userId.trim().isEmpty()|| postalCode.trim().isEmpty() || country.trim().isEmpty()|| city.trim().isEmpty() || recipientName.trim().isEmpty()|| streetAddress.trim().isEmpty()) {
             return null;
         }
 
