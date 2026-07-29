@@ -8,7 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/order")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
 public class OrderController {
 
     private final OrderService service;
@@ -51,8 +51,6 @@ public class OrderController {
     public Order getOrderSummary(@PathVariable String orderId) {
         return service.getOrderSummary(orderId);
     }
-
-    // ========== Inner DTOs ==========
 
     public static class CreateOrderRequest {
         public String userId;

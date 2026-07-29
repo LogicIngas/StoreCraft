@@ -8,7 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/address")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
 public class AddressController {
 
     private final AddressService service;
@@ -88,8 +88,6 @@ public class AddressController {
     public long getAddressCount(@PathVariable String userId) {
         return service.getAddressCount(userId);
     }
-
-    // ========== Inner DTOs ==========
 
     public static class CreateAddressRequest {
         public String userId;

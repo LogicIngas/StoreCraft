@@ -8,7 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/review")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
 public class ReviewController {
 
     private final ReviewService service;
@@ -36,8 +36,6 @@ public class ReviewController {
     public long getReviewCount(@PathVariable String productId) {
         return service.getReviewCount(productId);
     }
-
-    // ========== Inner DTOs ==========
 
     public static class CreateRequest {
         public String productId;

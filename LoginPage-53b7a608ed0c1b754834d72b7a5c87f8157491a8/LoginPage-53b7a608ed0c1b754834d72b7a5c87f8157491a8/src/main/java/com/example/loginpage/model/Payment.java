@@ -5,10 +5,6 @@ import org.hibernate.annotations.UuidGenerator;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-/**
- * Payment Entity - Tracks all payment transactions
- * Stores mock and real payment data for auditing
- */
 @Entity
 @Table(name = "payments")
 public class Payment {
@@ -28,31 +24,31 @@ public class Payment {
     private BigDecimal amount;
 
     @Column(name = "currency", length = 3)
-    private String currency; // ZAR, USD, etc.
+    private String currency;
 
     @Column(name = "payment_method", length = 50)
-    private String paymentMethod; // CARD, MOCK, PAYPAL, BANK_TRANSFER
+    private String paymentMethod;
 
     @Column(name = "transaction_id", length = 100)
-    private String transactionId; // Gateway transaction reference
+    private String transactionId;
 
     @Column(name = "status", length = 50)
-    private String status; // PENDING, COMPLETED, FAILED, REFUNDED
+    private String status;
 
     @Column(name = "card_last4", length = 4)
-    private String cardLast4; // Last 4 digits (masked)
+    private String cardLast4;
 
     @Column(name = "card_brand", length = 50)
-    private String cardBrand; // VISA, MASTERCARD, AMEX, MOCK
+    private String cardBrand;
 
     @Column(name = "card_holder_name", length = 100)
     private String cardHolderName;
 
     @Column(name = "error_message", columnDefinition = "TEXT")
-    private String errorMessage; // Error details if payment failed
+    private String errorMessage;
 
     @Column(name = "gateway_response", columnDefinition = "TEXT")
-    private String gatewayResponse; // Raw response from payment gateway
+    private String gatewayResponse;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -60,7 +56,6 @@ public class Payment {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Constructors
     public Payment() {}
 
     public Payment(String orderId, String userId, BigDecimal amount, String currency) {
@@ -74,7 +69,6 @@ public class Payment {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // Getters and Setters
     public String getPaymentId() {
         return paymentId;
     }

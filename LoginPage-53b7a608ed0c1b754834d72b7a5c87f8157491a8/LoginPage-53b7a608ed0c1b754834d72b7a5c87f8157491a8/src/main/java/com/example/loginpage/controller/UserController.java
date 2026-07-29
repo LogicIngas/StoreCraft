@@ -6,9 +6,12 @@ import com.example.loginpage.repository.IRoleRepository;
 import com.example.loginpage.service.impl.UserService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
 public class UserController {
 
     private final UserService service;
@@ -20,7 +23,7 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public UserResponse create(@RequestBody UserRequest request) {
+    public Map<String, Object> create(@RequestBody UserRequest request) {
         String roleName = request.roleName != null ? request.roleName.toUpperCase() : "BUYER";
         Role role = roleRepository.findByName(roleName)
                 .orElseGet(() -> roleRepository.findByName("BUYER").orElse(null));
@@ -38,19 +41,38 @@ public class UserController {
                 .build();
 
         User saved = service.create(user);
-        return new UserResponse(saved);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("userId", saved.getUserId());
+        response.put("email", saved.getEmail());
+        response.put("firstName", saved.getFirstName());
+        response.put("lastName", saved.getLastName());
+        response.put("roleName", saved.getRole().getName());
+        response.put("success", true);
+
+        return response;
     }
 
     @PostMapping("/login")
-    public UserResponse login(@RequestBody LoginRequest request) {
+    public Map<String, Object> login(@RequestBody LoginRequest request) {
         User user = service.findByEmail(request.email);
         if (user == null) {
             throw new RuntimeException("User not found. Please create an account.");
         }
+
         if (!user.getPassword().equals(request.password)) {
             throw new RuntimeException("Invalid email or password.");
         }
-        return new UserResponse(user);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("userId", user.getUserId());
+        response.put("email", user.getEmail());
+        response.put("firstName", user.getFirstName());
+        response.put("lastName", user.getLastName());
+        response.put("roleName", user.getRole().getName());
+        response.put("success", true);
+
+        return response;
     }
 
     @GetMapping("/read/{id}")
@@ -63,8 +85,6 @@ public class UserController {
         return service.delete(id);
     }
 
-    // ========== Inner DTOs ==========
-
     public static class UserRequest {
         public String email;
         public String password;
@@ -76,21 +96,5 @@ public class UserController {
     public static class LoginRequest {
         public String email;
         public String password;
-    }
-
-    public static class UserResponse {
-        public String userId;
-        public String email;
-        public String firstName;
-        public String lastName;
-        public String roleName;
-
-        public UserResponse(User user) {
-            this.userId = user.getUserId();
-            this.email = user.getEmail();
-            this.firstName = user.getFirstName();
-            this.lastName = user.getLastName();
-            this.roleName = user.getRole().getName();
-        }
     }
 }

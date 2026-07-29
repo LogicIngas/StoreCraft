@@ -1,7 +1,6 @@
 package com.example.loginpage.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.UuidGenerator;
 import java.time.LocalDateTime;
 
 @Entity
@@ -9,40 +8,33 @@ import java.time.LocalDateTime;
 public class CartItem {
 
     @Id
-    @UuidGenerator
-    @Column(name = "cart_item_id", updatable = false, nullable = false)
-    private String cartItemId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cart_item_id")
+    private Long cartItemId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    // FIX: Added mandatory @ManyToOne relationship to Product for the INSERT to work
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @Column(name = "quantity", nullable = false)
-    private Integer quantity;
+    @Column(name = "quantity")
+    private int quantity;
 
-    @Column(name = "added_at", nullable = false, updatable = false)
+    @Column(name = "added_at")
     private LocalDateTime addedAt;
 
-    // Constructors
-    public CartItem() {}
-
-    public CartItem(Cart cart, Product product, Integer quantity) {
-        this.cart = cart;
-        this.product = product;
-        this.quantity = quantity;
-        this.addedAt = LocalDateTime.now();
+    public CartItem() {
     }
 
-    // Getters and Setters
-    public String getCartItemId() {
+    public Long getCartItemId() {
         return cartItemId;
     }
 
-    public void setCartItemId(String cartItemId) {
+    public void setCartItemId(Long cartItemId) {
         this.cartItemId = cartItemId;
     }
 
@@ -62,11 +54,11 @@ public class CartItem {
         this.product = product;
     }
 
-    public Integer getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 

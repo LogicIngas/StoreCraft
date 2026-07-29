@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/cart")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
 public class CartController {
 
     private final CartService service;
@@ -44,8 +44,6 @@ public class CartController {
     public Integer getCartCount(@PathVariable String userId) {
         return service.getCartItemCount(userId);
     }
-
-    // ========== Inner DTOs ==========
 
     public static class AddToCartRequest {
         public String userId;

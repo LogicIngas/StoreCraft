@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -37,6 +38,7 @@ public class OrderService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         Order order = new Order(userId, totalAmount, shippingAddress);
+        order.setCreatedAt(LocalDateTime.now());
 
         for (CartItem cartItem : cart.getCartItems()) {
             OrderItem orderItem = new OrderItem(

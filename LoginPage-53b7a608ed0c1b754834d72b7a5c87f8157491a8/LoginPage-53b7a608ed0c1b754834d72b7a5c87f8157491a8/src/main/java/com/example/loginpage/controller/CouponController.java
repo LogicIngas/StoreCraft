@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/coupon")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
 public class CouponController {
 
     private final CouponService service;
@@ -26,8 +26,6 @@ public class CouponController {
     public Coupon applyCoupon(@PathVariable String orderId, @RequestBody ApplyRequest request) {
         return service.applyCoupon(orderId, request.couponCode);
     }
-
-    // ========== Inner DTOs ==========
 
     public static class ValidateRequest {
         public String code;

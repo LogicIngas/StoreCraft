@@ -26,7 +26,7 @@ public class Order {
     private BigDecimal totalAmount;
 
     @Column(name = "status")
-    private String status; // PENDING, CONFIRMED, SHIPPED, DELIVERED
+    private String status;
 
     @Column(name = "shipping_address", columnDefinition = "TEXT")
     private String shippingAddress;
@@ -37,7 +37,6 @@ public class Order {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Constructors
     public Order() {}
 
     public Order(String userId, BigDecimal totalAmount, String shippingAddress) {
@@ -49,7 +48,6 @@ public class Order {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // Getters and Setters
     public String getOrderId() {
         return orderId;
     }

@@ -6,16 +6,13 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.nio.file.Paths;
+import java.io.File;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Value("${frontend.url:http://localhost:5173}")
     private String frontendUrl;
-
-    @Value("${file.upload-dir:uploads}")
-    private String uploadDir;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -29,40 +26,22 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        try {
-            // ✅ Get absolute path to uploads directory
-            String absolutePath = Paths.get(uploadDir).toAbsolutePath().toString();
+        // YOUR EXACT UPLOADS FOLDER PATH
+        String absoluteUploadPath = "C:/Users/mbobo/Documents/GitHub/Project3WebProject/uploads/";
 
-            // ✅ Create proper file:// URL
-            String fileUri;
-            if (System.getProperty("os.name").toLowerCase().contains("win")) {
-                // Windows: file:///C:/path/to/uploads
-                fileUri = "file:///" + absolutePath.replace("\\", "/");
-            } else {
-                // Linux/Mac: file:///path/to/uploads
-                fileUri = "file://" + absolutePath;
-            }
+        File uploadDir = new File(absoluteUploadPath);
 
-            System.out.println("\n═══════════════════════════════════════════════════════");
-            System.out.println("📁 IMAGE SERVING CONFIGURATION");
-            System.out.println("═══════════════════════════════════════════════════════");
-            System.out.println("📂 Upload directory (from config): " + uploadDir);
-            System.out.println("📂 Absolute path: " + absolutePath);
-            System.out.println("📂 File URI: " + fileUri);
-            System.out.println("🌐 Web endpoint: http://localhost:8080/images/**");
-            System.out.println("🌐 Frontend CORS: " + frontendUrl);
-            System.out.println("═══════════════════════════════════════════════════════\n");
+        // Print to console to confirm it finds the folder
+        System.out.println("\n═══════════════════════════════════════════════════════");
+        System.out.println("📁 IMAGE SERVING DIRECTORY CHECK");
+        System.out.println("═══════════════════════════════════════════════════════");
+        System.out.println("Looking for images at: " + absoluteUploadPath);
+        System.out.println("Does this folder exist on disk? " + uploadDir.exists());
+        System.out.println("═══════════════════════════════════════════════════════\n");
 
-            registry.addResourceHandler("/images/**")
-                    .addResourceLocations(fileUri)
-                    .setCachePeriod(0)  // No caching for development
-                    .resourceChain(true);
-
-            System.out.println("✅ Image handler registered successfully!\n");
-
-        } catch (Exception e) {
-            System.err.println("❌ ERROR configuring image handler: " + e.getMessage());
-            e.printStackTrace();
-        }
+        // This maps your physical C:/drive folder to the URL
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations("file:" + absoluteUploadPath)
+                .setCachePeriod(3600);
     }
 }

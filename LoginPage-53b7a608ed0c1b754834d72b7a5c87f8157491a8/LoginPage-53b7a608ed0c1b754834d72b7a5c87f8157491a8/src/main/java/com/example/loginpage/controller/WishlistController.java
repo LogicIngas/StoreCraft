@@ -8,7 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/wishlist")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
 public class WishlistController {
 
     private final WishlistService service;
@@ -46,8 +46,6 @@ public class WishlistController {
     public long getWishlistCount(@PathVariable String userId) {
         return service.getWishlistCount(userId);
     }
-
-    // ========== Inner DTOs ==========
 
     public static class AddRequest {
         public String userId;

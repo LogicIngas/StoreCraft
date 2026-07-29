@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/payment")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
 public class PaymentController {
 
     private final PaymentService service;
@@ -63,8 +63,6 @@ public class PaymentController {
     public boolean verifyPayment(@PathVariable String paymentId) {
         return service.verifyPayment(paymentId);
     }
-
-    // ========== Inner DTOs ==========
 
     public static class CheckoutRequest {
         public String userId;
