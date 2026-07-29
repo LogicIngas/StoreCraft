@@ -9,11 +9,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ICartItemRepository extends JpaRepository<CartItem, String> {
+public interface ICartItemRepository extends JpaRepository<CartItem, String> {  // ✅ String, not Long
 
-    /**
-     * Find cart item by cart ID and product ID
-     */
     @Query("SELECT ci FROM CartItem ci WHERE ci.cart.cartId = :cartId AND ci.product.productId = :productId")
     Optional<CartItem> findByCartIdAndProductId(@Param("cartId") String cartId, @Param("productId") String productId);
 }

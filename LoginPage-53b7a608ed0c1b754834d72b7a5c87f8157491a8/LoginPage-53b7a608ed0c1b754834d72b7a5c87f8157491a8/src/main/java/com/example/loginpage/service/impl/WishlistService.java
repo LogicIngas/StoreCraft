@@ -20,6 +20,7 @@ public class WishlistService {
 
     @Transactional(readOnly = true)
     public List<Wishlist> getWishlistByUserId(String userId) {
+        // ✅ JPA will automatically fetch the Product due to EAGER fetch
         return wishlistRepository.findByUserId(userId);
     }
 

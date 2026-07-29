@@ -1,6 +1,7 @@
 package com.example.loginpage.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.UuidGenerator;
 import java.time.LocalDateTime;
 
 @Entity
@@ -8,33 +9,34 @@ import java.time.LocalDateTime;
 public class CartItem {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cart_item_id")
-    private Long cartItemId;
+    @UuidGenerator
+    @Column(name = "cart_item_id", updatable = false, nullable = false)
+    private String cartItemId;  // ✅ MUST be String, not Long
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;
 
-    // FIX: Added mandatory @ManyToOne relationship to Product for the INSERT to work
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)  // ✅ EAGER so product loads with cart
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @Column(name = "quantity")
+    @Column(name = "quantity", nullable = false)
     private int quantity;
 
     @Column(name = "added_at")
     private LocalDateTime addedAt;
 
     public CartItem() {
+        this.addedAt = LocalDateTime.now();
     }
 
-    public Long getCartItemId() {
+    // Getters and Setters
+    public String getCartItemId() {
         return cartItemId;
     }
 
-    public void setCartItemId(Long cartItemId) {
+    public void setCartItemId(String cartItemId) {
         this.cartItemId = cartItemId;
     }
 
@@ -68,5 +70,12 @@ public class CartItem {
 
     public void setAddedAt(LocalDateTime addedAt) {
         this.addedAt = addedAt;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (addedAt == null) {
+            addedAt = LocalDateTime.now();
+        }
     }
 }

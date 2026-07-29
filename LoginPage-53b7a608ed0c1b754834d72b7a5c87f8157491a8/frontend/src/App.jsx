@@ -175,34 +175,37 @@ export default function App() {
     };
 
     const handleAddToCart = async (productId) => {
-        if (!currentUser) {
-            showStatus('❌ Please log in to add items to cart', 'error');
-            return;
-        }
+    if (!currentUser) {
+        showStatus('❌ Please log in to add items to cart', 'error');
+        return;
+    }
 
-        try {
-            const response = await apiRequest('/cart/add', {
-                method: 'POST',
-                body: JSON.stringify({
-                    userId: currentUser.userId,
-                    productId: productId,
-                    quantity: 1,
-                }),
-            });
+    try {
+        console.log('Adding to cart:', { userId: currentUser.userId, productId, quantity: 1 });
+        
+        const response = await apiRequest('/cart/add', {
+            method: 'POST',
+            body: JSON.stringify({
+                userId: currentUser.userId,
+                productId: productId,
+                quantity: 1,
+            }),
+        });
 
-            if (response.ok) {
-                const cartData = await response.json();
-                setCart(cartData);
-                showStatus('✅ Added to cart!', 'success');
-            } else {
-                const errorData = await response.json().catch(() => ({}));
-                showStatus(`❌ ${errorData.message || 'Failed to add to cart'}`, 'error');
-            }
-        } catch (error) {
-            showStatus('❌ Error adding to cart', 'error');
-            console.error('Add to cart error:', error);
+        const data = await response.json();
+        console.log('Cart response:', data);
+
+        if (response.ok) {
+            setCart(data);
+            showStatus('✅ Added to cart!', 'success');
+        } else {
+            showStatus(`❌ ${data.message || 'Failed to add to cart'}`, 'error');
         }
-    };
+    } catch (error) {
+        console.error('Add to cart error:', error);
+        showStatus('❌ Error adding to cart', 'error');
+    }
+};
 
     const handleRemoveFromCart = async (cartItemId) => {
         if (!currentUser) return;

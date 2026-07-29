@@ -3,16 +3,21 @@ package com.example.loginpage.service.impl;
 import com.example.loginpage.model.Cart;
 import com.example.loginpage.model.CartItem;
 import com.example.loginpage.model.Product;
-import com.example.loginpage.repository.ICartItemRepository;
 import com.example.loginpage.repository.ICartRepository;
+import com.example.loginpage.repository.ICartItemRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Service
 public class CartService {
+
+    private static final Logger logger = LoggerFactory.getLogger(CartService.class);
 
     private final ICartRepository cartRepository;
     private final ICartItemRepository cartItemRepository;
@@ -42,34 +47,61 @@ public class CartService {
 
     @Transactional
     public Cart addToCart(String userId, String productId, Integer quantity) {
+        logger.info("=== ADD TO CART ===");
+        logger.info("userId: {}, productId: {}, quantity: {}", userId, productId, quantity);
+
+        // Validate product
         Product product = productService.getProductEntity(productId);
         if (product == null) {
+            logger.error("Product not found: {}", productId);
             throw new RuntimeException("Product not found: " + productId);
         }
+        logger.info("Product found: {}", product.getName());
+
         if (product.getStockQuantity() < quantity) {
+            logger.error("Insufficient stock. Available: {}, Requested: {}", product.getStockQuantity(), quantity);
             throw new RuntimeException("Insufficient stock for product: " + productId);
         }
 
+        // Get or create cart
         Cart cart = getOrCreateCart(userId);
+        logger.info("Cart ID: {}", cart.getCartId());
 
-        CartItem existingItem = cart.getCartItems().stream()
-                .filter(item -> item.getProduct().getProductId().equals(productId))
-                .findFirst()
-                .orElse(null);
+        // Check if product already in cart
+        CartItem existingItem = null;
+        for (CartItem item : cart.getCartItems()) {
+            if (item.getProduct().getProductId().equals(productId)) {
+                existingItem = item;
+                break;
+            }
+        }
 
         if (existingItem != null) {
+            // Update existing item
+            logger.info("Updating existing cart item. Current quantity: {}", existingItem.getQuantity());
             existingItem.setQuantity(existingItem.getQuantity() + quantity);
             cartItemRepository.save(existingItem);
         } else {
+            // Create new cart item
+            logger.info("Creating new cart item");
             CartItem newItem = new CartItem();
             newItem.setCart(cart);
             newItem.setProduct(product);
             newItem.setQuantity(quantity);
-            cart.getCartItems().add(newItem);
-            cartItemRepository.save(newItem);
+            newItem.setAddedAt(LocalDateTime.now());
+            
+            // Save the cart item
+            CartItem savedItem = cartItemRepository.save(newItem);
+            logger.info("Saved cart item ID: {}", savedItem.getCartItemId());
+            
+            // Add to cart's collection
+            cart.getCartItems().add(savedItem);
         }
 
-        return cartRepository.save(cart);
+        // Save and return the cart
+        Cart savedCart = cartRepository.save(cart);
+        logger.info("Cart saved. Total items: {}", savedCart.getCartItems().size());
+        return savedCart;
     }
 
     @Transactional

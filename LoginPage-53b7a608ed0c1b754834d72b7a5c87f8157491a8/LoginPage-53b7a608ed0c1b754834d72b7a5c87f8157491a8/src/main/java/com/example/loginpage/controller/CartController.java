@@ -2,6 +2,8 @@ package com.example.loginpage.controller;
 
 import com.example.loginpage.model.Cart;
 import com.example.loginpage.service.impl.CartService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -9,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
 public class CartController {
 
+    private static final Logger logger = LoggerFactory.getLogger(CartController.class);
+    
     private final CartService service;
 
     public CartController(CartService service) {
@@ -17,12 +21,24 @@ public class CartController {
 
     @GetMapping("/{userId}")
     public Cart getCart(@PathVariable String userId) {
+        logger.info("Getting cart for user: {}", userId);
         return service.getCartByUserId(userId);
     }
 
     @PostMapping("/add")
     public Cart addToCart(@RequestBody AddToCartRequest request) {
-        return service.addToCart(request.userId, request.productId, request.quantity);
+        logger.info("=== RECEIVED ADD TO CART REQUEST ===");
+        logger.info("userId: {}, productId: {}, quantity: {}", 
+            request.userId, request.productId, request.quantity);
+        
+        try {
+            Cart result = service.addToCart(request.userId, request.productId, request.quantity);
+            logger.info("Successfully added to cart. Cart ID: {}", result.getCartId());
+            return result;
+        } catch (Exception e) {
+            logger.error("Error adding to cart: {}", e.getMessage(), e);
+            throw e;
+        }
     }
 
     @PutMapping("/update/{cartItemId}")

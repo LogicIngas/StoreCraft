@@ -27,7 +27,6 @@ public class Cart {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Constructors
     public Cart() {}
 
     public Cart(String userId) {
@@ -63,7 +62,7 @@ public class Cart {
 
     public void addCartItem(CartItem cartItem) {
         cartItems.add(cartItem);
-        cartItem.setCart(this);  // ✅ This sets the bidirectional relationship
+        cartItem.setCart(this);
     }
 
     public void removeCartItem(CartItem cartItem) {
