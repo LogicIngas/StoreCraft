@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-/**
- * Orders Page Component
- */
 export default function OrdersPage({ userId }) {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -22,7 +19,9 @@ export default function OrdersPage({ userId }) {
             }
         };
 
-        loadOrders();
+        if (userId) {
+            loadOrders();
+        }
     }, [userId]);
 
     if (loading) return <div className="loading">Loading orders...</div>;
@@ -56,15 +55,15 @@ export default function OrdersPage({ userId }) {
                             </p>
                         </div>
                         <span className={`order-status ${order.status.toLowerCase()}`}>
-              {order.status}
-            </span>
+                            {order.status}
+                        </span>
                     </div>
                     <div className="order-items">
-                        {order.items.map(item => (
+                        {order.orderItems && order.orderItems.map(item => (
                             <div key={item.orderItemId} className="order-item">
-                                <span>{item.productName}</span>
+                                <span>{item.product ? item.product.name : 'Product'}</span>
                                 <span>x{item.quantity}</span>
-                                <span>R {item.subtotal}</span>
+                                <span>R {item.unitPrice * item.quantity}</span>
                             </div>
                         ))}
                     </div>

@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
+import NotificationBell from './NotificationBell';
+import LiveChat from './LiveChat';
 
 export default function Navbar({
-                                   currentUser,
-                                   currentPage,
-                                   setCurrentPage,
-                                   cartCount,
-                                   wishlistCount,
-                                   setShowAddressManager,
-                                   handleLogout,
-                                   isSeller
-                               }) {
+    currentUser,
+    currentPage,
+    setCurrentPage,
+    cartCount,
+    wishlistCount,
+    setShowAddressManager,
+    handleLogout,
+    isSeller
+}) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [notificationCount, setNotificationCount] = useState(0);
 
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -45,24 +48,28 @@ export default function Navbar({
                     >
                         🏠 Storefront
                     </button>
+
                     <button
                         onClick={() => handleNavClick('cart')}
                         className={`nav-button ${currentPage === 'cart' ? 'active' : ''}`}
                     >
                         🛒 Cart <span className="badge">{cartCount}</span>
                     </button>
+
                     <button
                         onClick={() => handleNavClick('wishlist')}
                         className={`nav-button ${currentPage === 'wishlist' ? 'active' : ''}`}
                     >
                         ❤️ Wishlist <span className="badge">{wishlistCount}</span>
                     </button>
+
                     <button
                         onClick={() => handleNavClick('orders')}
                         className={`nav-button ${currentPage === 'orders' ? 'active' : ''}`}
                     >
                         📋 Orders
                     </button>
+
                     <button
                         onClick={() => {
                             setShowAddressManager(true);
@@ -72,6 +79,7 @@ export default function Navbar({
                     >
                         📍 Addresses
                     </button>
+
                     {isSeller && (
                         <button
                             onClick={() => handleNavClick('upload')}
@@ -80,7 +88,24 @@ export default function Navbar({
                             📤 Upload
                         </button>
                     )}
-                    <span className="user-role-badge">{currentUser.roleName}</span>
+
+                    {/* ✅ Notification Bell */}
+                    <NotificationBell
+                        userId={currentUser?.userId}
+                        onNotificationCountChange={setNotificationCount}
+                    />
+
+                    {/* ✅ Live Chat */}
+                    <LiveChat
+                        userId={currentUser?.userId}
+                        userName={`${currentUser?.firstName} ${currentUser?.lastName}`}
+                        userRole={currentUser?.roleName}
+                    />
+
+                    <span className="user-role-badge">
+                        {currentUser.roleName}
+                    </span>
+
                     <button
                         onClick={handleLogout}
                         className="logout-button"
