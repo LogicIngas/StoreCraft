@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 
 /**
  * Orders Page Component
+ * ✅ FIXED: Properly unwraps ApiResponseDTO from the new OrderController,
+ * and reads the field names that OrderDTO/OrderItemDTO actually use
+ * (items, unitPrice) instead of the old raw-entity names
+ * (orderItems, subtotal).
  */
 export default function OrdersPage({ userId }) {
     const [orders, setOrders] = useState([]);
@@ -13,10 +17,15 @@ export default function OrdersPage({ userId }) {
                 const response = await fetch(`http://localhost:8080/order/user/${userId}`);
                 if (response.ok) {
                     const data = await response.json();
-                    setOrders(data);
+                    // ApiResponseDTO shape: { success, message, data: [...orders], timestamp }
+                    setOrders(data.data || []);
+                } else {
+                    console.error('Failed to load orders:', response.status);
+                    setOrders([]);
                 }
             } catch (error) {
                 console.error('Error loading orders:', error);
+                setOrders([]);
             } finally {
                 setLoading(false);
             }
@@ -27,7 +36,7 @@ export default function OrdersPage({ userId }) {
 
     if (loading) return <div className="loading">Loading orders...</div>;
 
-    if (orders.length === 0) {
+    if (!orders || orders.length === 0) {
         return (
             <div className="empty-state">
                 <div className="empty-state-icon">📋</div>
@@ -44,32 +53,41 @@ export default function OrdersPage({ userId }) {
                 <div key={order.orderId} className="order-card">
                     <div className="order-header">
                         <div>
-                            <h3>Order #{order.orderId.substring(0, 8)}</h3>
+                            <h3>Order #{order.orderId?.substring(0, 8) || 'N/A'}</h3>
                             <p className="order-date">
-                                {new Date(order.createdAt).toLocaleDateString('en-ZA', {
+                                {order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-ZA', {
                                     year: 'numeric',
                                     month: 'long',
                                     day: 'numeric',
                                     hour: '2-digit',
                                     minute: '2-digit'
-                                })}
+                                }) : 'Date not available'}
                             </p>
                         </div>
-                        <span className={`order-status ${order.status.toLowerCase()}`}>
-              {order.status}
-            </span>
+                        <span className={`order-status ${order.status?.toLowerCase() || ''}`}>
+                            {order.status || 'Unknown'}
+                        </span>
                     </div>
                     <div className="order-items">
-                        {order.items.map(item => (
-                            <div key={item.orderItemId} className="order-item">
-                                <span>{item.productName}</span>
-                                <span>x{item.quantity}</span>
-                                <span>R {item.subtotal}</span>
-                            </div>
-                        ))}
+                        {order.items && order.items.length > 0 ? (
+                            order.items.map(item => (
+                                <div key={item.orderItemId || Math.random()} className="order-item">
+                                    <span>{item.productName || 'Product'}</span>
+                                    <span>x{item.quantity || 0}</span>
+                                    <span>R {(item.subtotal ?? 0).toFixed(2)}</span>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="no-items">No items in this order</p>
+                        )}
                     </div>
+                    {order.shippingAddress && (
+                        <div className="order-shipping">
+                            <p><strong>📍 Shipping Address:</strong> {order.shippingAddress}</p>
+                        </div>
+                    )}
                     <div className="order-total">
-                        <strong>Total: R {order.totalAmount}</strong>
+                        <strong>Total: R {(order.totalAmount ?? 0).toFixed(2)}</strong>
                     </div>
                 </div>
             ))}
