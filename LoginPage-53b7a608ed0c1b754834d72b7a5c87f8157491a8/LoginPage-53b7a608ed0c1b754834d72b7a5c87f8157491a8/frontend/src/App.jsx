@@ -15,6 +15,7 @@ import PaymentCheckout from './PaymentCheckout';
 import StatusBanner from './components/StatusBanner';
 import Footer from './Footer';
 import LandingPage from './LandingPage';
+import AdminDashboard from './AdminDashboard';
 
 export default function App() {
   // State
@@ -31,7 +32,6 @@ export default function App() {
   const [statusType, setStatusType] = useState('');
   const [shippingAddress, setShippingAddress] = useState('');
   const [showCheckout, setShowCheckout] = useState(false);
-  const [showAddressManager, setShowAddressManager] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -43,6 +43,10 @@ export default function App() {
       setCurrentUser(user);
       loadUserData(user.userId);
       loadDefaultAddress(user.userId);
+      // If admin, default to admin dashboard
+      if (user.roleName === 'ADMIN') {
+        setCurrentPage('admin');
+      }
     }
   }, []);
 
@@ -80,7 +84,6 @@ export default function App() {
 
   const loadUserData = async (userId) => {
     try {
-      // Cart
       const cartResponse = await fetch(`http://localhost:8080/cart/${userId}`);
       if (cartResponse.ok) {
         const cartData = await cartResponse.json();
@@ -89,7 +92,6 @@ export default function App() {
         setCart({ cartId: '', userId, items: [], total: 0 });
       }
 
-      // Wishlist
       const wishlistResponse = await fetch(`http://localhost:8080/api/wishlist/user/${userId}`);
       if (wishlistResponse.ok) {
         const wishlistData = await wishlistResponse.json();
@@ -102,11 +104,9 @@ export default function App() {
 
   const loadDefaultAddress = async (userId) => {
     try {
-      console.log(`Loading default address for user: ${userId}`);
       const response = await fetch(`http://localhost:8080/address/user/${userId}/default`);
       if (response.ok) {
         const address = await response.json();
-        console.log('Default address loaded:', address);
         if (address) {
           const formatted = `${address.streetAddress}, ${address.city}, ${address.stateProvince || ''} ${address.postalCode}, ${address.country}`;
           setShippingAddress(formatted);
@@ -114,7 +114,6 @@ export default function App() {
           setShippingAddress('');
         }
       } else {
-        console.warn('No default address found, status:', response.status);
         setShippingAddress('');
       }
     } catch (error) {
@@ -125,7 +124,6 @@ export default function App() {
 
   // ---------- Handlers ----------
   const handleLogin = async (email, password) => {
-    console.log('Login attempt with:', email);
     try {
       setLoading(true);
       const response = await fetch('http://localhost:8080/user/login', {
@@ -134,7 +132,6 @@ export default function App() {
         body: JSON.stringify({ email, password }),
       });
       const data = await response.json();
-      console.log('Login response:', data);
       if (!response.ok) {
         showStatus(data.message || 'Login failed', 'error');
         return;
@@ -143,18 +140,21 @@ export default function App() {
       localStorage.setItem('currentUser', JSON.stringify(data));
       await loadUserData(data.userId);
       await loadDefaultAddress(data.userId);
-      setCurrentPage('storefront');
+      if (data.roleName === 'ADMIN') {
+        setCurrentPage('admin');
+      } else {
+        setCurrentPage('storefront');
+      }
       showStatus('✅ Login successful! Welcome to AfriConnect!', 'success');
     } catch (error) {
-      console.error('Login error:', error);
       showStatus('❌ Login failed. Please try again.', 'error');
+      console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleRegister = async (email, password, firstName, lastName, roleName) => {
-    console.log('Register attempt with:', email);
     try {
       setLoading(true);
       const response = await fetch('http://localhost:8080/user/create', {
@@ -163,7 +163,6 @@ export default function App() {
         body: JSON.stringify({ email, password, firstName, lastName, roleName }),
       });
       const data = await response.json();
-      console.log('Register response:', data);
       if (!response.ok) {
         showStatus(data.message || 'Registration failed', 'error');
         return;
@@ -172,11 +171,15 @@ export default function App() {
       localStorage.setItem('currentUser', JSON.stringify(data));
       await loadUserData(data.userId);
       await loadDefaultAddress(data.userId);
-      setCurrentPage('storefront');
+      if (data.roleName === 'ADMIN') {
+        setCurrentPage('admin');
+      } else {
+        setCurrentPage('storefront');
+      }
       showStatus('✅ Account created! Welcome to AfriConnect!', 'success');
     } catch (error) {
-      console.error('Register error:', error);
       showStatus('❌ Registration failed. Please try again.', 'error');
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -195,6 +198,10 @@ export default function App() {
   const handleAddToCart = async (productId) => {
     if (!currentUser) {
       showStatus('❌ Please log in to add items to cart', 'error');
+      return;
+    }
+    if (currentUser.roleName === 'ADMIN') {
+      showStatus('❌ Admins cannot add items to cart', 'error');
       return;
     }
     try {
@@ -254,6 +261,10 @@ export default function App() {
       showStatus('❌ Please log in to add to wishlist', 'error');
       return;
     }
+    if (currentUser.roleName === 'ADMIN') {
+      showStatus('❌ Admins cannot use wishlist', 'error');
+      return;
+    }
     try {
       const response = await fetch('http://localhost:8080/api/wishlist/add', {
         method: 'POST',
@@ -298,7 +309,6 @@ export default function App() {
 
     try {
       setIsProcessing(true);
-      // If user wants to save this address, create/update address
       if (saveAddress && addressData) {
         await saveShippingAddress(addressData);
       }
@@ -384,6 +394,9 @@ export default function App() {
     );
   }
 
+  const isAdmin = currentUser.roleName === 'ADMIN';
+  const isSeller = currentUser.roleName === 'SELLER';
+
   return (
     <div className="app-wrapper">
       <StatusBanner message={statusMessage} type={statusType} />
@@ -393,12 +406,16 @@ export default function App() {
         setCurrentPage={setCurrentPage}
         cartCount={cart?.items?.length || 0}
         wishlistCount={wishlist?.length || 0}
-        setShowAddressManager={setShowAddressManager}
         handleLogout={handleLogout}
-        isSeller={currentUser.roleName === 'SELLER'}
+        isSeller={isSeller}
+        isAdmin={isAdmin}
       />
       <main className="main-content">
-        {currentPage === 'storefront' && (
+        {currentPage === 'admin' && isAdmin && (
+          <AdminDashboard userId={currentUser.userId} />
+        )}
+
+        {currentPage === 'storefront' && !isAdmin && (
           <Storefront
             products={products}
             filteredProducts={filteredProducts}
@@ -412,9 +429,11 @@ export default function App() {
             onAddToWishlist={handleAddToWishlist}
             onRemoveFromWishlist={handleRemoveFromWishlist}
             wishlist={wishlist}
+            isAdmin={isAdmin}
           />
         )}
-        {currentPage === 'cart' && (
+
+        {currentPage === 'cart' && !isAdmin && (
           <CartPage
             cart={cart}
             onRemove={handleRemoveFromCart}
@@ -422,7 +441,8 @@ export default function App() {
             onCheckout={() => setShowCheckout(true)}
           />
         )}
-        {currentPage === 'wishlist' && (
+
+        {currentPage === 'wishlist' && !isAdmin && (
           <WishlistPage
             wishlist={wishlist}
             onAddToCart={handleAddToCart}
@@ -430,11 +450,27 @@ export default function App() {
             setCurrentPage={setCurrentPage}
           />
         )}
-        {currentPage === 'orders' && <OrdersPage userId={currentUser.userId} />}
-        {currentPage === 'upload' && currentUser.roleName === 'SELLER' && (
+
+        {currentPage === 'orders' && !isAdmin && (
+          <OrdersPage userId={currentUser.userId} />
+        )}
+
+        {currentPage === 'upload' && isSeller && (
           <UploadProduct onProductAdded={() => loadProducts()} />
         )}
-        {showCheckout && (
+
+        {currentPage === 'addresses' && (
+          <AddressManager
+            userId={currentUser.userId}
+            onClose={() => {
+              setCurrentPage(isAdmin ? 'admin' : 'storefront');
+              loadDefaultAddress(currentUser.userId);
+            }}
+            standalone={true}
+          />
+        )}
+
+        {showCheckout && !isAdmin && (
           <PaymentCheckout
             cart={cart}
             shippingAddress={shippingAddress}
@@ -444,15 +480,6 @@ export default function App() {
             isProcessing={isProcessing}
             userId={currentUser.userId}
             onAddressSaved={loadDefaultAddress}
-          />
-        )}
-        {showAddressManager && (
-          <AddressManager
-            userId={currentUser.userId}
-            onClose={() => {
-              setShowAddressManager(false);
-              loadDefaultAddress(currentUser.userId);
-            }}
           />
         )}
       </main>
