@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-/**
- * Orders Page Component
- * ✅ FIXED: Properly unwraps ApiResponseDTO from the new OrderController,
- * and reads the field names that OrderDTO/OrderItemDTO actually use
- * (items, unitPrice) instead of the old raw-entity names
- * (orderItems, subtotal).
- */
 export default function OrdersPage({ userId }) {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -17,8 +10,8 @@ export default function OrdersPage({ userId }) {
                 const response = await fetch(`http://localhost:8080/order/user/${userId}`);
                 if (response.ok) {
                     const data = await response.json();
-                    // ApiResponseDTO shape: { success, message, data: [...orders], timestamp }
-                    setOrders(data.data || []);
+                    // data is now a List<OrderDTO> directly
+                    setOrders(data || []);
                 } else {
                     console.error('Failed to load orders:', response.status);
                     setOrders([]);

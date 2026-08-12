@@ -26,7 +26,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // YOUR EXACT UPLOADS FOLDER PATH
+        // YOUR EXACT UPLOADS FOLDER PATH later we can change it to a relative path or use a property file to make it more flexible
         String absoluteUploadPath = "C:/Users/mbobo/Documents/GitHub/Project3WebProject/uploads/";
 
         File uploadDir = new File(absoluteUploadPath);

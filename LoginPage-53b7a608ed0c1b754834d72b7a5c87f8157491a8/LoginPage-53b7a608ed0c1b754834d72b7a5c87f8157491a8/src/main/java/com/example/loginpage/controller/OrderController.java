@@ -1,10 +1,14 @@
 package com.example.loginpage.controller;
 
+import com.example.loginpage.dto.OrderDTO;
+import com.example.loginpage.dto.OrderItemDTO;
 import com.example.loginpage.model.Order;
+import com.example.loginpage.model.OrderItem;
 import com.example.loginpage.service.impl.OrderService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/order")
@@ -18,40 +22,80 @@ public class OrderController {
     }
 
     @PostMapping("/create")
-    public Order createOrder(@RequestBody CreateOrderRequest request) {
-        return service.createOrderFromCart(request.userId, request.shippingAddress);
+    public OrderDTO createOrder(@RequestBody CreateOrderRequest request) {
+        Order order = service.createOrderFromCart(request.userId, request.shippingAddress);
+        return convertToOrderDTO(order);
     }
 
     @GetMapping("/{orderId}")
-    public Order getOrder(@PathVariable String orderId) {
-        return service.getOrderById(orderId);
+    public OrderDTO getOrder(@PathVariable String orderId) {
+        Order order = service.getOrderById(orderId);
+        return convertToOrderDTO(order);
     }
 
     @GetMapping("/user/{userId}")
-    public List<Order> getOrdersByUser(@PathVariable String userId) {
-        return service.getOrdersByUserId(userId);
+    public List<OrderDTO> getOrdersByUser(@PathVariable String userId) {
+        List<Order> orders = service.getOrdersByUserId(userId);
+        return orders.stream()
+                .map(this::convertToOrderDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/status/{status}")
-    public List<Order> getOrdersByStatus(@PathVariable String status) {
-        return service.getOrdersByStatus(status);
+    public List<OrderDTO> getOrdersByStatus(@PathVariable String status) {
+        List<Order> orders = service.getOrdersByStatus(status);
+        return orders.stream()
+                .map(this::convertToOrderDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/user/{userId}/status/{status}")
-    public List<Order> getOrdersByUserAndStatus(@PathVariable String userId, @PathVariable String status) {
-        return service.getOrdersByUserIdAndStatus(userId, status);
+    public List<OrderDTO> getOrdersByUserAndStatus(@PathVariable String userId,
+                                                   @PathVariable String status) {
+        List<Order> orders = service.getOrdersByUserIdAndStatus(userId, status);
+        return orders.stream()
+                .map(this::convertToOrderDTO)
+                .collect(Collectors.toList());
     }
 
     @PutMapping("/{orderId}/status")
-    public Order updateOrderStatus(@PathVariable String orderId, @RequestBody StatusRequest request) {
-        return service.updateOrderStatus(orderId, request.status);
+    public OrderDTO updateOrderStatus(@PathVariable String orderId, @RequestBody StatusRequest request) {
+        Order order = service.updateOrderStatus(orderId, request.status);
+        return convertToOrderDTO(order);
     }
 
     @GetMapping("/summary/{orderId}")
-    public Order getOrderSummary(@PathVariable String orderId) {
-        return service.getOrderSummary(orderId);
+    public OrderDTO getOrderSummary(@PathVariable String orderId) {
+        Order order = service.getOrderSummary(orderId);
+        return convertToOrderDTO(order);
     }
 
+    // ---------- Conversion Helper ----------
+    private OrderDTO convertToOrderDTO(Order order) {
+        if (order == null) return null;
+        List<OrderItemDTO> itemDTOs = order.getOrderItems().stream()
+                .map(item -> new OrderItemDTO(
+                        item.getOrderItemId(),
+                        item.getProduct().getProductId(),
+                        item.getProduct().getName(),
+                        item.getQuantity(),
+                        item.getUnitPrice()
+                ))
+                .collect(Collectors.toList());
+
+        return new OrderDTO(
+                order.getOrderId(),
+                order.getUserId(),
+                itemDTOs,
+                order.getTotalAmount(),
+                order.getStatus(),
+                order.getShippingAddress(),
+                order.getCreatedAt(),
+                order.getUpdatedAt()
+        );
+    }
+
+    // ---------- Request DTOs ----------
     public static class CreateOrderRequest {
         public String userId;
         public String shippingAddress;

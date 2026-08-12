@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import './landing-and-footer.css';
 
-// Components from components/ folder
+// Components
 import Navbar from './components/Navbar';
 import LoginRegisterPage from './components/LoginRegisterPage';
 import Storefront from './components/Storefront';
@@ -13,13 +13,11 @@ import UploadProduct from './components/UploadProduct';
 import AddressManager from './AddressManager';
 import PaymentCheckout from './PaymentCheckout';
 import StatusBanner from './components/StatusBanner';
-
-// New components from src/ root (NOT in components folder)
 import Footer from './Footer';
 import LandingPage from './LandingPage';
 
 export default function App() {
-  // ========== STATE ==========
+  // State
   const [currentUser, setCurrentUser] = useState(null);
   const [currentPage, setCurrentPage] = useState('storefront');
   const [cart, setCart] = useState(null);
@@ -37,8 +35,6 @@ export default function App() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // ========== USEEFFECTS ==========
-
   // Load user from localStorage on mount
   useEffect(() => {
     const savedUser = localStorage.getItem('currentUser');
@@ -46,6 +42,7 @@ export default function App() {
       const user = JSON.parse(savedUser);
       setCurrentUser(user);
       loadUserData(user.userId);
+      loadDefaultAddress(user.userId);
     }
   }, []);
 
@@ -54,32 +51,26 @@ export default function App() {
     loadProducts();
   }, []);
 
-  // Filter products based on search and category
+  // Filter products
   useEffect(() => {
     let filtered = products;
-
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(p => p.category === selectedCategory);
     }
-
     if (searchTerm.trim()) {
       filtered = filtered.filter(p =>
-          p.name.toLowerCase().includes(searchTerm.toLowerCase())
+        p.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-
     setFilteredProducts(filtered);
   }, [products, searchTerm, selectedCategory]);
 
-  // ========== API CALLS ==========
-
+  // ---------- API Calls ----------
   const loadProducts = async () => {
     try {
       const response = await fetch('http://localhost:8080/product/all');
       const data = await response.json();
       setProducts(data);
-
-      // Extract unique categories
       const uniqueCategories = ['all', ...new Set(data.map(p => p.category))];
       setCategories(uniqueCategories);
     } catch (error) {
@@ -89,33 +80,52 @@ export default function App() {
 
   const loadUserData = async (userId) => {
     try {
-      // Load cart
+      // Cart
       const cartResponse = await fetch(`http://localhost:8080/cart/${userId}`);
       if (cartResponse.ok) {
         const cartData = await cartResponse.json();
-        // ✅ FIXED: Extract data from ApiResponseDTO wrapper
-        setCart(cartData.data || cartData);
+        setCart(cartData);
       } else {
-        // Create new cart if doesn't exist
-        const newCart = { cartId: '', userId, items: [], total: 0 };
-        setCart(newCart);
+        setCart({ cartId: '', userId, items: [], total: 0 });
       }
 
-      // Load wishlist
+      // Wishlist
       const wishlistResponse = await fetch(`http://localhost:8080/api/wishlist/user/${userId}`);
       if (wishlistResponse.ok) {
         const wishlistData = await wishlistResponse.json();
-        // ✅ FIXED: Extract data array from ApiResponseDTO wrapper
-        setWishlist(wishlistData.data || []);
+        setWishlist(wishlistData);
       }
     } catch (error) {
       console.error('Error loading user data:', error);
     }
   };
 
-  // ========== HANDLERS ==========
+  const loadDefaultAddress = async (userId) => {
+    try {
+      console.log(`Loading default address for user: ${userId}`);
+      const response = await fetch(`http://localhost:8080/address/user/${userId}/default`);
+      if (response.ok) {
+        const address = await response.json();
+        console.log('Default address loaded:', address);
+        if (address) {
+          const formatted = `${address.streetAddress}, ${address.city}, ${address.stateProvince || ''} ${address.postalCode}, ${address.country}`;
+          setShippingAddress(formatted);
+        } else {
+          setShippingAddress('');
+        }
+      } else {
+        console.warn('No default address found, status:', response.status);
+        setShippingAddress('');
+      }
+    } catch (error) {
+      console.error('Error loading default address:', error);
+      setShippingAddress('');
+    }
+  };
 
+  // ---------- Handlers ----------
   const handleLogin = async (email, password) => {
+    console.log('Login attempt with:', email);
     try {
       setLoading(true);
       const response = await fetch('http://localhost:8080/user/login', {
@@ -123,28 +133,28 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-
       const data = await response.json();
-
+      console.log('Login response:', data);
       if (!response.ok) {
         showStatus(data.message || 'Login failed', 'error');
         return;
       }
-
       setCurrentUser(data);
       localStorage.setItem('currentUser', JSON.stringify(data));
-      loadUserData(data.userId);
+      await loadUserData(data.userId);
+      await loadDefaultAddress(data.userId);
       setCurrentPage('storefront');
       showStatus('✅ Login successful! Welcome to AfriConnect!', 'success');
     } catch (error) {
-      showStatus('❌ Login failed. Please try again.', 'error');
       console.error('Login error:', error);
+      showStatus('❌ Login failed. Please try again.', 'error');
     } finally {
       setLoading(false);
     }
   };
 
   const handleRegister = async (email, password, firstName, lastName, roleName) => {
+    console.log('Register attempt with:', email);
     try {
       setLoading(true);
       const response = await fetch('http://localhost:8080/user/create', {
@@ -152,22 +162,21 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password, firstName, lastName, roleName }),
       });
-
       const data = await response.json();
-
+      console.log('Register response:', data);
       if (!response.ok) {
         showStatus(data.message || 'Registration failed', 'error');
         return;
       }
-
       setCurrentUser(data);
       localStorage.setItem('currentUser', JSON.stringify(data));
-      loadUserData(data.userId);
+      await loadUserData(data.userId);
+      await loadDefaultAddress(data.userId);
       setCurrentPage('storefront');
       showStatus('✅ Account created! Welcome to AfriConnect!', 'success');
     } catch (error) {
-      showStatus('❌ Registration failed. Please try again.', 'error');
       console.error('Register error:', error);
+      showStatus('❌ Registration failed. Please try again.', 'error');
     } finally {
       setLoading(false);
     }
@@ -177,6 +186,7 @@ export default function App() {
     setCurrentUser(null);
     setCart(null);
     setWishlist([]);
+    setShippingAddress('');
     localStorage.removeItem('currentUser');
     setCurrentPage('storefront');
     showStatus('✅ Logged out successfully!', 'success');
@@ -187,44 +197,34 @@ export default function App() {
       showStatus('❌ Please log in to add items to cart', 'error');
       return;
     }
-
     try {
       const response = await fetch('http://localhost:8080/cart/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: currentUser.userId,
-          productId,
-          quantity: 1,
-        }),
+        body: JSON.stringify({ userId: currentUser.userId, productId, quantity: 1 }),
       });
-
       if (response.ok) {
         const cartData = await response.json();
-        // ✅ FIXED: Extract data from ApiResponseDTO wrapper
-        setCart(cartData.data || cartData);
+        setCart(cartData);
         showStatus('✅ Added to cart!', 'success');
       } else {
         showStatus('❌ Failed to add to cart', 'error');
       }
     } catch (error) {
       showStatus('❌ Error adding to cart', 'error');
-      console.error('Add to cart error:', error);
+      console.error(error);
     }
   };
 
   const handleRemoveFromCart = async (cartItemId) => {
     if (!currentUser) return;
-
     try {
       const response = await fetch(`http://localhost:8080/cart/remove/${cartItemId}?userId=${currentUser.userId}`, {
         method: 'DELETE',
       });
-
       if (response.ok) {
         const cartData = await response.json();
-        // ✅ FIXED: Extract data from ApiResponseDTO wrapper
-        setCart(cartData.data || cartData);
+        setCart(cartData);
         showStatus('✅ Removed from cart', 'success');
       }
     } catch (error) {
@@ -234,21 +234,15 @@ export default function App() {
 
   const handleUpdateQuantity = async (cartItemId, quantity) => {
     if (!currentUser || quantity < 1) return;
-
     try {
       const response = await fetch(`http://localhost:8080/cart/update/${cartItemId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: currentUser.userId,
-          quantity,
-        }),
+        body: JSON.stringify({ userId: currentUser.userId, quantity }),
       });
-
       if (response.ok) {
         const cartData = await response.json();
-        // ✅ FIXED: Extract data from ApiResponseDTO wrapper
-        setCart(cartData.data || cartData);
+        setCart(cartData);
       }
     } catch (error) {
       console.error('Error updating quantity:', error);
@@ -260,22 +254,16 @@ export default function App() {
       showStatus('❌ Please log in to add to wishlist', 'error');
       return;
     }
-
     try {
       const response = await fetch('http://localhost:8080/api/wishlist/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: currentUser.userId,
-          productId,
-        }),
+        body: JSON.stringify({ userId: currentUser.userId, productId }),
       });
-
       if (response.ok) {
         const updatedWishlist = await fetch(`http://localhost:8080/api/wishlist/user/${currentUser.userId}`);
         const wishlistData = await updatedWishlist.json();
-        // ✅ FIXED: Extract data array from ApiResponseDTO wrapper
-        setWishlist(wishlistData.data || []);
+        setWishlist(wishlistData);
         showStatus('✅ Added to wishlist!', 'success');
       }
     } catch (error) {
@@ -285,12 +273,10 @@ export default function App() {
 
   const handleRemoveFromWishlist = async (wishlistId) => {
     if (!currentUser) return;
-
     try {
       const response = await fetch(`http://localhost:8080/api/wishlist/remove/${wishlistId}`, {
         method: 'DELETE',
       });
-
       if (response.ok) {
         setWishlist(wishlist.filter(w => w.wishlistId !== wishlistId));
         showStatus('✅ Removed from wishlist', 'success');
@@ -300,28 +286,35 @@ export default function App() {
     }
   };
 
-  const handleCheckout = async (cardToken, cardLast4, cardHolderName) => {
-    if (!currentUser || !cart || !shippingAddress.trim()) {
-      showStatus('❌ Please provide all required information', 'error');
+  const handleCheckout = async (cardToken, cardLast4, cardHolderName, saveAddress, addressData) => {
+    if (!currentUser || !cart) {
+      showStatus('❌ Cart is empty', 'error');
+      return;
+    }
+    if (!shippingAddress.trim()) {
+      showStatus('❌ Shipping address is required', 'error');
       return;
     }
 
     try {
       setIsProcessing(true);
+      // If user wants to save this address, create/update address
+      if (saveAddress && addressData) {
+        await saveShippingAddress(addressData);
+      }
+
       const response = await fetch('http://localhost:8080/payment/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userId: currentUser.userId,
-          shippingAddress,
+          shippingAddress: shippingAddress,
           cardToken,
           cardLast4,
           cardHolderName,
         }),
       });
-
       const data = await response.json();
-
       if (response.ok) {
         setShowCheckout(false);
         setShippingAddress('');
@@ -333,9 +326,37 @@ export default function App() {
       }
     } catch (error) {
       showStatus('❌ Payment processing failed', 'error');
-      console.error('Checkout error:', error);
+      console.error(error);
     } finally {
       setIsProcessing(false);
+    }
+  };
+
+  const saveShippingAddress = async (addressData) => {
+    try {
+      const payload = {
+        userId: currentUser.userId,
+        type: 'SHIPPING',
+        recipientName: addressData.recipientName || currentUser.firstName + ' ' + currentUser.lastName,
+        phoneNumber: addressData.phoneNumber || '',
+        streetAddress: addressData.streetAddress || shippingAddress.split(',')[0].trim(),
+        city: addressData.city || shippingAddress.split(',')[1]?.trim() || '',
+        stateProvince: addressData.stateProvince || '',
+        postalCode: addressData.postalCode || '',
+        country: addressData.country || 'South Africa',
+        isDefault: true,
+      };
+      const response = await fetch('http://localhost:8080/address/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (response.ok) {
+        showStatus('✅ Address saved successfully!', 'success');
+        await loadDefaultAddress(currentUser.userId);
+      }
+    } catch (error) {
+      console.error('Error saving address:', error);
     }
   };
 
@@ -345,118 +366,97 @@ export default function App() {
     setTimeout(() => setStatusMessage(''), 4000);
   };
 
-  // ========== RENDER ==========
-
-  // ✅ If NOT logged in → Show Landing Page
+  // ---------- Render ----------
   if (!currentUser) {
     return (
-        <div className="app-wrapper">
-          <LandingPage
-              onLoginClick={() => setCurrentPage('login')}
-              products={products}
-          />
-
-          {currentPage === 'login' && (
-              <div className="modal-overlay" onClick={() => setCurrentPage('landing')}>
-                <div className="modal-content" onClick={e => e.stopPropagation()}>
-                  <button
-                      className="modal-close"
-                      onClick={() => setCurrentPage('landing')}
-                  >
-                    ✕
-                  </button>
-                  <LoginRegisterPage
-                      onLogin={handleLogin}
-                      onRegister={handleRegister}
-                  />
-                </div>
-              </div>
-          )}
-
-          <Footer />
-        </div>
+      <div className="app-wrapper">
+        <LandingPage onLoginClick={() => setCurrentPage('login')} products={products} />
+        {currentPage === 'login' && (
+          <div className="modal-overlay" onClick={() => setCurrentPage('landing')}>
+            <div className="modal-content" onClick={e => e.stopPropagation()}>
+              <button className="modal-close" onClick={() => setCurrentPage('landing')}>✕</button>
+              <LoginRegisterPage onLogin={handleLogin} onRegister={handleRegister} />
+            </div>
+          </div>
+        )}
+        <Footer />
+      </div>
     );
   }
 
-  // ✅ If logged in → Show full app with Storefront as default
   return (
-      <div className="app-wrapper">
-        <StatusBanner message={statusMessage} type={statusType} />
-        <Navbar
-            currentUser={currentUser}
-            currentPage={currentPage}
+    <div className="app-wrapper">
+      <StatusBanner message={statusMessage} type={statusType} />
+      <Navbar
+        currentUser={currentUser}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        cartCount={cart?.items?.length || 0}
+        wishlistCount={wishlist?.length || 0}
+        setShowAddressManager={setShowAddressManager}
+        handleLogout={handleLogout}
+        isSeller={currentUser.roleName === 'SELLER'}
+      />
+      <main className="main-content">
+        {currentPage === 'storefront' && (
+          <Storefront
+            products={products}
+            filteredProducts={filteredProducts}
+            loading={loading}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            categories={categories}
+            onAddToCart={handleAddToCart}
+            onAddToWishlist={handleAddToWishlist}
+            onRemoveFromWishlist={handleRemoveFromWishlist}
+            wishlist={wishlist}
+          />
+        )}
+        {currentPage === 'cart' && (
+          <CartPage
+            cart={cart}
+            onRemove={handleRemoveFromCart}
+            onUpdateQuantity={handleUpdateQuantity}
+            onCheckout={() => setShowCheckout(true)}
+          />
+        )}
+        {currentPage === 'wishlist' && (
+          <WishlistPage
+            wishlist={wishlist}
+            onAddToCart={handleAddToCart}
+            onRemoveFromWishlist={handleRemoveFromWishlist}
             setCurrentPage={setCurrentPage}
-            cartCount={cart?.items?.length || 0}
-            wishlistCount={wishlist?.length || 0}
-            setShowAddressManager={setShowAddressManager}
-            handleLogout={handleLogout}
-            isSeller={currentUser.roleName === 'SELLER'}
-        />
-
-        <main className="main-content">
-          {currentPage === 'storefront' && (
-              <Storefront
-                  products={products}
-                  filteredProducts={filteredProducts}
-                  loading={loading}
-                  searchTerm={searchTerm}
-                  setSearchTerm={setSearchTerm}
-                  selectedCategory={selectedCategory}
-                  setSelectedCategory={setSelectedCategory}
-                  categories={categories}
-                  onAddToCart={handleAddToCart}
-                  onAddToWishlist={handleAddToWishlist}
-                  onRemoveFromWishlist={handleRemoveFromWishlist}
-                  wishlist={wishlist}
-              />
-          )}
-
-          {currentPage === 'cart' && (
-              <CartPage
-                  cart={cart}
-                  onRemove={handleRemoveFromCart}
-                  onUpdateQuantity={handleUpdateQuantity}
-                  onCheckout={() => setShowCheckout(true)}
-              />
-          )}
-
-          {currentPage === 'wishlist' && (
-              <WishlistPage
-                  wishlist={wishlist}
-                  onAddToCart={handleAddToCart}
-                  onRemoveFromWishlist={handleRemoveFromWishlist}
-                  setCurrentPage={setCurrentPage}
-              />
-          )}
-
-          {currentPage === 'orders' && (
-              <OrdersPage userId={currentUser.userId} />
-          )}
-
-          {currentPage === 'upload' && currentUser.roleName === 'SELLER' && (
-              <UploadProduct onProductAdded={() => loadProducts()} />
-          )}
-
-          {showCheckout && (
-              <PaymentCheckout
-                  cart={cart}
-                  shippingAddress={shippingAddress}
-                  onShippingAddressChange={setShippingAddress}
-                  onPayment={handleCheckout}
-                  onClose={() => setShowCheckout(false)}
-                  isProcessing={isProcessing}
-              />
-          )}
-
-          {showAddressManager && (
-              <AddressManager
-                  userId={currentUser.userId}
-                  onClose={() => setShowAddressManager(false)}
-              />
-          )}
-        </main>
-
-        <Footer />
-      </div>
+          />
+        )}
+        {currentPage === 'orders' && <OrdersPage userId={currentUser.userId} />}
+        {currentPage === 'upload' && currentUser.roleName === 'SELLER' && (
+          <UploadProduct onProductAdded={() => loadProducts()} />
+        )}
+        {showCheckout && (
+          <PaymentCheckout
+            cart={cart}
+            shippingAddress={shippingAddress}
+            onShippingAddressChange={setShippingAddress}
+            onPayment={handleCheckout}
+            onClose={() => setShowCheckout(false)}
+            isProcessing={isProcessing}
+            userId={currentUser.userId}
+            onAddressSaved={loadDefaultAddress}
+          />
+        )}
+        {showAddressManager && (
+          <AddressManager
+            userId={currentUser.userId}
+            onClose={() => {
+              setShowAddressManager(false);
+              loadDefaultAddress(currentUser.userId);
+            }}
+          />
+        )}
+      </main>
+      <Footer />
+    </div>
   );
 }

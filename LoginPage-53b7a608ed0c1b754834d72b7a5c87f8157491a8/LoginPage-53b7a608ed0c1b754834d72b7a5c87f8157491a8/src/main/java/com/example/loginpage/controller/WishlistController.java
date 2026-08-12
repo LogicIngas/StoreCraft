@@ -1,10 +1,13 @@
 package com.example.loginpage.controller;
 
+import com.example.loginpage.dto.WishlistDTO;
+import com.example.loginpage.model.Product;
 import com.example.loginpage.model.Wishlist;
 import com.example.loginpage.service.impl.WishlistService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/wishlist")
@@ -18,8 +21,11 @@ public class WishlistController {
     }
 
     @GetMapping("/user/{userId}")
-    public List<Wishlist> getWishlist(@PathVariable String userId) {
-        return service.getWishlistByUserId(userId);
+    public List<WishlistDTO> getWishlist(@PathVariable String userId) {
+        List<Wishlist> wishlists = service.getWishlistByUserId(userId);
+        return wishlists.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @PostMapping("/add")
@@ -47,6 +53,23 @@ public class WishlistController {
         return service.getWishlistCount(userId);
     }
 
+    // --- Helper conversion ---
+    private WishlistDTO convertToDTO(Wishlist wishlist) {
+        Product product = wishlist.getProduct();
+        return new WishlistDTO(
+                wishlist.getWishlistId(),
+                product.getProductId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getStockQuantity(),
+                product.getImageUrl(),
+                product.getCategory(),
+                wishlist.getCreatedAt().toString()
+        );
+    }
+
+    // --- Request DTOs ---
     public static class AddRequest {
         public String userId;
         public String productId;
