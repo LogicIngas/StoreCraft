@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react';
 
+function getImageUrl(imageUrl) {
+    if (!imageUrl) {
+        return 'https://placehold.co/300x350?text=No+Image';
+    }
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+        return imageUrl;
+    }
+    return `http://localhost:8080${imageUrl}`;
+}
+
 export default function LandingPage({ onLoginClick, products = [] }) {
     const [featuredProducts, setFeaturedProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -9,7 +19,6 @@ export default function LandingPage({ onLoginClick, products = [] }) {
             try {
                 const response = await fetch('http://localhost:8080/product/all');
                 const data = await response.json();
-                // Get first 6 products for showcase
                 setFeaturedProducts(data.slice(0, 6));
             } catch (error) {
                 console.error('Error loading products:', error);
@@ -17,7 +26,6 @@ export default function LandingPage({ onLoginClick, products = [] }) {
                 setLoading(false);
             }
         };
-
         loadProducts();
     }, []);
 
@@ -111,6 +119,7 @@ export default function LandingPage({ onLoginClick, products = [] }) {
                                         alt={product.name}
                                         className="product-image-landing"
                                         onError={(e) => {
+                                            e.target.onerror = null;
                                             e.target.src = 'https://placehold.co/300x350?text=No+Image';
                                         }}
                                     />
@@ -176,15 +185,4 @@ export default function LandingPage({ onLoginClick, products = [] }) {
             </section>
         </div>
     );
-}
-
-// Helper function
-function getImageUrl(imageUrl) {
-    if (!imageUrl) {
-        return 'https://placehold.co/300x350?text=No+Image';
-    }
-    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-        return imageUrl;
-    }
-    return `http://localhost:8080${imageUrl}`;
 }

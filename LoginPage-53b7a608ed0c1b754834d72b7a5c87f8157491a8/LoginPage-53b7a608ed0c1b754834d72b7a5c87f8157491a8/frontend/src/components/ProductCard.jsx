@@ -1,35 +1,29 @@
 import React, { useState } from 'react';
 
-// ✅ Helper function to construct proper image URL
+// Helper to construct proper image URL
 function getImageUrl(imageUrl) {
     if (!imageUrl) {
         return 'https://placehold.co/300x350?text=No+Image';
     }
-
-    // If already a full URL, return as is
     if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
         return imageUrl;
     }
-
-    // ✅ Prepend backend domain for relative URLs
     return `http://localhost:8080${imageUrl}`;
 }
 
 export default function ProductCard({
-                                        product,
-                                        onAddToCart,
-                                        onAddToWishlist,
-                                        onRemoveFromWishlist,
-                                        isInWishlist = false,
-                                        showRemoveFromWishlist = false
-                                    }) {
+    product,
+    onAddToCart,
+    onAddToWishlist,
+    onRemoveFromWishlist,
+    isInWishlist = false,
+    showRemoveFromWishlist = false
+}) {
     const [isHovered, setIsHovered] = useState(false);
     const [isRemoving, setIsRemoving] = useState(false);
 
-    // Handle wishlist click
     const handleWishlistClick = async (e) => {
         e.stopPropagation();
-
         if (showRemoveFromWishlist && onRemoveFromWishlist) {
             setIsRemoving(true);
             try {
@@ -44,7 +38,6 @@ export default function ProductCard({
         }
     };
 
-    // Handle add to cart
     const handleAddToCartClick = (e) => {
         e.stopPropagation();
         if (onAddToCart) {
@@ -64,8 +57,8 @@ export default function ProductCard({
                     alt={product.name || 'Product'}
                     className="product-image"
                     onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = 'https://placehold.co/300x350?text=No+Image+Found';
+                        e.target.onerror = null; // prevent infinite loop
+                        e.target.src = 'https://placehold.co/300x350?text=No+Image';
                     }}
                 />
                 {isHovered && (

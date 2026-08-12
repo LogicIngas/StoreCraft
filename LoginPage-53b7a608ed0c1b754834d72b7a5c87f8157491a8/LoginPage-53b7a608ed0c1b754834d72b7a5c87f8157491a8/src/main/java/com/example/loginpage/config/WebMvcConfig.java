@@ -26,22 +26,25 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // YOUR EXACT UPLOADS FOLDER PATH later we can change it to a relative path or use a property file to make it more flexible
-        String absoluteUploadPath = "C:/Users/mbobo/Documents/GitHub/Project3WebProject/uploads/";
 
-        File uploadDir = new File(absoluteUploadPath);
+        // String absoluteUploadPath = "C:/Users/mbobo/Documents/GitHub/Project3WebProject/uploads/";
+        // File uploadDir = new File(absoluteUploadPath);
+        
+        // Use a relative path (from the project root) for portability
+        String uploadPath = System.getProperty("user.dir") + "/uploads/";
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+            System.out.println("📁 Created uploads directory at: " + uploadPath);
+        }
 
-        // Print to console to confirm it finds the folder
         System.out.println("\n═══════════════════════════════════════════════════════");
-        System.out.println("📁 IMAGE SERVING DIRECTORY CHECK");
-        System.out.println("═══════════════════════════════════════════════════════");
-        System.out.println("Looking for images at: " + absoluteUploadPath);
-        System.out.println("Does this folder exist on disk? " + uploadDir.exists());
+        System.out.println("📁 Serving images from: " + uploadPath);
+        System.out.println("Does folder exist? " + uploadDir.exists());
         System.out.println("═══════════════════════════════════════════════════════\n");
 
-        // This maps your physical C:/drive folder to the URL
         registry.addResourceHandler("/images/**")
-                .addResourceLocations("file:" + absoluteUploadPath)
+                .addResourceLocations("file:" + uploadPath)
                 .setCachePeriod(3600);
     }
 }
