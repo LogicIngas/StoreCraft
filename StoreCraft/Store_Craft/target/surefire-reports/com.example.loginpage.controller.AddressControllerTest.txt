@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.example.loginpage.controller.AddressControllerTest
+-------------------------------------------------------------------------------
+Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.41 s -- in com.example.loginpage.controller.AddressControllerTest

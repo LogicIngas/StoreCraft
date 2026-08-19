@@ -34,8 +34,6 @@ It features user authentication, product browsing, shopping cart, wishlist, orde
 - [Clone the Repository](#-clone-the-repository)
 - [Backend Setup (Spring Boot)](#️-backend-setup-spring-boot)
 - [Frontend Setup (React + Vite)](#-frontend-setup-react--vite)
-- [Docker Setup (Optional)](#-docker-setup-optional)
-
 ### 🏃 Running the App
 - [Running the Application](#-running-the-application)
 - [Default Admin Credentials](#-default-admin-credentials)
