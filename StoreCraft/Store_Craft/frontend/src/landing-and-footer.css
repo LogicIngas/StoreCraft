@@ -190,6 +190,18 @@
     animation: bounce 3s ease-in-out infinite;
 }
 
+.hero-logo-img {
+    width: 300px;
+    height: 300px;
+    object-fit: contain;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    padding: 1.5rem;
+    animation: bounce 3s ease-in-out infinite;
+}
+
 /* FEATURES SECTION */
 .features-section {
     padding: var(--space-16) var(--space-4);

@@ -17,6 +17,7 @@ import Footer from './Footer';
 import LandingPage from './LandingPage';
 import AdminDashboard from './AdminDashboard';
 import ProfilePage from './components/ProfilePage';
+import CookieConsent from './components/CookieConsent';
 
 export default function App() {
   // State
@@ -32,6 +33,17 @@ export default function App() {
   const [statusMessage, setStatusMessage] = useState('');
   const [statusType, setStatusType] = useState('');
   const [shippingAddress, setShippingAddress] = useState('');
+  // Cookie consent state
+  const [cookieAccepted, setCookieAccepted] = useState(
+    localStorage.getItem('cookieConsentAccepted') === 'accepted'
+  );
+
+  // Force landing page when consent not given
+  useEffect(() => {
+    if (!cookieAccepted) {
+      setCurrentPage('landing');
+    }
+  }, [cookieAccepted]);
   const [showCheckout, setShowCheckout] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -73,7 +85,9 @@ export default function App() {
   // ---------- API Calls ----------
   const loadProducts = async () => {
     try {
-      const response = await fetch('http://localhost:8080/product/all');
+      const response = await fetch('http://localhost:8080/product/all', {
+        credentials: 'include',
+      });
       const data = await response.json();
       setProducts(data);
       const uniqueCategories = ['all', ...new Set(data.map(p => p.category))];
@@ -85,7 +99,9 @@ export default function App() {
 
   const loadUserData = async (userId) => {
     try {
-      const cartResponse = await fetch(`http://localhost:8080/cart/${userId}`);
+      const cartResponse = await fetch(`http://localhost:8080/cart/${userId}`, {
+        credentials: 'include',
+      });
       if (cartResponse.ok) {
         const cartData = await cartResponse.json();
         setCart(cartData);
@@ -93,7 +109,9 @@ export default function App() {
         setCart({ cartId: '', userId, items: [], total: 0 });
       }
 
-      const wishlistResponse = await fetch(`http://localhost:8080/api/wishlist/user/${userId}`);
+      const wishlistResponse = await fetch(`http://localhost:8080/api/wishlist/user/${userId}`, {
+        credentials: 'include',
+      });
       if (wishlistResponse.ok) {
         const wishlistData = await wishlistResponse.json();
         setWishlist(wishlistData);
@@ -105,7 +123,9 @@ export default function App() {
 
   const loadDefaultAddress = async (userId) => {
     try {
-      const response = await fetch(`http://localhost:8080/address/user/${userId}/default`);
+      const response = await fetch(`http://localhost:8080/address/user/${userId}/default`, {
+        credentials: 'include',
+      });
       if (response.ok) {
         const address = await response.json();
         if (address) {
@@ -130,6 +150,7 @@ export default function App() {
       const response = await fetch('http://localhost:8080/user/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
       const data = await response.json();
@@ -146,7 +167,7 @@ export default function App() {
       } else {
         setCurrentPage('storefront');
       }
-      showStatus('✅ Login successful! Welcome to AfriConnect!', 'success');
+      showStatus('✅ Login successful! Welcome to StoreCraft!', 'success');
     } catch (error) {
       showStatus('❌ Login failed. Please try again.', 'error');
       console.error(error);
@@ -161,6 +182,7 @@ export default function App() {
       const response = await fetch('http://localhost:8080/user/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ email, password, firstName, lastName, roleName }),
       });
       const data = await response.json();
@@ -177,7 +199,7 @@ export default function App() {
       } else {
         setCurrentPage('storefront');
       }
-      showStatus('✅ Account created! Welcome to AfriConnect!', 'success');
+      showStatus('✅ Account created! Welcome to StoreCraft!', 'success');
     } catch (error) {
       showStatus('❌ Registration failed. Please try again.', 'error');
       console.error(error);
@@ -186,7 +208,16 @@ export default function App() {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    // Call the backend logout to clear the server-side cookie
+    try {
+      await fetch('http://localhost:8080/user/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+    } catch (error) {
+      console.error('Logout request failed:', error);
+    }
     setCurrentUser(null);
     setCart(null);
     setWishlist([]);
@@ -203,6 +234,7 @@ export default function App() {
       const response = await fetch(`http://localhost:8080/user/update/${currentUser.userId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(profileData),
       });
       const data = await response.json();
@@ -237,6 +269,7 @@ export default function App() {
       const response = await fetch('http://localhost:8080/cart/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ userId: currentUser.userId, productId, quantity: 1 }),
       });
       if (response.ok) {
@@ -257,6 +290,7 @@ export default function App() {
     try {
       const response = await fetch(`http://localhost:8080/cart/remove/${cartItemId}?userId=${currentUser.userId}`, {
         method: 'DELETE',
+        credentials: 'include',
       });
       if (response.ok) {
         const cartData = await response.json();
@@ -274,6 +308,7 @@ export default function App() {
       const response = await fetch(`http://localhost:8080/cart/update/${cartItemId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ userId: currentUser.userId, quantity }),
       });
       if (response.ok) {
@@ -298,10 +333,13 @@ export default function App() {
       const response = await fetch('http://localhost:8080/api/wishlist/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ userId: currentUser.userId, productId }),
       });
       if (response.ok) {
-        const updatedWishlist = await fetch(`http://localhost:8080/api/wishlist/user/${currentUser.userId}`);
+        const updatedWishlist = await fetch(`http://localhost:8080/api/wishlist/user/${currentUser.userId}`, {
+          credentials: 'include',
+        });
         const wishlistData = await updatedWishlist.json();
         setWishlist(wishlistData);
         showStatus('✅ Added to wishlist!', 'success');
@@ -316,6 +354,7 @@ export default function App() {
     try {
       const response = await fetch(`http://localhost:8080/api/wishlist/remove/${wishlistId}`, {
         method: 'DELETE',
+        credentials: 'include',
       });
       if (response.ok) {
         setWishlist(wishlist.filter(w => w.wishlistId !== wishlistId));
@@ -345,6 +384,7 @@ export default function App() {
       const response = await fetch('http://localhost:8080/payment/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({
           userId: currentUser.userId,
           shippingAddress: shippingAddress,
@@ -388,6 +428,7 @@ export default function App() {
       const response = await fetch('http://localhost:8080/address/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(payload),
       });
       if (response.ok) {
@@ -405,10 +446,24 @@ export default function App() {
     setTimeout(() => setStatusMessage(''), 4000);
   };
 
+  // Cookie consent callbacks
+  const handleCookieAccept = () => {
+    setCookieAccepted(true);
+  };
+
+  const handleCookieDecline = () => {
+    setCookieAccepted(false);
+    // Force user to landing page only
+    setCurrentPage('landing');
+    setCurrentUser(null);
+    localStorage.removeItem('currentUser');
+  };
+
   // ---------- Render ----------
   if (!currentUser) {
     return (
       <div className="app-wrapper">
+        <StatusBanner message={statusMessage} type={statusType} />
         <LandingPage onLoginClick={() => setCurrentPage('login')} products={products} />
         {currentPage === 'login' && (
           <div className="modal-overlay" onClick={() => setCurrentPage('landing')}>
@@ -419,6 +474,7 @@ export default function App() {
           </div>
         )}
         <Footer />
+        <CookieConsent onAccept={handleCookieAccept} onDecline={handleCookieDecline} />
       </div>
     );
   }

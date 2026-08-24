@@ -93,7 +93,7 @@ export default function WishlistPage({
     const shareLink = `${window.location.origin}/wishlist/shared`;
     if (navigator.share) {
       navigator.share({
-        title: 'My AfriConnect Wishlist',
+        title: 'My StoreCraft Wishlist',
         text: `Check out my wishlist! ${totalItems} items worth R${totalValue.toFixed(2)}`,
         url: shareLink
       }).catch(() => {});

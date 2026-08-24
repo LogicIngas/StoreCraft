@@ -3,7 +3,12 @@ package com.example.loginpage.controller;
 import com.example.loginpage.model.User;
 import com.example.loginpage.model.Role;
 import com.example.loginpage.repository.IRoleRepository;
+import com.example.loginpage.security.CookieAuthInterceptor;
 import com.example.loginpage.service.impl.UserService;
+import com.example.loginpage.util.Helper;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,20 +25,53 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"}, allowCredentials = "true")
 public class UserController {
 
     private final UserService service;
     private final IRoleRepository roleRepository;
+
+    // Cookie settings
+    private static final String SESSION_COOKIE_NAME = CookieAuthInterceptor.SESSION_COOKIE_NAME;
+    private static final int COOKIE_MAX_AGE = 24 * 60 * 60; // 24 hours in seconds
 
     public UserController(UserService service, IRoleRepository roleRepository) {
         this.service = service;
         this.roleRepository = roleRepository;
     }
 
+    // ============ HELPER: Create session cookie ============
+
+    private Cookie createSessionCookie(String userId) {
+        Cookie cookie = new Cookie(SESSION_COOKIE_NAME, userId);
+        cookie.setHttpOnly(true);       // Prevents JavaScript access (XSS protection)
+        cookie.setPath("/");            // Available to all paths
+        cookie.setMaxAge(COOKIE_MAX_AGE);
+        cookie.setSecure(false);        // Set to true in production (HTTPS only)
+        // SameSite attribute will be added manually when adding the cookie to the response
+        return cookie;
+    }
+
+    private Cookie createClearSessionCookie() {
+        Cookie cookie = new Cookie(SESSION_COOKIE_NAME, "");
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);            // Immediately expires the cookie
+        cookie.setSecure(false);
+        return cookie;
+    }
+
+    // ============ ENDPOINTS ============
+
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody UserRequest request) {
+    public ResponseEntity<?> create(@RequestBody UserRequest request, HttpServletResponse httpResponse) {
         try {
+            // Validate email using Helper
+            if (Helper.isNullOrEmpty(request.email) || !Helper.isValidEmail(request.email)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("message", "Please provide a valid email address."));
+            }
+
             String roleName = request.roleName != null ? request.roleName.toUpperCase() : "BUYER";
             Role role = roleRepository.findByName(roleName)
                     .orElseGet(() -> roleRepository.findByName("BUYER").orElse(null));
@@ -53,6 +91,9 @@ public class UserController {
 
             User saved = service.create(user);
 
+            // Set session cookie on successful registration
+            httpResponse.addCookie(createSessionCookie(saved.getUserId()));
+
             Map<String, Object> response = new HashMap<>();
             response.put("userId", saved.getUserId());
             response.put("email", saved.getEmail());
@@ -69,8 +110,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletResponse httpResponse) {
         try {
+            // Validate email using Helper
+            if (Helper.isNullOrEmpty(request.email) || !Helper.isValidEmail(request.email)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("message", "Please provide a valid email address."));
+            }
+
             User user = service.findByEmail(request.email);
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -81,6 +128,9 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(Map.of("message", "Invalid email or password."));
             }
+
+            // Set session cookie on successful login
+            httpResponse.addCookie(createSessionCookie(user.getUserId()));
 
             Map<String, Object> response = new HashMap<>();
             response.put("userId", user.getUserId());
@@ -97,6 +147,35 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("message", "Login error: " + e.getMessage()));
         }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse httpResponse) {
+        // Clear the session cookie
+        httpResponse.addCookie(createClearSessionCookie());
+        return ResponseEntity.ok(Map.of("message", "Logged out successfully.", "success", true));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(HttpServletRequest request) {
+        // The interceptor already validated the cookie and stored the user
+        User user = (User) request.getAttribute(CookieAuthInterceptor.AUTHENTICATED_USER_ATTR);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Not authenticated."));
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("userId", user.getUserId());
+        response.put("email", user.getEmail());
+        response.put("firstName", user.getFirstName());
+        response.put("lastName", user.getLastName());
+        response.put("roleName", user.getRole().getName());
+        response.put("isActive", user.getIsActive());
+        response.put("profileImageUrl", user.getProfileImageUrl());
+        response.put("success", true);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/read/{id}")

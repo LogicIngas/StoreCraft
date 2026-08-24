@@ -13,6 +13,7 @@ public class OrderItem {
     @Column(name = "order_item_id", updatable = false, nullable = false)
     private String orderItemId;
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;

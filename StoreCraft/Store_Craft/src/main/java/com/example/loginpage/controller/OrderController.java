@@ -99,9 +99,17 @@ public class OrderController {
     public static class CreateOrderRequest {
         public String userId;
         public String shippingAddress;
+
+        public String getUserId() { return userId; }
+        public void setUserId(String userId) { this.userId = userId; }
+        public String getShippingAddress() { return shippingAddress; }
+        public void setShippingAddress(String shippingAddress) { this.shippingAddress = shippingAddress; }
     }
 
     public static class StatusRequest {
         public String status;
+
+        public String getStatus() { return status; }
+        public void setStatus(String status) { this.status = status; }
     }
 }

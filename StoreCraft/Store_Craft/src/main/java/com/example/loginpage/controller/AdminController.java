@@ -4,6 +4,7 @@ import com.example.loginpage.model.Order;
 import com.example.loginpage.model.User;
 import com.example.loginpage.repository.*;
 import com.example.loginpage.service.impl.OrderService;
+import com.example.loginpage.security.RoleRequired;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,8 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/admin")
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"}, allowCredentials = "true")
+@RoleRequired("ADMIN")
 public class AdminController {
 
     @Autowired

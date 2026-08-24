@@ -22,6 +22,8 @@ export default function Storefront({
         <h2 className="section-title">✨ Featured Products</h2>
         <div className="section-actions">
           <select
+            id="category-filter"
+            name="category"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
             className="category-filter"
@@ -33,11 +35,14 @@ export default function Storefront({
             ))}
           </select>
           <input
+            id="product-search"
+            name="search"
             type="text"
             placeholder="🔍 Search products..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
+            autoComplete="off"
           />
         </div>
       </div>

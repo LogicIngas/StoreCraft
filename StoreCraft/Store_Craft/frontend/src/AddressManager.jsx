@@ -33,7 +33,9 @@ export default function AddressManager({ userId, onClose, standalone = false }) 
   const loadAddresses = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:8080/address/user/${userId}`);
+      const response = await fetch(`http://localhost:8080/address/user/${userId}`, {
+        credentials: 'include',
+      });
       if (response.ok) {
         const data = await response.json();
         setAddresses(data);
@@ -72,6 +74,7 @@ export default function AddressManager({ userId, onClose, standalone = false }) 
       const response = await fetch(url, {
         method: method,
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(payload),
       });
 
@@ -123,6 +126,7 @@ export default function AddressManager({ userId, onClose, standalone = false }) 
     try {
       const response = await fetch(`http://localhost:8080/address/${addressId}`, {
         method: 'DELETE',
+        credentials: 'include',
       });
       if (!response.ok) {
         showStatus('Failed to delete address');
@@ -140,6 +144,7 @@ export default function AddressManager({ userId, onClose, standalone = false }) 
     try {
       const response = await fetch(`http://localhost:8080/address/${addressId}/default`, {
         method: 'PUT',
+        credentials: 'include',
       });
       if (!response.ok) {
         showStatus('Failed to set default');

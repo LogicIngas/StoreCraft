@@ -29,7 +29,9 @@ export default function ProfilePage({
       const fetchOrders = async () => {
         try {
           setLoadingOrders(true);
-          const response = await fetch(`http://localhost:8080/order/user/${currentUser.userId}`);
+          const response = await fetch(`http://localhost:8080/order/user/${currentUser.userId}`, {
+            credentials: 'include',
+          });
           if (response.ok) {
             const data = await response.json();
             setOrderCount(data?.length || 0);
@@ -106,7 +108,7 @@ export default function ProfilePage({
         <div className="profile-user-summary">
           <h2 className="profile-fullname">{firstName} {lastName}</h2>
           <p className="profile-email">📧 {email}</p>
-          <p className="profile-joined">✨ Member of AfriConnect</p>
+          <p className="profile-joined">✨ Member of StoreCraft</p>
         </div>
       </div>
 

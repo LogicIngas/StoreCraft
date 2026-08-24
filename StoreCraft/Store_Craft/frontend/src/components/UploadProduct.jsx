@@ -95,6 +95,7 @@ export default function UploadProduct({ onProductAdded }) {
 
             const response = await fetch('http://localhost:8080/product/upload', {
                 method: 'POST',
+                credentials: 'include',
                 body: uploadFormData
                 // Don't set Content-Type header; browser will set it automatically with boundary
             });

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Logo1 from '../assets/Logo1.jpg';
 
 export default function Navbar({
   currentUser,
@@ -25,7 +26,7 @@ export default function Navbar({
     <header className="app-header">
       <div className="header-content">
         <div className="header-left">
-          <h1 className="logo">🌍 AfriConnect</h1>
+          <img src={Logo1} alt="StoreCraft Logo" className="logo" />
 
           <button
             className="hamburger-button"

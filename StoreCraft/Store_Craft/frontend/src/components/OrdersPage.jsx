@@ -7,7 +7,9 @@ export default function OrdersPage({ userId }) {
     useEffect(() => {
         const loadOrders = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/order/user/${userId}`);
+                const response = await fetch(`http://localhost:8080/order/user/${userId}`, {
+                    credentials: 'include',
+                });
                 if (response.ok) {
                     const data = await response.json();
                     // data is now a List<OrderDTO> directly

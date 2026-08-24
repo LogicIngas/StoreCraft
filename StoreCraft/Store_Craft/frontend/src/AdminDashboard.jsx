@@ -46,10 +46,10 @@ export default function AdminDashboard({ userId }) {
     setLoading(true);
     try {
       const [statsRes, usersRes, ordersRes, revRes] = await Promise.all([
-        fetch('http://localhost:8080/api/admin/dashboard/stats'),
-        fetch('http://localhost:8080/api/admin/users/all'),
-        fetch('http://localhost:8080/api/admin/orders/all'),
-        fetch('http://localhost:8080/api/admin/revenue/monthly')
+        fetch('http://localhost:8080/api/admin/dashboard/stats', { credentials: 'include' }),
+        fetch('http://localhost:8080/api/admin/users/all', { credentials: 'include' }),
+        fetch('http://localhost:8080/api/admin/orders/all', { credentials: 'include' }),
+        fetch('http://localhost:8080/api/admin/revenue/monthly', { credentials: 'include' })
       ]);
 
       if (statsRes.ok) setStats(await statsRes.json());
@@ -87,6 +87,7 @@ export default function AdminDashboard({ userId }) {
       const res = await fetch(`http://localhost:8080/api/admin/orders/${orderId}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ status: newStatus })
       });
       if (res.ok) {

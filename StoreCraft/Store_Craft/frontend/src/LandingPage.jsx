@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Logo1 from './assets/Logo1.jpg';
 
 function getImageUrl(imageUrl) {
     if (!imageUrl) {
@@ -17,7 +18,9 @@ export default function LandingPage({ onLoginClick, products = [] }) {
     useEffect(() => {
         const loadProducts = async () => {
             try {
-                const response = await fetch('http://localhost:8080/product/all');
+                const response = await fetch('http://localhost:8080/product/all', {
+                    credentials: 'include',
+                });
                 const data = await response.json();
                 setFeaturedProducts(data.slice(0, 6));
             } catch (error) {
@@ -36,7 +39,7 @@ export default function LandingPage({ onLoginClick, products = [] }) {
                 <div className="hero-content">
                     <div className="hero-text">
                         <h1 className="hero-title">
-                            Welcome to <span className="gradient-text">AfriConnect</span>
+                            Welcome to <span className="gradient-text">StoreCraft</span>
                         </h1>
                         <p className="hero-subtitle">
                             Discover authentic African products, connect with sellers, and experience premium shopping
@@ -51,16 +54,14 @@ export default function LandingPage({ onLoginClick, products = [] }) {
                         </div>
                     </div>
                     <div className="hero-image">
-                        <div className="hero-placeholder">
-                            <span>🛍️</span>
-                        </div>
+                        <img src={Logo1} alt="StoreCraft Logo" className="hero-logo-img" />
                     </div>
                 </div>
             </section>
 
             {/* FEATURES SECTION */}
             <section className="features-section">
-                <h2 className="section-title">Why Choose AfriConnect?</h2>
+                <h2 className="section-title">Why Choose StoreCraft?</h2>
                 <div className="features-grid">
                     <div className="feature-card">
                         <div className="feature-icon">🌍</div>
@@ -152,7 +153,7 @@ export default function LandingPage({ onLoginClick, products = [] }) {
 
             {/* STATS SECTION */}
             <section className="stats-section">
-                <h2 className="section-title">AfriConnect by Numbers</h2>
+                <h2 className="section-title">StoreCraft by Numbers</h2>
                 <div className="stats-grid">
                     <div className="stat-card">
                         <h3>10K+</h3>
@@ -176,7 +177,7 @@ export default function LandingPage({ onLoginClick, products = [] }) {
             {/* CTA SECTION */}
             <section className="final-cta-section">
                 <div className="cta-content">
-                    <h2>Ready to Join the AfriConnect Community?</h2>
+                    <h2>Ready to Join the StoreCraft Community?</h2>
                     <p>Sign in to explore thousands of authentic African products</p>
                     <button onClick={onLoginClick} className="btn-primary-large-white">
                         🚀 Sign In Now

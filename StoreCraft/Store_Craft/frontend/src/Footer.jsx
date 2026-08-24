@@ -9,7 +9,7 @@ export default function Footer() {
             <div className="footer-content">
                 <div className="footer-section">
                     <div className="footer-brand">
-                        <h3>🌍 AfriConnect</h3>
+                        <h3>🌍 StoreCraft</h3>
                         <p>Your gateway to authentic African products</p>
                         <div className="social-links">
                             <a href="#" className="social-link" title="Facebook">f</a>
@@ -58,9 +58,12 @@ export default function Footer() {
                     <p>Subscribe to get special offers and updates</p>
                     <div className="newsletter-form">
                         <input
+                            id="newsletter-email"
+                            name="newsletter-email"
                             type="email"
                             placeholder="Enter your email"
                             className="newsletter-input"
+                            autoComplete="email"
                         />
                         <button className="newsletter-button">Subscribe</button>
                     </div>
@@ -70,7 +73,7 @@ export default function Footer() {
             {/* FOOTER BOTTOM */}
             <div className="footer-bottom">
                 <div className="footer-bottom-content">
-                    <p>&copy; {currentYear} AfriConnect. All rights reserved.</p>
+                    <p>&copy; {currentYear} StoreCraft. All rights reserved.</p>
                     <div className="footer-links">
                         <a href="#privacy">Privacy Policy</a>
                         <a href="#terms">Terms of Service</a>

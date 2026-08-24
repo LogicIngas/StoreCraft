@@ -20,6 +20,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedOrigins(frontendUrl, "http://localhost:5173", "http://localhost:5174")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
+                .exposedHeaders("Set-Cookie")
                 .allowCredentials(true)
                 .maxAge(3600);
     }

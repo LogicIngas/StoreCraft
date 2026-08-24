@@ -21,7 +21,8 @@ public class DataInitializer implements CommandLineRunner {
     private final IUserRepository userRepository;
 
     @Autowired
-    public DataInitializer(IProductRepository productRepository, IRoleRepository roleRepository, IUserRepository userRepository) {
+    public DataInitializer(IProductRepository productRepository, IRoleRepository roleRepository,
+            IUserRepository userRepository) {
         this.productRepository = productRepository;
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
@@ -73,24 +74,24 @@ public class DataInitializer implements CommandLineRunner {
                 System.out.println("ℹ️ Admin user already exists");
             }
         } else {
-            System.err.println("❌ ADMIN role not found – admin user not created!");
+            System.out.println("❌ ADMIN role not found – admin user not created!");
         }
 
         // 3. Seed only 3 products if the table is empty
         if (productRepository.count() == 0) {
-            productRepository.save(new Product(
-                    "Classic Black Hoodie",
-                    "Warm and comfortable cotton blend hoodie.",
-                    new BigDecimal("449.99"), 20, "/images/n6.jpg", "Clothing"));
+            // productRepository.save(new Product(
+            // "Classic Black Hoodie",
+            // "Warm and comfortable cotton blend hoodie.",
+            // new BigDecimal("449.99"), 20, "/images/n6.jpg", "Clothing"));
             productRepository.save(new Product(
                     "Slim Fit Ripped Jeans",
                     "Durable denim jeans with distressed design.",
                     new BigDecimal("599.99"), 15, "/images/n20.jpg", "Clothing"));
-            productRepository.save(new Product(
-                    "Winter Puffer Jacket",
-                    "Windproof and water-resistant puffer jacket.",
-                    new BigDecimal("899.99"), 10, "/images/n22.jpg", "Clothing"));
-            System.out.println("✅ Seeded 3 sample products");
+            // productRepository.save(new Product(
+            // "Winter Puffer Jacket",
+            // "Windproof and water-resistant puffer jacket.",
+            // new BigDecimal("899.99"), 10, "/images/n22.jpg", "Clothing"));
+            // System.out.println("✅ Seeded 3 sample products");
         }
 
         System.out.println("\n═══════════════════════════════════════════════════════");
