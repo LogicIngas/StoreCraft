@@ -59,17 +59,17 @@ public class DataInitializer implements CommandLineRunner {
 
         // 2. Initialize Admin User (if missing)
         if (adminRole != null) {
-            User admin = userRepository.findByEmail("admin@africonnect.com");
+            User admin = userRepository.findByEmail("admin@storecraft.com");
             if (admin == null) {
                 admin = new User.Builder()
-                        .setEmail("admin@africonnect.com")
+                        .setEmail("admin@storecraft.com")
                         .setPassword("admin123")
                         .setFirstName("Admin")
                         .setLastName("User")
                         .setRole(adminRole)
                         .build();
                 userRepository.save(admin);
-                System.out.println("✅ Admin user created: admin@africonnect.com / admin123");
+                System.out.println("✅ Admin user created: admin@storecraft.com / admin123");
             } else {
                 System.out.println("ℹ️ Admin user already exists");
             }
@@ -84,14 +84,9 @@ public class DataInitializer implements CommandLineRunner {
             // "Warm and comfortable cotton blend hoodie.",
             // new BigDecimal("449.99"), 20, "/images/n6.jpg", "Clothing"));
             productRepository.save(new Product(
-                    "Slim Fit Ripped Jeans",
-                    "Durable denim jeans with distressed design.",
-                    new BigDecimal("599.99"), 15, "/images/n20.jpg", "Clothing"));
-            // productRepository.save(new Product(
-            // "Winter Puffer Jacket",
-            // "Windproof and water-resistant puffer jacket.",
-            // new BigDecimal("899.99"), 10, "/images/n22.jpg", "Clothing"));
-            // System.out.println("✅ Seeded 3 sample products");
+                    "Test Product name 1",
+                    "Test Product description 1.",
+                    new BigDecimal("599.99"), 15, "/uploads/n69.png", "Clothing"));
         }
 
         System.out.println("\n═══════════════════════════════════════════════════════");

@@ -62,13 +62,13 @@ export default function ProductCard({
             <button
               onClick={handleAddToCartClick}
               className="quick-add-button"
-              disabled={product.stockQuantity <= 0 || isAdmin}
+              disabled={product.stockQuantity == null || Number(product.stockQuantity) <= 0 || isAdmin}
             >
               🛒 Quick Add
             </button>
           </div>
         )}
-        {product.stockQuantity <= 0 && (
+        {product.stockQuantity != null && Number(product.stockQuantity) <= 0 && (
           <div className="out-of-stock-badge">Out of Stock</div>
         )}
         {isAdmin && (
@@ -112,7 +112,7 @@ export default function ProductCard({
                 <button
                   onClick={handleAddToCartClick}
                   className="add-to-cart-button"
-                  disabled={product.stockQuantity <= 0}
+                  disabled={product.stockQuantity == null || Number(product.stockQuantity) <= 0}
                 >
                   Add To Cart
                 </button>
@@ -120,7 +120,7 @@ export default function ProductCard({
             )}
           </div>
         </div>
-        {product.stockQuantity > 0 && product.stockQuantity <= 5 && !isAdmin && (
+        {product.stockQuantity != null && Number(product.stockQuantity) > 0 && Number(product.stockQuantity) <= 5 && !isAdmin && (
           <div className="low-stock-badge">🔥 Only {product.stockQuantity} left!</div>
         )}
       </div>

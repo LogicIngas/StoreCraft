@@ -6,6 +6,7 @@ import com.example.loginpage.repository.*;
 import com.example.loginpage.service.impl.OrderService;
 import com.example.loginpage.security.RoleRequired;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/admin")
 @CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"}, allowCredentials = "true")
 @RoleRequired("ADMIN")
+@PreAuthorize("hasAuthority('ROLE_ADMIN')") // Enforced by Spring Security
 public class AdminController {
 
     @Autowired

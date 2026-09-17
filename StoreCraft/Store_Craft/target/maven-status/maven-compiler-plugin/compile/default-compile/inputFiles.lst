@@ -4,6 +4,7 @@ C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\factory\ReviewFactory.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\dto\SuccessResponse.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\controller\ChatController.java
+C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\security\SecurityConfig.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\repository\ICategoryRepository.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\model\Coupon.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\repository\IReviewRepository.java
@@ -47,6 +48,7 @@ C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\model\ChatMessage.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\service\IUserService.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\factory\OrderItemFactory.java
+C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\security\JwtFilter.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\model\Wishlist.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\repository\ICartItemRepository.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\service\impl\EmailService.java
@@ -70,6 +72,7 @@ C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\model\Product.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\config\WebConfig.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\dto\CartDTO.java
+C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\service\impl\JWTService.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\service\impl\UserService.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\repository\IChatMessageRepository.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\dto\ErrorResponse.java
@@ -77,10 +80,12 @@ C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\service\impl\AddressService.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\controller\WishlistController.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\repository\ICouponRepository.java
+C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\util\Helper.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\model\CartItem.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\dto\CartItemDTO.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\model\OrderItem.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\model\Role.java
+C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\security\RoleRequired.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\controller\NotificationController.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\model\User.java
 C:\Users\mbobo\Documents\@GitHub\Project 3\updated_branch\StoreCraft\StoreCraft\Store_Craft\src\main\java\com\example\loginpage\factory\CartItemFactory.java

@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/coupon")
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
+@CrossOrigin(origins = { "http://localhost:5173", "http://localhost:5174" })
 public class CouponController {
 
     private final CouponService service;

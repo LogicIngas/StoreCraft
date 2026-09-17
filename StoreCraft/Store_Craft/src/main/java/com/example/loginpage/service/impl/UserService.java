@@ -4,11 +4,17 @@ import com.example.loginpage.model.User;
 import com.example.loginpage.repository.IUserRepository;
 import com.example.loginpage.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
-public class UserService implements IUserService {
+public class UserService implements IUserService, UserDetailsService {
 
     private final IUserRepository repository;
 
@@ -16,6 +22,26 @@ public class UserService implements IUserService {
     public UserService(IUserRepository repository) {
         this.repository = repository;
     }
+
+    // ---- Spring Security: load user by email (email = username) ----
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = repository.findByEmail(email);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found: " + email);
+        }
+
+        // Map DB role name (e.g. "ADMIN") → Spring Security authority "ROLE_ADMIN"
+        String authority = "ROLE_" + user.getRole().getName().toUpperCase();
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                user.getPassword(), // NoOpPasswordEncoder is set in SecurityConfig — no prefix needed
+                List.of(new SimpleGrantedAuthority(authority))
+        );
+    }
+
+    // ---- Standard CRUD ----
 
     @Override
     @Transactional

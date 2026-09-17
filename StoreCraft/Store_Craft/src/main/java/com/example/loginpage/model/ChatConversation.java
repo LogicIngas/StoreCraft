@@ -52,24 +52,77 @@ public class ChatConversation {
     }
 
     // Getters and Setters
-    public String getConversationId() { return conversationId; }
-    public void setConversationId(String conversationId) { this.conversationId = conversationId; }
-    public String getUser1Id() { return user1Id; }
-    public void setUser1Id(String user1Id) { this.user1Id = user1Id; }
-    public String getUser2Id() { return user2Id; }
-    public void setUser2Id(String user2Id) { this.user2Id = user2Id; }
-    public String getLastMessage() { return lastMessage; }
-    public void setLastMessage(String lastMessage) { this.lastMessage = lastMessage; }
-    public LocalDateTime getLastMessageTime() { return lastMessageTime; }
-    public void setLastMessageTime(LocalDateTime lastMessageTime) { this.lastMessageTime = lastMessageTime; }
-    public Integer getUser1UnreadCount() { return user1UnreadCount; }
-    public void setUser1UnreadCount(Integer user1UnreadCount) { this.user1UnreadCount = user1UnreadCount; }
-    public Integer getUser2UnreadCount() { return user2UnreadCount; }
-    public void setUser2UnreadCount(Integer user2UnreadCount) { this.user2UnreadCount = user2UnreadCount; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    public String getConversationId() {
+        return conversationId;
+    }
+
+    public void setConversationId(String conversationId) {
+        this.conversationId = conversationId;
+    }
+
+    public String getUser1Id() {
+        return user1Id;
+    }
+
+    public void setUser1Id(String user1Id) {
+        this.user1Id = user1Id;
+    }
+
+    public String getUser2Id() {
+        return user2Id;
+    }
+
+    public void setUser2Id(String user2Id) {
+        this.user2Id = user2Id;
+    }
+
+    public String getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
+    }
+
+    public LocalDateTime getLastMessageTime() {
+        return lastMessageTime;
+    }
+
+    public void setLastMessageTime(LocalDateTime lastMessageTime) {
+        this.lastMessageTime = lastMessageTime;
+    }
+
+    public Integer getUser1UnreadCount() {
+        return user1UnreadCount;
+    }
+
+    public void setUser1UnreadCount(Integer user1UnreadCount) {
+        this.user1UnreadCount = user1UnreadCount;
+    }
+
+    public Integer getUser2UnreadCount() {
+        return user2UnreadCount;
+    }
+
+    public void setUser2UnreadCount(Integer user2UnreadCount) {
+        this.user2UnreadCount = user2UnreadCount;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 
     @PreUpdate
     protected void onUpdate() {

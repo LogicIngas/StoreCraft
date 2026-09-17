@@ -3,10 +3,9 @@ package com.example.loginpage.controller;
 import com.example.loginpage.model.User;
 import com.example.loginpage.model.Role;
 import com.example.loginpage.repository.IRoleRepository;
-import com.example.loginpage.security.CookieAuthInterceptor;
+import com.example.loginpage.service.impl.JWTService;
 import com.example.loginpage.service.impl.UserService;
 import com.example.loginpage.util.Helper;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -30,35 +29,12 @@ public class UserController {
 
     private final UserService service;
     private final IRoleRepository roleRepository;
+    private final JWTService jwtService;
 
-    // Cookie settings
-    private static final String SESSION_COOKIE_NAME = CookieAuthInterceptor.SESSION_COOKIE_NAME;
-    private static final int COOKIE_MAX_AGE = 24 * 60 * 60; // 24 hours in seconds
-
-    public UserController(UserService service, IRoleRepository roleRepository) {
+    public UserController(UserService service, IRoleRepository roleRepository, JWTService jwtService) {
         this.service = service;
         this.roleRepository = roleRepository;
-    }
-
-    // ============ HELPER: Create session cookie ============
-
-    private Cookie createSessionCookie(String userId) {
-        Cookie cookie = new Cookie(SESSION_COOKIE_NAME, userId);
-        cookie.setHttpOnly(true);       // Prevents JavaScript access (XSS protection)
-        cookie.setPath("/");            // Available to all paths
-        cookie.setMaxAge(COOKIE_MAX_AGE);
-        cookie.setSecure(false);        // Set to true in production (HTTPS only)
-        // SameSite attribute will be added manually when adding the cookie to the response
-        return cookie;
-    }
-
-    private Cookie createClearSessionCookie() {
-        Cookie cookie = new Cookie(SESSION_COOKIE_NAME, "");
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(0);            // Immediately expires the cookie
-        cookie.setSecure(false);
-        return cookie;
+        this.jwtService = jwtService;
     }
 
     // ============ ENDPOINTS ============
@@ -91,8 +67,8 @@ public class UserController {
 
             User saved = service.create(user);
 
-            // Set session cookie on successful registration
-            httpResponse.addCookie(createSessionCookie(saved.getUserId()));
+            // Generate JWT token so the user is immediately authenticated
+            String token = jwtService.generateToken(saved.getEmail());
 
             Map<String, Object> response = new HashMap<>();
             response.put("userId", saved.getUserId());
@@ -100,6 +76,9 @@ public class UserController {
             response.put("firstName", saved.getFirstName());
             response.put("lastName", saved.getLastName());
             response.put("roleName", saved.getRole().getName());
+            response.put("isActive", saved.getIsActive());
+            response.put("profileImageUrl", saved.getProfileImageUrl());
+            response.put("token", token); // JWT token for subsequent requests
             response.put("success", true);
 
             return ResponseEntity.ok(response);
@@ -108,6 +87,7 @@ public class UserController {
                     .body(Map.of("message", e.getMessage()));
         }
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletResponse httpResponse) {
@@ -129,8 +109,8 @@ public class UserController {
                         .body(Map.of("message", "Invalid email or password."));
             }
 
-            // Set session cookie on successful login
-            httpResponse.addCookie(createSessionCookie(user.getUserId()));
+            // Generate JWT token for the authenticated user
+            String token = jwtService.generateToken(user.getEmail());
 
             Map<String, Object> response = new HashMap<>();
             response.put("userId", user.getUserId());
@@ -140,6 +120,7 @@ public class UserController {
             response.put("roleName", user.getRole().getName());
             response.put("isActive", user.getIsActive());
             response.put("profileImageUrl", user.getProfileImageUrl());
+            response.put("token", token); // JWT token for subsequent requests
             response.put("success", true);
 
             return ResponseEntity.ok(response);
@@ -151,15 +132,18 @@ public class UserController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse httpResponse) {
-        // Clear the session cookie
-        httpResponse.addCookie(createClearSessionCookie());
         return ResponseEntity.ok(Map.of("message", "Logged out successfully.", "success", true));
     }
 
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(HttpServletRequest request) {
-        // The interceptor already validated the cookie and stored the user
-        User user = (User) request.getAttribute(CookieAuthInterceptor.AUTHENTICATED_USER_ATTR);
+        // Without cookies or interceptor, just check if user ID is in headers (for testing)
+        String userId = request.getHeader("X-User-Id");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Not authenticated."));
+        }
+        User user = service.read(userId);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("message", "Not authenticated."));

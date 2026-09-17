@@ -22,7 +22,7 @@ export default function LandingPage({ onLoginClick, products = [] }) {
                     credentials: 'include',
                 });
                 const data = await response.json();
-                setFeaturedProducts(data.slice(0, 6));
+                setFeaturedProducts(data.slice(0, 3));
             } catch (error) {
                 console.error('Error loading products:', error);
             } finally {

@@ -15,7 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/chat")
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
+@CrossOrigin(origins = { "http://localhost:5173", "http://localhost:5174" })
 public class ChatController {
 
     @Autowired
@@ -31,14 +31,12 @@ public class ChatController {
         messagingTemplate.convertAndSendToUser(
                 message.getRecipientId(),
                 "/queue/messages",
-                savedMessage
-        );
+                savedMessage);
 
         messagingTemplate.convertAndSendToUser(
                 message.getSenderId(),
                 "/queue/messages",
-                savedMessage
-        );
+                savedMessage);
     }
 
     @MessageMapping("/chat.typing")
@@ -50,13 +48,12 @@ public class ChatController {
         messagingTemplate.convertAndSendToUser(
                 recipientId,
                 "/queue/typing",
-                Map.of("senderId", senderId, "isTyping", isTyping)
-        );
+                Map.of("senderId", senderId, "isTyping", isTyping));
     }
 
     @GetMapping("/history/{userId}/{otherUserId}")
     public List<ChatMessage> getChatHistory(@PathVariable String userId,
-                                            @PathVariable String otherUserId) {
+            @PathVariable String otherUserId) {
         return chatService.getChatHistory(userId, otherUserId);
     }
 
@@ -92,7 +89,7 @@ public class ChatController {
 
     @GetMapping("/unread-count/{userId}/{senderId}")
     public long getUnreadCountFromSender(@PathVariable String userId,
-                                         @PathVariable String senderId) {
+            @PathVariable String senderId) {
         return chatService.getUnreadCountFromSender(userId, senderId);
     }
 
@@ -103,14 +100,14 @@ public class ChatController {
 
     @GetMapping("/conversation/{user1Id}/{user2Id}")
     public ChatConversation getConversation(@PathVariable String user1Id,
-                                            @PathVariable String user2Id) {
+            @PathVariable String user2Id) {
         return chatService.getConversationBetweenUsers(user1Id, user2Id)
                 .orElse(null);
     }
 
     @GetMapping("/recent/{userId}/{limit}")
     public List<ChatMessage> getRecentMessages(@PathVariable String userId,
-                                               @PathVariable int limit) {
+            @PathVariable int limit) {
         return chatService.getRecentMessages(userId, limit);
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/notifications")
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
+@CrossOrigin(origins = { "http://localhost:5173", "http://localhost:5174" })
 public class NotificationController {
 
     @Autowired
@@ -28,14 +28,12 @@ public class NotificationController {
                 request.type,
                 request.title,
                 request.message,
-                request.link
-        );
+                request.link);
 
         messagingTemplate.convertAndSendToUser(
                 request.userId,
                 "/queue/notifications",
-                notification
-        );
+                notification);
 
         return notification;
     }
