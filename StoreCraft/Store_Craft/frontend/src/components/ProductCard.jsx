@@ -1,9 +1,10 @@
+import { apiUrl } from '../api.js';
 import React, { useState } from 'react';
 
 function getImageUrl(imageUrl) {
   if (!imageUrl) return 'https://placehold.co/300x350?text=No+Image';
   if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) return imageUrl;
-  return `http://localhost:8080${imageUrl}`;
+  return apiUrl(`${imageUrl}`);
 }
 
 export default function ProductCard({

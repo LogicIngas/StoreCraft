@@ -1,3 +1,4 @@
+import { apiUrl } from '../api.js';
 import React, { useState } from 'react';
 import './UploadProduct.css';
 
@@ -93,7 +94,7 @@ export default function UploadProduct({ onProductAdded }) {
             uploadFormData.append('stockQuantity', formData.stockQuantity);
             uploadFormData.append('category', formData.category);
 
-            const response = await fetch('http://localhost:8080/product/upload', {
+            const response = await fetch(apiUrl('/product/upload'), {
                 method: 'POST',
                 credentials: 'include',
                 body: uploadFormData

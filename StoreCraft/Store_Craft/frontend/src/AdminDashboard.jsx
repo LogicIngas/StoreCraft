@@ -1,3 +1,4 @@
+import { apiUrl } from './api.js';
 import React, { useState, useEffect } from 'react';
 import {
   Box,
@@ -46,10 +47,10 @@ export default function AdminDashboard({ userId }) {
     setLoading(true);
     try {
       const [statsRes, usersRes, ordersRes, revRes] = await Promise.all([
-        fetch('http://localhost:8080/api/admin/dashboard/stats', { credentials: 'include' }),
-        fetch('http://localhost:8080/api/admin/users/all', { credentials: 'include' }),
-        fetch('http://localhost:8080/api/admin/orders/all', { credentials: 'include' }),
-        fetch('http://localhost:8080/api/admin/revenue/monthly', { credentials: 'include' })
+        fetch(apiUrl('/api/admin/dashboard/stats'), { credentials: 'include' }),
+        fetch(apiUrl('/api/admin/users/all'), { credentials: 'include' }),
+        fetch(apiUrl('/api/admin/orders/all'), { credentials: 'include' }),
+        fetch(apiUrl('/api/admin/revenue/monthly'), { credentials: 'include' })
       ]);
 
       if (statsRes.ok) setStats(await statsRes.json());
@@ -84,7 +85,7 @@ export default function AdminDashboard({ userId }) {
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
-      const res = await fetch(`http://localhost:8080/api/admin/orders/${orderId}/status`, {
+      const res = await fetch(apiUrl(`/api/admin/orders/${orderId}/status`), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

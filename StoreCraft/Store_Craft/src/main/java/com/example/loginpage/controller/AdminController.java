@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/admin")
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"}, allowCredentials = "true")
 @RoleRequired("ADMIN")
 @PreAuthorize("hasAuthority('ROLE_ADMIN')") // Enforced by Spring Security
 public class AdminController {

@@ -3,10 +3,11 @@ package com.example.loginpage.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -16,36 +17,35 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+        // `frontend.url` may hold a comma separated list so several allowed
+        // origins (e.g. a Render host plus a preview deployment) can be
+        // configured from a single environment variable.
+        List<String> origins = new ArrayList<>();
+        for (String candidate : Arrays.asList(frontendUrl.split(","))) {
+            String trimmed = candidate.trim();
+            if (!trimmed.isEmpty() && !trimmed.equals("*")) {
+                origins.add(trimmed);
+            }
+        }
+        if (origins.isEmpty()) {
+            // No explicit origin configured: same-origin deployments do not need
+            // CORS at all, so allow any origin via patterns.
+            registry.addMapping("/**")
+                    .allowedOriginPatterns("*")
+                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
+                    .allowedHeaders("*")
+                    .exposedHeaders("Set-Cookie")
+                    .allowCredentials(true)
+                    .maxAge(3600);
+            return;
+        }
+
         registry.addMapping("/**")
-                .allowedOrigins(frontendUrl, "http://localhost:5173", "http://localhost:5174")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedOrigins(origins.toArray(new String[0]))
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
                 .exposedHeaders("Set-Cookie")
                 .allowCredentials(true)
                 .maxAge(3600);
-    }
-
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
-        // String absoluteUploadPath = "C:/Users/mbobo/Documents/GitHub/Project3WebProject/uploads/";
-        // File uploadDir = new File(absoluteUploadPath);
-        
-        // Use a relative path (from the project root) for portability
-        String uploadPath = System.getProperty("user.dir") + "/uploads/";
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
-            System.out.println("📁 Created uploads directory at: " + uploadPath);
-        }
-
-        System.out.println("\n═══════════════════════════════════════════════════════");
-        System.out.println("📁 Serving images from: " + uploadPath);
-        System.out.println("Does folder exist? " + uploadDir.exists());
-        System.out.println("═══════════════════════════════════════════════════════\n");
-
-        registry.addResourceHandler("/images/**")
-                .addResourceLocations("file:" + uploadPath)
-                .setCachePeriod(3600);
     }
 }

@@ -47,12 +47,15 @@ public class SecurityConfig {
 
         // URL access rules
         http.authorizeHttpRequests(auth -> auth
+                // Permit all CORS pre-flight requests so OPTIONS never gets a 401/403
+                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                 // Public: login, register, static assets, all product browsing, websockets
                 .requestMatchers(
-                        "/user/login", "/user/create",
+                        "/user/login", "/user/create", "/user/logout",
                         "/uploads/**", "/images/**",
                         "/product/**",          // all product reading (write ops secured at method level)
                         "/ws/**", "/chat/**",   // WebSocket handshake endpoints
+                        "/actuator/health", "/actuator/health/**", "/actuator/info",
                         "/error"
                 ).permitAll()
                 // Everything else must carry a valid JWT

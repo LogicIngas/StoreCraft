@@ -8,6 +8,7 @@ import com.example.loginpage.service.impl.UserService;
 import com.example.loginpage.util.Helper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +25,14 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"}, allowCredentials = "true")
 public class UserController {
 
     private final UserService service;
     private final IRoleRepository roleRepository;
     private final JWTService jwtService;
+
+    @Value("${file.upload-dir:uploads}")
+    private String uploadDir;
 
     public UserController(UserService service, IRoleRepository roleRepository, JWTService jwtService) {
         this.service = service;
@@ -251,9 +254,9 @@ public class UserController {
                         .body(Map.of("message", "File is empty"));
             }
 
-            // Save to local file system
-            String uploadDir = "uploads/";
-            Path uploadPath = Paths.get(uploadDir);
+            // Save to the configured upload directory (a mounted volume in
+            // production, the working directory during local development)
+            Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }

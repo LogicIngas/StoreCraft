@@ -1,3 +1,4 @@
+import { apiUrl } from '../api.js';
 import React, { useState, useEffect } from 'react';
 
 export default function OrdersPage({ userId }) {
@@ -7,7 +8,7 @@ export default function OrdersPage({ userId }) {
     useEffect(() => {
         const loadOrders = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/order/user/${userId}`, {
+                const response = await fetch(apiUrl(`/order/user/${userId}`), {
                     credentials: 'include',
                 });
                 if (response.ok) {

@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/cart")
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
 public class CartController {
 
     private static final Logger logger = LoggerFactory.getLogger(CartController.class);

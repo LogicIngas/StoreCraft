@@ -1,3 +1,4 @@
+import { apiUrl } from '../api.js';
 import React, { useState, useEffect } from 'react';
 import AddressManager from '../AddressManager';
 import OrdersPage from './OrdersPage';
@@ -29,7 +30,7 @@ export default function ProfilePage({
       const fetchOrders = async () => {
         try {
           setLoadingOrders(true);
-          const response = await fetch(`http://localhost:8080/order/user/${currentUser.userId}`, {
+          const response = await fetch(apiUrl(`/order/user/${currentUser.userId}`), {
             credentials: 'include',
           });
           if (response.ok) {

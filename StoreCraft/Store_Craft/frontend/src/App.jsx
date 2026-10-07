@@ -1,3 +1,4 @@
+import { apiUrl } from './api.js';
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import './landing-and-footer.css';
@@ -85,7 +86,7 @@ export default function App() {
   // ---------- API Calls ----------
   const loadProducts = async () => {
     try {
-      const response = await fetch('http://localhost:8080/product/all', {
+      const response = await fetch(apiUrl('/product/all'), {
         credentials: 'include',
       });
       const data = await response.json();
@@ -99,7 +100,7 @@ export default function App() {
 
   const loadUserData = async (userId) => {
     try {
-      const cartResponse = await fetch(`http://localhost:8080/cart/${userId}`, {
+      const cartResponse = await fetch(apiUrl(`/cart/${userId}`), {
         credentials: 'include',
       });
       if (cartResponse.ok) {
@@ -109,7 +110,7 @@ export default function App() {
         setCart({ cartId: '', userId, items: [], total: 0 });
       }
 
-      const wishlistResponse = await fetch(`http://localhost:8080/api/wishlist/user/${userId}`, {
+      const wishlistResponse = await fetch(apiUrl(`/api/wishlist/user/${userId}`), {
         credentials: 'include',
       });
       if (wishlistResponse.ok) {
@@ -123,7 +124,7 @@ export default function App() {
 
   const loadDefaultAddress = async (userId) => {
     try {
-      const response = await fetch(`http://localhost:8080/address/user/${userId}/default`, {
+      const response = await fetch(apiUrl(`/address/user/${userId}/default`), {
         credentials: 'include',
       });
       if (response.ok) {
@@ -147,7 +148,7 @@ export default function App() {
   const handleLogin = async (email, password) => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8080/user/login', {
+      const response = await fetch(apiUrl('/user/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -179,7 +180,7 @@ export default function App() {
   const handleRegister = async (email, password, firstName, lastName, roleName) => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8080/user/create', {
+      const response = await fetch(apiUrl('/user/create'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -211,7 +212,7 @@ export default function App() {
   const handleLogout = async () => {
     // Call the backend logout to clear the server-side cookie
     try {
-      await fetch('http://localhost:8080/user/logout', {
+      await fetch(apiUrl('/user/logout'), {
         method: 'POST',
         credentials: 'include',
       });
@@ -231,7 +232,7 @@ export default function App() {
     if (!currentUser) return false;
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:8080/user/update/${currentUser.userId}`, {
+      const response = await fetch(apiUrl(`/user/update/${currentUser.userId}`), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -266,7 +267,7 @@ export default function App() {
       return;
     }
     try {
-      const response = await fetch('http://localhost:8080/cart/add', {
+      const response = await fetch(apiUrl('/cart/add'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -288,7 +289,7 @@ export default function App() {
   const handleRemoveFromCart = async (cartItemId) => {
     if (!currentUser) return;
     try {
-      const response = await fetch(`http://localhost:8080/cart/remove/${cartItemId}?userId=${currentUser.userId}`, {
+      const response = await fetch(apiUrl(`/cart/remove/${cartItemId}?userId=${currentUser.userId}`), {
         method: 'DELETE',
         credentials: 'include',
       });
@@ -305,7 +306,7 @@ export default function App() {
   const handleUpdateQuantity = async (cartItemId, quantity) => {
     if (!currentUser || quantity < 1) return;
     try {
-      const response = await fetch(`http://localhost:8080/cart/update/${cartItemId}`, {
+      const response = await fetch(apiUrl(`/cart/update/${cartItemId}`), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -330,14 +331,14 @@ export default function App() {
       return;
     }
     try {
-      const response = await fetch('http://localhost:8080/api/wishlist/add', {
+      const response = await fetch(apiUrl('/api/wishlist/add'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ userId: currentUser.userId, productId }),
       });
       if (response.ok) {
-        const updatedWishlist = await fetch(`http://localhost:8080/api/wishlist/user/${currentUser.userId}`, {
+        const updatedWishlist = await fetch(apiUrl(`/api/wishlist/user/${currentUser.userId}`), {
           credentials: 'include',
         });
         const wishlistData = await updatedWishlist.json();
@@ -352,7 +353,7 @@ export default function App() {
   const handleRemoveFromWishlist = async (wishlistId) => {
     if (!currentUser) return;
     try {
-      const response = await fetch(`http://localhost:8080/api/wishlist/remove/${wishlistId}`, {
+      const response = await fetch(apiUrl(`/api/wishlist/remove/${wishlistId}`), {
         method: 'DELETE',
         credentials: 'include',
       });
@@ -381,7 +382,7 @@ export default function App() {
         await saveShippingAddress(addressData);
       }
 
-      const response = await fetch('http://localhost:8080/payment/checkout', {
+      const response = await fetch(apiUrl('/payment/checkout'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -425,7 +426,7 @@ export default function App() {
         country: addressData.country || 'South Africa',
         isDefault: true,
       };
-      const response = await fetch('http://localhost:8080/address/create', {
+      const response = await fetch(apiUrl('/address/create'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

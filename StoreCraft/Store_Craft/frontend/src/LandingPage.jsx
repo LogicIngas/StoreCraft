@@ -1,3 +1,4 @@
+import { apiUrl } from './api.js';
 import React, { useEffect, useState } from 'react';
 import Logo1 from './assets/Logo1.jpg';
 
@@ -8,7 +9,7 @@ function getImageUrl(imageUrl) {
     if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
         return imageUrl;
     }
-    return `http://localhost:8080${imageUrl}`;
+    return apiUrl(`${imageUrl}`);
 }
 
 export default function LandingPage({ onLoginClick, products = [] }) {
@@ -18,7 +19,7 @@ export default function LandingPage({ onLoginClick, products = [] }) {
     useEffect(() => {
         const loadProducts = async () => {
             try {
-                const response = await fetch('http://localhost:8080/product/all', {
+                const response = await fetch(apiUrl('/product/all'), {
                     credentials: 'include',
                 });
                 const data = await response.json();

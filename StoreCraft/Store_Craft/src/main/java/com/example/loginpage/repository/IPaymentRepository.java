@@ -146,8 +146,12 @@ public interface IPaymentRepository extends JpaRepository<Payment, String> {
     /**
      * Find recent payments for a user using native query with LIMIT
      * ✅ Alternative: Native query approach
+     * <p>
+     * PostgreSQL does not accept a bind parameter directly in {@code LIMIT}
+     * (i.e. {@code LIMIT :limit} is a syntax error there, unlike MySQL), so the
+     * parameter is cast to an integer first.
      */
-    @Query(value = "SELECT * FROM payments p WHERE p.user_id = :userId ORDER BY p.created_at DESC LIMIT :limit",
+    @Query(value = "SELECT p.* FROM payments p WHERE p.user_id = :userId ORDER BY p.created_at DESC LIMIT CAST(:limit AS int)",
             nativeQuery = true)
     List<Payment> findRecentPaymentsByUserIdNative(@Param("userId") String userId,
                                                    @Param("limit") int limit);

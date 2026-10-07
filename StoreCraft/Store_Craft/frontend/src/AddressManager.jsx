@@ -1,3 +1,4 @@
+import { apiUrl } from './api.js';
 import React, { useState, useEffect } from 'react';
 
 export default function AddressManager({ userId, onClose, standalone = false }) {
@@ -33,7 +34,7 @@ export default function AddressManager({ userId, onClose, standalone = false }) 
   const loadAddresses = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:8080/address/user/${userId}`, {
+      const response = await fetch(apiUrl(`/address/user/${userId}`), {
         credentials: 'include',
       });
       if (response.ok) {
@@ -66,8 +67,8 @@ export default function AddressManager({ userId, onClose, standalone = false }) 
 
     try {
       const url = editingId
-        ? `http://localhost:8080/address/${editingId}`
-        : 'http://localhost:8080/address/create';
+        ? apiUrl(`/address/${editingId}`)
+        : apiUrl('/address/create');
       const method = editingId ? 'PUT' : 'POST';
       const payload = editingId ? formData : { userId, ...formData };
 
@@ -124,7 +125,7 @@ export default function AddressManager({ userId, onClose, standalone = false }) 
   const handleDelete = async (addressId) => {
     if (!window.confirm('Are you sure you want to delete this address?')) return;
     try {
-      const response = await fetch(`http://localhost:8080/address/${addressId}`, {
+      const response = await fetch(apiUrl(`/address/${addressId}`), {
         method: 'DELETE',
         credentials: 'include',
       });
@@ -142,7 +143,7 @@ export default function AddressManager({ userId, onClose, standalone = false }) 
 
   const handleSetDefault = async (addressId) => {
     try {
-      const response = await fetch(`http://localhost:8080/address/${addressId}/default`, {
+      const response = await fetch(apiUrl(`/address/${addressId}/default`), {
         method: 'PUT',
         credentials: 'include',
       });

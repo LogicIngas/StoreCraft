@@ -1,0 +1,42 @@
+# =============================================================================
+# StoreCraft — Git Ignore Rules
+# =============================================================================
+
+# --- Secrets / Environment Files (NEVER commit these) ---
+.env
+.env.*
+!.env.example
+
+# --- Maven Build Output ---
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# --- IDE / Editor Files ---
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/settings.json
+*.swp
+*.swo
+
+# --- OS Files ---
+.DS_Store
+Thumbs.db
+
+# --- Logs ---
+*.log
+hs_err_pid*.log
+
+# --- Node / Frontend ---
+frontend/node_modules/
+frontend/dist/
+frontend/.cache/
+
+# --- Docker ---
+# (Dockerfile itself should be committed)
+
+# --- Uploads (user-generated content, not source code) ---
+uploads/
