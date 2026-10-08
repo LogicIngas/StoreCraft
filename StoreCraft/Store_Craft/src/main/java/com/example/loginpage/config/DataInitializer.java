@@ -79,16 +79,28 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println("❌ ADMIN role not found – admin user not created!");
         }
 
-        // 3. Seed only 3 products if the table is empty
+        // 3. Seed 3 products if the table is empty to make the store look populated and test images
         if (productRepository.count() == 0) {
-            // productRepository.save(new Product(
-            // "Classic Black Hoodie",
-            // "Warm and comfortable cotton blend hoodie.",
-            // new BigDecimal("449.99"), 20, "/images/n6.jpg", "Clothing"));
             productRepository.save(new Product(
-                    "Test Product name 1",
-                    "Test Product description 1.",
-                    new BigDecimal("599.99"), 15, "/uploads/n69.png", "Clothing"));
+                    "Premium Cotton T-Shirt",
+                    "High-quality, breathable 100% cotton t-shirt. Perfect for everyday wear.",
+                    new BigDecimal("299.99"), 50, 
+                    "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&auto=format&fit=crop&q=80", 
+                    "Clothing"));
+
+            productRepository.save(new Product(
+                    "Classic Denim Jacket",
+                    "A timeless piece for any wardrobe. Features durable denim and a comfortable fit.",
+                    new BigDecimal("899.99"), 15, 
+                    "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=600&auto=format&fit=crop&q=80", 
+                    "Clothing"));
+
+            productRepository.save(new Product(
+                    "Leather Crossbody Bag",
+                    "Handcrafted genuine leather bag with adjustable strap and multiple compartments.",
+                    new BigDecimal("1299.99"), 10, 
+                    "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=600&auto=format&fit=crop&q=80", 
+                    "Accessories"));
         }
 
         System.out.println("\n═══════════════════════════════════════════════════════");
