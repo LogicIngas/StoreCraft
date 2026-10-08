@@ -20,9 +20,9 @@ public class FileStorageService {
             @Value("${cloudinary.api-secret}") String apiSecret) {
 
         this.cloudinary = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", cloudName,
-                "api_key",    apiKey,
-                "api_secret", apiSecret,
+                "cloud_name", cloudName != null ? cloudName.trim() : "",
+                "api_key",    apiKey != null ? apiKey.trim() : "",
+                "api_secret", apiSecret != null ? apiSecret.trim() : "",
                 "secure",     true
         ));
     }
