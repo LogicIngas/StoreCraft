@@ -1,0 +1,12 @@
+# The container image is built on Linux. Without these rules a Windows checkout
+# with core.autocrlf=true commits CRLF, and a CRLF shebang line makes the
+# entrypoint unrunnable ("bad interpreter: /usr/local/bin/start.sh^M").
+
+Dockerfile        text eol=lf
+render.yaml       text eol=lf
+.dockerignore     text eol=lf
+docker/**         text eol=lf
+*.sh              text eol=lf
+
+# Run `git add --renormalize .` once after adding this file to pull the same
+# guarantee onto any other shell scripts you add later.
