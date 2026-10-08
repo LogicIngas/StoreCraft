@@ -81,8 +81,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // {noop} = no encoding — keeps plain-text passwords working for existing data
-        return NoOpPasswordEncoder.getInstance();
+        return new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
     }
 
     @Bean

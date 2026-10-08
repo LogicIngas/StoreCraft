@@ -30,14 +30,16 @@ public class UserController {
     private final UserService service;
     private final IRoleRepository roleRepository;
     private final JWTService jwtService;
+    private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     @Value("${file.upload-dir:uploads}")
     private String uploadDir;
 
-    public UserController(UserService service, IRoleRepository roleRepository, JWTService jwtService) {
+    public UserController(UserService service, IRoleRepository roleRepository, JWTService jwtService, org.springframework.security.crypto.password.PasswordEncoder passwordEncoder) {
         this.service = service;
         this.roleRepository = roleRepository;
         this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // ============ ENDPOINTS ============
@@ -62,7 +64,7 @@ public class UserController {
 
             User user = new User.Builder()
                     .setEmail(request.email)
-                    .setPassword(request.password)
+                    .setPassword(passwordEncoder.encode(request.password))
                     .setFirstName(request.firstName)
                     .setLastName(request.lastName)
                     .setRole(role)
@@ -107,7 +109,19 @@ public class UserController {
                         .body(Map.of("message", "User not found. Please create an account."));
             }
 
-            if (!user.getPassword().equals(request.password)) {
+            boolean matches;
+            if (user.getPassword().startsWith("$2a$")) {
+                matches = passwordEncoder.matches(request.password, user.getPassword());
+            } else {
+                matches = user.getPassword().equals(request.password);
+                if (matches) {
+                    // Seamless migration: hash plain text password on successful login
+                    user.setPassword(passwordEncoder.encode(request.password));
+                    service.update(user);
+                }
+            }
+
+            if (!matches) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(Map.of("message", "Invalid email or password."));
             }
@@ -186,7 +200,9 @@ public class UserController {
             if (request.firstName != null) existing.setFirstName(request.firstName);
             if (request.lastName != null) existing.setLastName(request.lastName);
             if (request.email != null) existing.setEmail(request.email);
-            if (request.password != null && !request.password.isEmpty()) existing.setPassword(request.password);
+            if (request.password != null && !request.password.isEmpty()) {
+                existing.setPassword(passwordEncoder.encode(request.password));
+            }
 
             User saved = service.update(existing);
 

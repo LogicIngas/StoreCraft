@@ -19,13 +19,15 @@ public class DataInitializer implements CommandLineRunner {
     private final IProductRepository productRepository;
     private final IRoleRepository roleRepository;
     private final IUserRepository userRepository;
+    private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     @Autowired
     public DataInitializer(IProductRepository productRepository, IRoleRepository roleRepository,
-            IUserRepository userRepository) {
+            IUserRepository userRepository, org.springframework.security.crypto.password.PasswordEncoder passwordEncoder) {
         this.productRepository = productRepository;
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -63,7 +65,7 @@ public class DataInitializer implements CommandLineRunner {
             if (admin == null) {
                 admin = new User.Builder()
                         .setEmail("admin@storecraft.com")
-                        .setPassword("admin123")
+                        .setPassword(passwordEncoder.encode("admin123"))
                         .setFirstName("Admin")
                         .setLastName("User")
                         .setRole(adminRole)
