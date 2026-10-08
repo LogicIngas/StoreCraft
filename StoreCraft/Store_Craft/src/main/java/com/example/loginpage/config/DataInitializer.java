@@ -79,22 +79,28 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println("❌ ADMIN role not found – admin user not created!");
         }
 
-        // 3. Seed 3 products if the table is empty to make the store look populated and test images
-        if (productRepository.count() == 0) {
+        // 3. Seed 3 sample products to make the store look populated and test images
+        // We check by name so we don't accidentally add duplicates on every restart,
+        // but we still add them even if you have other products in the database.
+        if (!productRepository.existsByName("Premium Cotton T-Shirt")) {
             productRepository.save(new Product(
                     "Premium Cotton T-Shirt",
                     "High-quality, breathable 100% cotton t-shirt. Perfect for everyday wear.",
                     new BigDecimal("299.99"), 50, 
                     "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&auto=format&fit=crop&q=80", 
                     "Clothing"));
+        }
 
+        if (!productRepository.existsByName("Classic Denim Jacket")) {
             productRepository.save(new Product(
                     "Classic Denim Jacket",
                     "A timeless piece for any wardrobe. Features durable denim and a comfortable fit.",
                     new BigDecimal("899.99"), 15, 
                     "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=600&auto=format&fit=crop&q=80", 
                     "Clothing"));
+        }
 
+        if (!productRepository.existsByName("Leather Crossbody Bag")) {
             productRepository.save(new Product(
                     "Leather Crossbody Bag",
                     "Handcrafted genuine leather bag with adjustable strap and multiple compartments.",

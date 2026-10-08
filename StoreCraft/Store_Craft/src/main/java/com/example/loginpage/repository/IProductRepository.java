@@ -11,6 +11,8 @@ import java.util.List;
 @Repository
 public interface IProductRepository extends JpaRepository<Product, String> {
 
+    boolean existsByName(String name);
+
     /**
      * Find all products in a specific category
      */
