@@ -1,5 +1,7 @@
 import { apiUrl } from './api.js';
 import React, { useState, useEffect } from 'react';
+import { supabase } from './supabaseClient';
+import { supabase } from './supabaseClient';
 import './App.css';
 import './landing-and-footer.css';
 
@@ -67,6 +69,42 @@ export default function App() {
   // Load products on mount
   useEffect(() => {
     loadProducts();
+  }, []);
+
+  // Supabase auth state listener
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        const supaUser = session.user;
+        const fakeBackendUser = {
+          userId: supaUser.id,
+          email: supaUser.email,
+          firstName: supaUser.user_metadata?.full_name?.split(' ')[0] || supaUser.email.split('@')[0],
+          lastName: supaUser.user_metadata?.full_name?.split(' ')[1] || '',
+          roleName: 'BUYER', 
+          authProvider: 'supabase'
+        };
+        setCurrentUser(fakeBackendUser);
+        localStorage.setItem('currentUser', JSON.stringify(fakeBackendUser));
+        await loadUserData(fakeBackendUser.userId);
+        await loadDefaultAddress(fakeBackendUser.userId);
+        setCurrentPage('storefront');
+        showStatus('✅ Login successful via Supabase!', 'success');
+      } else if (event === 'SIGNED_OUT') {
+        setCurrentUser(null);
+        setCart(null);
+        setWishlist([]);
+        setShippingAddress('');
+        localStorage.removeItem('currentUser');
+        setCurrentPage('storefront');
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   // Filter products
@@ -218,6 +256,12 @@ export default function App() {
       });
     } catch (error) {
       console.error('Logout request failed:', error);
+    }
+    
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error('Supabase logout failed:', error);
     }
     setCurrentUser(null);
     setCart(null);
