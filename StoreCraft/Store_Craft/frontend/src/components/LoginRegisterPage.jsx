@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Logo1 from '../assets/Logo1.jpg';
 import { supabase } from '../supabaseClient';
+import { apiUrl } from '../api.js';
 
 export default function LoginRegisterPage({ onLogin, onRegister }) {
   const [isLogin, setIsLogin] = useState(true);
@@ -11,12 +12,78 @@ export default function LoginRegisterPage({ onLogin, onRegister }) {
   const [showPassword, setShowPassword] = useState(false);
   const [selectedRole, setSelectedRole] = useState('BUYER');
 
+  // Forgot / Reset password state
+  const [view, setView] = useState('auth'); // 'auth' | 'forgot' | 'reset'
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotMsg, setForgotMsg] = useState('');
+  const [resetToken, setResetToken] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [resetMsg, setResetMsg] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  // Detect ?reset_token= in URL on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('reset_token');
+    if (token) {
+      setResetToken(token);
+      setView('reset');
+      // Clean URL without reload
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isLogin) {
       onLogin(email, password);
     } else {
       onRegister(email, password, firstName, lastName, selectedRole);
+    }
+  };
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setForgotMsg('');
+    try {
+      const res = await fetch(apiUrl('/user/forgot-password'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: forgotEmail }),
+      });
+      const data = await res.json();
+      setForgotMsg(data.message || 'Reset link sent!');
+    } catch {
+      setForgotMsg('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    if (newPassword.length < 6) {
+      setResetMsg('Password must be at least 6 characters.');
+      return;
+    }
+    setLoading(true);
+    setResetMsg('');
+    try {
+      const res = await fetch(apiUrl('/user/reset-password'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: resetToken, newPassword }),
+      });
+      const data = await res.json();
+      setResetMsg(data.message || 'Done!');
+      if (res.ok) {
+        setTimeout(() => setView('auth'), 2500);
+      }
+    } catch {
+      setResetMsg('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,6 +115,81 @@ export default function LoginRegisterPage({ onLogin, onRegister }) {
     }
   };
 
+  // ── Reset Password View ──────────────────────────────────────────────
+  if (view === 'reset') {
+    return (
+      <div className="auth-container">
+        <div className="auth-card">
+          <img src={Logo1} alt="StoreCraft Logo" className="auth-logo" />
+          <h1 className="auth-title">Set New Password</h1>
+          <p className="auth-subtitle">Choose a strong new password for your account.</p>
+          <form onSubmit={handleResetPassword} className="auth-form">
+            <div className="password-input-wrapper">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="🔒 New Password (min 6 chars)"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="auth-input"
+                required
+                minLength={6}
+              />
+              <button type="button" className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? '🙈' : '👁️'}
+              </button>
+            </div>
+            {resetMsg && (
+              <p style={{ color: resetMsg.includes('successfully') ? '#00897b' : '#e53e3e', fontSize: '14px', textAlign: 'center' }}>
+                {resetMsg}
+              </p>
+            )}
+            <button type="submit" className="auth-button" disabled={loading}>
+              {loading ? 'Updating…' : 'Update Password'}
+            </button>
+          </form>
+          <button type="button" onClick={() => setView('auth')} className="auth-toggle">
+            ← Back to Sign In
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Forgot Password View ─────────────────────────────────────────────
+  if (view === 'forgot') {
+    return (
+      <div className="auth-container">
+        <div className="auth-card">
+          <img src={Logo1} alt="StoreCraft Logo" className="auth-logo" />
+          <h1 className="auth-title">Forgot Password?</h1>
+          <p className="auth-subtitle">Enter your email and we'll send you a reset link.</p>
+          <form onSubmit={handleForgotPassword} className="auth-form">
+            <input
+              type="email"
+              placeholder="📧 Your Email Address"
+              value={forgotEmail}
+              onChange={(e) => setForgotEmail(e.target.value)}
+              className="auth-input"
+              required
+            />
+            {forgotMsg && (
+              <p style={{ color: '#00897b', fontSize: '14px', textAlign: 'center', padding: '8px', background: '#e6fffa', borderRadius: '8px' }}>
+                {forgotMsg}
+              </p>
+            )}
+            <button type="submit" className="auth-button" disabled={loading}>
+              {loading ? 'Sending…' : 'Send Reset Link'}
+            </button>
+          </form>
+          <button type="button" onClick={() => setView('auth')} className="auth-toggle">
+            ← Back to Sign In
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Main Auth View ───────────────────────────────────────────────────
   return (
     <div className="auth-container">
       <div className="auth-card">
@@ -89,6 +231,18 @@ export default function LoginRegisterPage({ onLogin, onRegister }) {
             </button>
           </div>
 
+          {isLogin && (
+            <div style={{ textAlign: 'right', marginTop: '-4px', marginBottom: '4px' }}>
+              <button
+                type="button"
+                onClick={() => setView('forgot')}
+                style={{ background: 'none', border: 'none', color: '#00897b', fontSize: '13px', cursor: 'pointer', textDecoration: 'underline', padding: 0 }}
+              >
+                Forgot password?
+              </button>
+            </div>
+          )}
+
           {!isLogin && (
             <>
               <div className="auth-name-row">
@@ -129,7 +283,7 @@ export default function LoginRegisterPage({ onLogin, onRegister }) {
                     <span className="role-option-label">
                       <span className="role-icon">🛒</span>
                       Buyer
-                      <span className="role-description">Browse & purchase products</span>
+                      <span className="role-description">Browse &amp; purchase products</span>
                     </span>
                   </label>
                   <label className="auth-role-option">
@@ -144,7 +298,7 @@ export default function LoginRegisterPage({ onLogin, onRegister }) {
                     <span className="role-option-label">
                       <span className="role-icon">📤</span>
                       Seller
-                      <span className="role-description">Upload & sell products</span>
+                      <span className="role-description">Upload &amp; sell products</span>
                     </span>
                   </label>
                 </div>

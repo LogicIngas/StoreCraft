@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -52,6 +51,7 @@ public class SecurityConfig {
                 // Public: login, register, static assets, all product browsing, websockets
                 .requestMatchers(
                         "/user/login", "/user/create", "/user/logout",
+                        "/user/social-login", "/user/forgot-password", "/user/reset-password",
                         "/uploads/**", "/images/**",
                         "/product/**",          // all product reading (write ops secured at method level)
                         "/ws/**", "/chat/**",   // WebSocket handshake endpoints

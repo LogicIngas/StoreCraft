@@ -18,4 +18,10 @@ public interface IUserRepository extends JpaRepository<User, String> {
      */
     @Query("SELECT u FROM User u WHERE u.email = :email")
     User findByEmail(@Param("email") String email);
+
+    /**
+     * Find a user by their password-reset token.
+     */
+    @Query("SELECT u FROM User u WHERE u.resetToken = :token")
+    User findByResetToken(@Param("token") String token);
 }

@@ -77,20 +77,43 @@ export default function App() {
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session?.user) {
         const supaUser = session.user;
-        const fakeBackendUser = {
-          userId: supaUser.id,
-          email: supaUser.email,
-          firstName: supaUser.user_metadata?.full_name?.split(' ')[0] || supaUser.email.split('@')[0],
-          lastName: supaUser.user_metadata?.full_name?.split(' ')[1] || '',
-          roleName: 'BUYER', 
-          authProvider: 'supabase'
-        };
-        setCurrentUser(fakeBackendUser);
-        localStorage.setItem('currentUser', JSON.stringify(fakeBackendUser));
-        await loadUserData(fakeBackendUser.userId);
-        await loadDefaultAddress(fakeBackendUser.userId);
-        setCurrentPage('storefront');
-        showStatus('✅ Login successful via Supabase!', 'success');
+        try {
+          // Bridge: call our own backend to get a real JWT so cart/wishlist work
+          const res = await fetch(apiUrl('/user/social-login'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: supaUser.email,
+              firstName: supaUser.user_metadata?.full_name?.split(' ')[0] || supaUser.email.split('@')[0],
+              lastName:  supaUser.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
+            }),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            setCurrentUser(data);
+            localStorage.setItem('currentUser', JSON.stringify(data));
+            await loadUserData(data.userId);
+            await loadDefaultAddress(data.userId);
+            setCurrentPage('storefront');
+            showStatus('✅ Login successful! Welcome to StoreCraft!', 'success');
+          } else {
+            // Fallback: at least show them as a guest-BUYER (no cart access)
+            const fallback = {
+              userId: supaUser.id,
+              email: supaUser.email,
+              firstName: supaUser.user_metadata?.full_name?.split(' ')[0] || supaUser.email.split('@')[0],
+              lastName: '',
+              roleName: 'BUYER',
+              authProvider: 'supabase',
+            };
+            setCurrentUser(fallback);
+            localStorage.setItem('currentUser', JSON.stringify(fallback));
+            setCurrentPage('storefront');
+            showStatus('✅ Logged in via email link!', 'success');
+          }
+        } catch (err) {
+          console.error('Social login bridge failed:', err);
+        }
       } else if (event === 'SIGNED_OUT') {
         setCurrentUser(null);
         setCart(null);

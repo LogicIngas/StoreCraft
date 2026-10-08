@@ -36,7 +36,7 @@ public class UserService implements IUserService, UserDetailsService {
 
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
-                user.getPassword(), // NoOpPasswordEncoder is set in SecurityConfig — no prefix needed
+                user.getPassword(), // BCryptPasswordEncoder is set in SecurityConfig
                 List.of(new SimpleGrantedAuthority(authority))
         );
     }
