@@ -1,28 +1,38 @@
 package com.example.loginpage.service.impl;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
+import java.util.Map;
 
 @Service
 public class FileStorageService {
 
-    @Value("${file.upload-dir:uploads}")
-    private String uploadDir;
+    private final Cloudinary cloudinary;
+
+    public FileStorageService(
+            @Value("${cloudinary.cloud-name}") String cloudName,
+            @Value("${cloudinary.api-key}") String apiKey,
+            @Value("${cloudinary.api-secret}") String apiSecret) {
+
+        this.cloudinary = new Cloudinary(ObjectUtils.asMap(
+                "cloud_name", cloudName,
+                "api_key",    apiKey,
+                "api_secret", apiSecret,
+                "secure",     true
+        ));
+    }
 
     /**
-     * Save uploaded file and return the saved filename
+     * Upload an image to Cloudinary and return its permanent CDN URL.
      *
-     * @param file the multipart file to upload
-     * @return the relative path to the uploaded file (e.g., /images/uuid-filename.jpg)
-     * @throws IOException if file storage fails
+     * @param file the multipart image file to upload
+     * @return the full HTTPS URL of the uploaded image on Cloudinary
+     * @throws IOException if the upload fails
      */
     public String saveFile(MultipartFile file) throws IOException {
         if (file == null || file.isEmpty()) {
@@ -35,74 +45,78 @@ public class FileStorageService {
             throw new IllegalArgumentException("Only image files are allowed");
         }
 
-        // Get original filename and extension
-        String originalFilename = file.getOriginalFilename();
-        String fileExtension = getFileExtension(originalFilename);
+        Map<?, ?> uploadResult = cloudinary.uploader().upload(
+                file.getBytes(),
+                ObjectUtils.asMap(
+                        "folder",           "storecraft/products",
+                        "resource_type",    "image",
+                        "use_filename",     false,
+                        "unique_filename",  true
+                )
+        );
 
-        // Generate unique filename to avoid conflicts
-        String savedFilename = UUID.randomUUID().toString() + "." + fileExtension;
-
-        // Create upload directory if it doesn't exist
-        Path uploadPath = Paths.get(uploadDir).toAbsolutePath();
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
-
-        // Save file to disk
-        Path filePath = uploadPath.resolve(savedFilename);
-        Files.copy(file.getInputStream(), filePath);
-
-        // Return the URL path (relative to the web root)
-        return "/images/" + savedFilename;
+        // "secure_url" is the permanent HTTPS CDN link
+        return (String) uploadResult.get("secure_url");
     }
 
     /**
-     * Delete a file by its path
+     * Delete an image from Cloudinary by its URL.
+     * Extracts the public_id from the URL so Cloudinary can locate the asset.
      *
-     * @param filePath the relative path to the file (e.g., /images/filename.jpg)
-     * @return true if deletion was successful, false otherwise
+     * @param imageUrl the full Cloudinary CDN URL stored in the database
+     * @return true if deletion succeeded, false otherwise
      */
-    public boolean deleteFile(String filePath) {
-        if (filePath == null || filePath.isEmpty()) {
+    public boolean deleteFile(String imageUrl) {
+        if (imageUrl == null || imageUrl.isEmpty()) {
             return false;
         }
 
         try {
-            // Extract filename from path and construct full path
-            String filename = filePath.replace("/images/", "");
-            Path fullPath = Paths.get(uploadDir).toAbsolutePath().resolve(filename);
-
-            if (Files.exists(fullPath)) {
-                Files.delete(fullPath);
-                return true;
-            }
-            return false;
-        } catch (IOException e) {
-            System.err.println("Failed to delete file: " + e.getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * Get file extension from filename
-     */
-    private String getFileExtension(String filename) {
-        if (filename == null || !filename.contains(".")) {
-            return "jpg";
-        }
-        return filename.substring(filename.lastIndexOf(".") + 1).toLowerCase();
-    }
-
-    /**
-     * Check if file exists
-     */
-    public boolean fileExists(String filePath) {
-        try {
-            String filename = filePath.replace("/images/", "");
-            Path fullPath = Paths.get(uploadDir).toAbsolutePath().resolve(filename);
-            return Files.exists(fullPath);
+            String publicId = extractPublicId(imageUrl);
+            Map<?, ?> result = cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+            return "ok".equals(result.get("result"));
         } catch (Exception e) {
+            System.err.println("Failed to delete Cloudinary image: " + e.getMessage());
             return false;
         }
+    }
+
+    /**
+     * Check whether a Cloudinary image URL is reachable (non-null/empty).
+     * Cloudinary URLs are always persistent, so we just validate the URL exists.
+     */
+    public boolean fileExists(String imageUrl) {
+        return imageUrl != null && !imageUrl.isEmpty() && imageUrl.startsWith("https://");
+    }
+
+    /**
+     * Extract the Cloudinary public_id from a secure URL.
+     * Example URL: https://res.cloudinary.com/demo/image/upload/v1234567890/storecraft/products/abc123.jpg
+     * Extracted public_id: storecraft/products/abc123
+     */
+    private String extractPublicId(String imageUrl) {
+        // Remove everything up to and including "/upload/"
+        int uploadIndex = imageUrl.indexOf("/upload/");
+        if (uploadIndex == -1) {
+            throw new IllegalArgumentException("Not a valid Cloudinary URL: " + imageUrl);
+        }
+        String afterUpload = imageUrl.substring(uploadIndex + 8); // skip "/upload/"
+
+        // Remove version segment if present (e.g. "v1234567890/")
+        if (afterUpload.startsWith("v") && afterUpload.contains("/")) {
+            int slashIndex = afterUpload.indexOf("/");
+            String potentialVersion = afterUpload.substring(1, slashIndex);
+            if (potentialVersion.matches("\\d+")) {
+                afterUpload = afterUpload.substring(slashIndex + 1);
+            }
+        }
+
+        // Remove file extension
+        int dotIndex = afterUpload.lastIndexOf(".");
+        if (dotIndex != -1) {
+            afterUpload = afterUpload.substring(0, dotIndex);
+        }
+
+        return afterUpload;
     }
 }
