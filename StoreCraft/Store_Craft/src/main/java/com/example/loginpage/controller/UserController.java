@@ -46,6 +46,9 @@ public class UserController {
     @Value("${frontend.url:http://localhost:5173}")
     private String frontendUrl;
 
+    @Value("${app.base-url:}")
+    private String appBaseUrl;
+
     public UserController(UserService service, IRoleRepository roleRepository, JWTService jwtService,
                           org.springframework.security.crypto.password.PasswordEncoder passwordEncoder,
                           IUserRepository userRepository, EmailService emailService,
@@ -57,6 +60,24 @@ public class UserController {
         this.userRepository = userRepository;
         this.emailService = emailService;
         this.supabaseJwtVerifier = supabaseJwtVerifier;
+    }
+
+    private String getBestBaseUrl() {
+        String urlsToParse = (appBaseUrl != null && !appBaseUrl.trim().isEmpty()) ? appBaseUrl : frontendUrl;
+        if (urlsToParse == null || urlsToParse.trim().isEmpty()) {
+            return "https://storecraft-fe.onrender.com"; // hard fallback
+        }
+        String[] urls = urlsToParse.split(",");
+        // 1. Prefer HTTPS (production)
+        for (String u : urls) {
+            if (u.trim().startsWith("https://")) return u.trim();
+        }
+        // 2. Prefer non-localhost (like a local network IP, or other domain)
+        for (String u : urls) {
+            if (!u.trim().contains("localhost") && !u.trim().contains("127.0.0.1")) return u.trim();
+        }
+        // 3. Fallback
+        return urls[0].trim();
     }
 
     // ============ ENDPOINTS ============
@@ -97,7 +118,7 @@ public class UserController {
             String token = jwtService.generateToken(saved.getEmail());
 
             // Dispatch verification email in the background (so it doesn't block response)
-            String baseUrl = frontendUrl.contains(",") ? frontendUrl.split(",")[0].trim() : frontendUrl.trim();
+            String baseUrl = getBestBaseUrl();
             String verifyLink = baseUrl + "?verify_token=" + vToken;
             new Thread(() -> {
                 emailService.sendVerificationEmail(saved.getEmail(), saved.getFirstName(), verifyLink);
@@ -330,9 +351,7 @@ public class UserController {
                 service.update(user);
 
                 // Build the reset link pointing to the frontend
-                String baseUrl = frontendUrl.contains(",")
-                        ? frontendUrl.split(",")[0].trim()
-                        : frontendUrl.trim();
+                String baseUrl = getBestBaseUrl();
                 String resetLink = baseUrl + "?reset_token=" + token;
 
                 emailService.sendPasswordResetEmail(
