@@ -6,8 +6,10 @@ import com.example.loginpage.repository.IRoleRepository;
 import com.example.loginpage.repository.IUserRepository;
 import com.example.loginpage.service.impl.EmailService;
 import com.example.loginpage.service.impl.JWTService;
+import com.example.loginpage.service.impl.SupabaseJwtVerifier;
 import com.example.loginpage.service.impl.UserService;
 import com.example.loginpage.util.Helper;
+import com.nimbusds.jwt.JWTClaimsSet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +38,7 @@ public class UserController {
     private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
     private final IUserRepository userRepository;
     private final EmailService emailService;
+    private final SupabaseJwtVerifier supabaseJwtVerifier;
 
     @Value("${file.upload-dir:uploads}")
     private String uploadDir;
@@ -45,13 +48,15 @@ public class UserController {
 
     public UserController(UserService service, IRoleRepository roleRepository, JWTService jwtService,
                           org.springframework.security.crypto.password.PasswordEncoder passwordEncoder,
-                          IUserRepository userRepository, EmailService emailService) {
+                          IUserRepository userRepository, EmailService emailService,
+                          SupabaseJwtVerifier supabaseJwtVerifier) {
         this.service = service;
         this.roleRepository = roleRepository;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.emailService = emailService;
+        this.supabaseJwtVerifier = supabaseJwtVerifier;
     }
 
     // ============ ENDPOINTS ============
@@ -121,17 +126,25 @@ public class UserController {
                         .body(Map.of("message", "User not found. Please create an account."));
             }
 
-            boolean matches;
-            if (user.getPassword().startsWith("$2a$")) {
-                matches = passwordEncoder.matches(request.password, user.getPassword());
-            } else {
-                matches = user.getPassword().equals(request.password);
-                if (matches) {
-                    // Seamless migration: hash plain text password on successful login
-                    user.setPassword(passwordEncoder.encode(request.password));
-                    service.update(user);
-                }
+            // A2 — BCrypt-only check.
+            //
+            // MIGRATION NOTE (for future devs):
+            // Legacy rows that were stored as plaintext before the BCrypt rollout
+            // will fail this check intentionally. Those users must go through
+            // forgot-password → reset-password to obtain a BCrypt-hashed credential.
+            // Do NOT re-introduce a plaintext fallback here — it would be a security
+            // regression. If you need to migrate rows in bulk, use a one-time DB script
+            // that hashes all plaintext passwords offline before running the app.
+            if (!user.getPassword().startsWith("$2a$") && !user.getPassword().startsWith("$2b$")) {
+                // Stored password is not BCrypt — require a password reset
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of(
+                                "message", "Your account requires a password reset. Please use 'Forgot Password'.",
+                                "passwordResetRequired", true
+                        ));
             }
+
+            boolean matches = passwordEncoder.matches(request.password, user.getPassword());
 
             if (!matches) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -165,32 +178,68 @@ public class UserController {
     }
 
     /**
-     * Social / Magic-Link login bridge.
-     * Called by the frontend after Supabase authenticates the user.
-     * Finds or creates a BUYER account in our database, then returns our own JWT.
+     * A1 — Social / Magic-Link login bridge (SECURITY HARDENED).
+     *
+     * The frontend calls this after Supabase authenticates the user.
+     * It MUST pass the Supabase access token in the Authorization header:
+     *   Authorization: Supabase <access_token>
+     *
+     * The backend verifies the token against Supabase's JWKS endpoint and
+     * extracts the email + name exclusively from the verified JWT claims.
+     * The request body is intentionally ignored for identity information.
+     *
+     * NEVER trust the request body for email/name — it can be forged.
      */
     @PostMapping("/social-login")
-    public ResponseEntity<?> socialLogin(@RequestBody SocialLoginRequest request) {
+    public ResponseEntity<?> socialLogin(
+            @RequestBody SocialLoginRequest ignoredBody,
+            HttpServletRequest httpRequest) {
         try {
-            if (request.email == null || request.email.trim().isEmpty()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(Map.of("message", "Email is required."));
+            // 1. Extract the Supabase access token from the Authorization header
+            String authHeader = httpRequest.getHeader("Authorization");
+            if (authHeader == null || !authHeader.startsWith("Supabase ")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("message",
+                                "Supabase access token is required in Authorization header."));
+            }
+            String supabaseToken = authHeader.substring(9).trim(); // strip "Supabase "
+
+            // 2. Verify the token against Supabase's JWKS (RS256)
+            JWTClaimsSet claims;
+            try {
+                claims = supabaseJwtVerifier.verify(supabaseToken);
+            } catch (SupabaseJwtVerifier.SupabaseAuthException e) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("message", "Invalid or expired Supabase token: " + e.getMessage()));
             }
 
-            User user = userRepository.findByEmail(request.email.trim());
+            // 3. Extract email and name FROM the verified claims only — never from the body
+            String email;
+            try {
+                email = supabaseJwtVerifier.extractEmail(claims);
+            } catch (SupabaseJwtVerifier.SupabaseAuthException e) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("message", e.getMessage()));
+            }
 
+            String fullName = supabaseJwtVerifier.extractFullName(claims);
+            String firstName = (fullName != null && !fullName.isBlank())
+                    ? fullName.split(" ")[0]
+                    : email.split("@")[0];
+            String lastName = (fullName != null && fullName.contains(" "))
+                    ? fullName.substring(fullName.indexOf(' ') + 1)
+                    : "";
+
+            // 4. Find or create the local user account
+            User user = userRepository.findByEmail(email.trim());
             if (user == null) {
-                // First time — create the user as BUYER automatically
                 Role buyerRole = roleRepository.findByName("BUYER").orElse(null);
                 if (buyerRole == null) {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                             .body(Map.of("message", "BUYER role not found. Contact admin."));
                 }
-                String firstName = request.firstName != null ? request.firstName : request.email.split("@")[0];
-                String lastName  = request.lastName  != null ? request.lastName  : "";
-
                 user = new User.Builder()
-                        .setEmail(request.email.trim())
+                        .setEmail(email.trim())
                         .setPassword(passwordEncoder.encode(UUID.randomUUID().toString()))
                         .setFirstName(firstName)
                         .setLastName(lastName)
@@ -199,6 +248,7 @@ public class UserController {
                 user = service.create(user);
             }
 
+            // 5. Issue our own JWT for subsequent API calls
             String token = jwtService.generateToken(user.getEmail());
 
             Map<String, Object> response = new HashMap<>();

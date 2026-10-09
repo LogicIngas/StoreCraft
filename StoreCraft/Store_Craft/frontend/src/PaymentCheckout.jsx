@@ -10,8 +10,8 @@ export default function PaymentCheckout({
   userId,
   onAddressSaved,
 }) {
+  const [cardNumber, setCardNumber] = useState('');
   const [cardToken, setCardToken] = useState('');
-  const [cardLast4, setCardLast4] = useState('');
   const [cardHolderName, setCardHolderName] = useState('');
   const [saveAddress, setSaveAddress] = useState(false);
   const [addressData, setAddressData] = useState({
@@ -25,16 +25,40 @@ export default function PaymentCheckout({
   });
   const [errors, setErrors] = useState({});
 
+  // Luhn algorithm check for credit cards
+  const isValidCardNumber = (number) => {
+    const regex = new RegExp("^[0-9]{13,19}$");
+    if (!regex.test(number)) return false;
+
+    let sum = 0;
+    let alternate = false;
+    for (let i = number.length - 1; i >= 0; i--) {
+      let n = parseInt(number.substring(i, i + 1));
+      if (alternate) {
+        n *= 2;
+        if (n > 9) n = (n % 10) + 1;
+      }
+      sum += n;
+      alternate = !alternate;
+    }
+    return (sum % 10 === 0);
+  };
+
   const validateForm = () => {
     const newErrors = {};
     if (!shippingAddress.trim()) {
       newErrors.shippingAddress = 'Shipping address is required';
     }
-    if (!cardToken.trim()) {
-      newErrors.cardToken = 'Card token is required';
+    const cleanCard = cardNumber.replace(/\D/g, '');
+    if (!cleanCard) {
+      newErrors.cardNumber = 'Card number is required';
+    } else if (!isValidCardNumber(cleanCard)) {
+      newErrors.cardNumber = 'Invalid card number. Please use a valid test card.';
     }
-    if (cardToken.trim().length < 3) {
-      newErrors.cardToken = 'Card token must be at least 3 characters';
+    if (!cardToken.trim()) {
+      newErrors.cardToken = 'CVV is required';
+    } else if (cardToken.trim().length < 3) {
+      newErrors.cardToken = 'CVV must be at least 3 characters';
     }
     if (!cardHolderName.trim()) {
       newErrors.cardHolderName = 'Cardholder name is required';
@@ -52,7 +76,9 @@ export default function PaymentCheckout({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-    onPayment(cardToken, cardLast4, cardHolderName, saveAddress, addressData);
+    const cleanCard = cardNumber.replace(/\D/g, '');
+    const computedLast4 = cleanCard.substring(cleanCard.length - 4);
+    onPayment(cardToken, computedLast4, cardHolderName, saveAddress, addressData);
   };
 
   if (!cart) return null;
@@ -133,7 +159,7 @@ export default function PaymentCheckout({
                     type="tel"
                     value={addressData.phoneNumber}
                     onChange={(e) => setAddressData({ ...addressData, phoneNumber: e.target.value })}
-                    placeholder="(optional)"
+                    placeholder="e.g., 083 123 4567"
                     style={styles.input}
                     disabled={isProcessing}
                   />
@@ -144,7 +170,7 @@ export default function PaymentCheckout({
                     type="text"
                     value={addressData.streetAddress}
                     onChange={(e) => setAddressData({ ...addressData, streetAddress: e.target.value })}
-                    placeholder="e.g., 123 Main St"
+                    placeholder="e.g., 213 Main St"
                     style={styles.input}
                     disabled={isProcessing}
                   />
@@ -157,7 +183,7 @@ export default function PaymentCheckout({
                       type="text"
                       value={addressData.city}
                       onChange={(e) => setAddressData({ ...addressData, city: e.target.value })}
-                      placeholder="City"
+                      placeholder="e.g., Durban"
                       style={styles.input}
                       disabled={isProcessing}
                     />
@@ -169,7 +195,7 @@ export default function PaymentCheckout({
                       type="text"
                       value={addressData.stateProvince}
                       onChange={(e) => setAddressData({ ...addressData, stateProvince: e.target.value })}
-                      placeholder="(optional)"
+                      placeholder="KwaZulu-Natal"
                       style={styles.input}
                       disabled={isProcessing}
                     />
@@ -208,6 +234,23 @@ export default function PaymentCheckout({
           <div style={styles.section}>
             <h3 style={styles.sectionTitle}>Payment Details</h3>
             <div style={styles.formGroup}>
+              <label>Card Number *</label>
+              <input
+                type="text"
+                value={cardNumber}
+                onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, '');
+                    const formatted = val.match(/.{1,4}/g)?.join(' ') || val;
+                    setCardNumber(formatted);
+                }}
+                placeholder="0000 0000 0000 0000"
+                style={styles.input}
+                disabled={isProcessing}
+                maxLength="19"
+              />
+              {errors.cardNumber && <div style={styles.errorMessage}>{errors.cardNumber}</div>}
+            </div>
+            <div style={styles.formGroup}>
               <label>Cardholder Name *</label>
               <input
                 type="text"
@@ -220,29 +263,17 @@ export default function PaymentCheckout({
               {errors.cardHolderName && <div style={styles.errorMessage}>{errors.cardHolderName}</div>}
             </div>
             <div style={styles.formGroup}>
-              <label>Card Token (Mock) *</label>
+              <label>Card CVV *</label>
               <input
                 type="text"
                 value={cardToken}
                 onChange={(e) => setCardToken(e.target.value)}
-                placeholder="Enter any value (min 3 chars)"
+                placeholder="Enter CVV (min 3 chars)"
                 style={styles.input}
                 disabled={isProcessing}
               />
               {errors.cardToken && <div style={styles.errorMessage}>{errors.cardToken}</div>}
-              <small style={styles.helpText}>This is a mock payment gateway. Use any value with at least 3 characters.</small>
-            </div>
-            <div style={styles.formGroup}>
-              <label>Card Last 4 Digits (Optional)</label>
-              <input
-                type="text"
-                value={cardLast4}
-                onChange={(e) => setCardLast4(e.target.value.slice(0, 4))}
-                placeholder="1234"
-                maxLength="4"
-                style={styles.input}
-                disabled={isProcessing}
-              />
+              <small style={styles.helpText}>Your CVV is required for this transaction.</small>
             </div>
           </div>
 

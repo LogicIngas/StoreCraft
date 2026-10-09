@@ -28,4 +28,10 @@ public interface IOrderRepository extends JpaRepository<Order, String> {
      */
     @Query("SELECT o FROM Order o WHERE o.userId = :userId AND o.status = :status ORDER BY o.createdAt DESC")
     List<Order> findByUserIdAndStatus(@Param("userId") String userId, @Param("status") String status);
+
+    /**
+     * A4 — Find orders containing products sold by a specific seller
+     */
+    @Query("SELECT DISTINCT o FROM Order o JOIN o.orderItems i WHERE i.product.sellerId = :sellerId ORDER BY o.createdAt DESC")
+    List<Order> findOrdersBySellerId(@Param("sellerId") String sellerId);
 }

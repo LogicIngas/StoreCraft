@@ -59,10 +59,13 @@ public class ProductService {
 
     @Transactional
     public Product uploadProduct(MultipartFile file, String name, String description,
-                                 BigDecimal price, Integer stockQuantity, String category) {
+                                 BigDecimal price, Integer stockQuantity, String category, String sellerId) {
         try {
             String imageUrl = fileStorageService.saveFile(file);
             Product product = new Product(name, description, price, stockQuantity, imageUrl, category);
+            if (sellerId != null) {
+                product.setSellerId(sellerId);
+            }
             return productRepository.save(product);
         } catch (Exception e) {
             throw new RuntimeException("Failed to upload product: " + e.getMessage());
@@ -104,5 +107,10 @@ public class ProductService {
     @Transactional(readOnly = true)
     public Product getProductEntity(String productId) {
         return productRepository.findById(productId).orElse(null);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Product> getProductsBySellerId(String sellerId) {
+        return productRepository.findBySellerId(sellerId);
     }
 }

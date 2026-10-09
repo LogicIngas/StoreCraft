@@ -13,9 +13,11 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService service;
+    private final com.example.loginpage.service.impl.UserService userService;
 
-    public ProductController(ProductService service) {
+    public ProductController(ProductService service, com.example.loginpage.service.impl.UserService userService) {
         this.service = service;
+        this.userService = userService;
     }
 
     @GetMapping("/all")
@@ -55,9 +57,24 @@ public class ProductController {
             @RequestParam(value = "description", required = false) String description,
             @RequestParam("price") BigDecimal price,
             @RequestParam("stockQuantity") Integer stockQuantity,
-            @RequestParam("category") String category) {
+            @RequestParam("category") String category,
+            java.security.Principal principal) {
+        
+        String sellerId = null;
+        if (principal != null) {
+            com.example.loginpage.model.User user = userService.findByEmail(principal.getName());
+            if (user != null) sellerId = user.getUserId();
+        }
 
-        return service.uploadProduct(file, name, description, price, stockQuantity, category);
+        return service.uploadProduct(file, name, description, price, stockQuantity, category, sellerId);
+    }
+
+    @GetMapping("/seller")
+    public List<Product> getProductsBySeller(java.security.Principal principal) {
+        if (principal == null) return List.of();
+        com.example.loginpage.model.User user = userService.findByEmail(principal.getName());
+        if (user == null) return List.of();
+        return service.getProductsBySellerId(user.getUserId());
     }
 
     @PostMapping("/create")

@@ -18,6 +18,7 @@ import StatusBanner from './components/StatusBanner';
 import Footer from './Footer';
 import LandingPage from './LandingPage';
 import AdminDashboard from './AdminDashboard';
+import SellerDashboard from './components/SellerDashboard';
 import ProfilePage from './components/ProfilePage';
 import CookieConsent from './components/CookieConsent';
 
@@ -79,9 +80,14 @@ export default function App() {
         const supaUser = session.user;
         try {
           // Bridge: call our own backend to get a real JWT so cart/wishlist work
+          // A1: Forward the Supabase access token so the backend can verify it server-side
           const res = await fetch(apiUrl('/user/social-login'), {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              // Backend verifies this RS256 token against Supabase's JWKS endpoint
+              'Authorization': `Supabase ${session.access_token}`,
+            },
             body: JSON.stringify({
               email: supaUser.email,
               firstName: supaUser.user_metadata?.full_name?.split(' ')[0] || supaUser.email.split('@')[0],
@@ -216,7 +222,12 @@ export default function App() {
       });
       const data = await response.json();
       if (!response.ok) {
-        showStatus(data.message || 'Login failed', 'error');
+        // A2: handle forced reset for legacy plaintext-password accounts
+        if (data.passwordResetRequired) {
+          showStatus('⚠️ Your account requires a password reset. Please use "Forgot Password" below.', 'error');
+        } else {
+          showStatus(data.message || 'Login failed', 'error');
+        }
         return;
       }
       setCurrentUser(data);
@@ -620,6 +631,10 @@ export default function App() {
 
         {currentPage === 'upload' && isSeller && (
           <UploadProduct onProductAdded={() => loadProducts()} />
+        )}
+
+        {currentPage === 'sellerDashboard' && isSeller && (
+          <SellerDashboard userId={currentUser.userId} />
         )}
 
         {currentPage === 'addresses' && (

@@ -17,13 +17,18 @@ public class PaymentService {
     private final IPaymentRepository paymentRepository;
     private final CartService cartService;
     private final OrderService orderService;
+    private final com.example.loginpage.service.impl.UserService userService;
+    private final com.example.loginpage.service.impl.EmailService emailService;
 
     @Autowired
     public PaymentService(IPaymentRepository paymentRepository, CartService cartService,
-                          OrderService orderService) {
+                          OrderService orderService, com.example.loginpage.service.impl.UserService userService,
+                          com.example.loginpage.service.impl.EmailService emailService) {
         this.paymentRepository = paymentRepository;
         this.cartService = cartService;
         this.orderService = orderService;
+        this.userService = userService;
+        this.emailService = emailService;
     }
 
     @Transactional
@@ -75,6 +80,17 @@ public class PaymentService {
 
             orderService.updateOrderStatus(order.getOrderId(), "CONFIRMED");
             cartService.clearCart(userId);
+
+            // Send confirmation email
+            try {
+                com.example.loginpage.model.User user = userService.read(userId);
+                if (user != null) {
+                    String name = user.getFirstName() != null ? user.getFirstName() : "Customer";
+                    emailService.sendOrderConfirmation(user.getEmail(), name, order.getOrderId(), total, LocalDateTime.now().toLocalDate().toString());
+                }
+            } catch (Exception ex) {
+                System.err.println("Failed to send order confirmation email: " + ex.getMessage());
+            }
 
             return completedPayment;
 

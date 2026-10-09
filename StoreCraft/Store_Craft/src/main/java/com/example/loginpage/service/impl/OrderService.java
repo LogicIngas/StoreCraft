@@ -18,11 +18,17 @@ public class OrderService {
 
     private final IOrderRepository orderRepository;
     private final CartService cartService;
+    private final com.example.loginpage.service.impl.UserService userService;
+    private final com.example.loginpage.service.impl.EmailService emailService;
 
     @Autowired
-    public OrderService(IOrderRepository orderRepository, CartService cartService) {
+    public OrderService(IOrderRepository orderRepository, CartService cartService,
+                        com.example.loginpage.service.impl.UserService userService,
+                        com.example.loginpage.service.impl.EmailService emailService) {
         this.orderRepository = orderRepository;
         this.cartService = cartService;
+        this.userService = userService;
+        this.emailService = emailService;
     }
 
     @Transactional
@@ -78,11 +84,35 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found: " + orderId));
         order.setStatus(newStatus);
-        return orderRepository.save(order);
+        Order updated = orderRepository.save(order);
+
+        // Notify user if status is changed to something meaningful
+        if (newStatus.equalsIgnoreCase("SHIPPED") || newStatus.equalsIgnoreCase("DELIVERED") || newStatus.equalsIgnoreCase("CANCELLED")) {
+            try {
+                com.example.loginpage.model.User user = userService.read(order.getUserId());
+                if (user != null) {
+                    String name = user.getFirstName() != null ? user.getFirstName() : "Customer";
+                    if (newStatus.equalsIgnoreCase("SHIPPED")) {
+                        emailService.sendShippingNotification(user.getEmail(), name, order.getOrderId(), "TBA", "3-5 business days");
+                    } else {
+                        // For delivered/cancelled, maybe send a generic one or build one
+                        // but shipping is the primary one mentioned.
+                    }
+                }
+            } catch (Exception ex) {
+                System.err.println("Failed to send status update email: " + ex.getMessage());
+            }
+        }
+        return updated;
     }
 
     @Transactional(readOnly = true)
     public Order getOrderSummary(String orderId) {
         return getOrderById(orderId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Order> getOrdersBySellerId(String sellerId) {
+        return orderRepository.findOrdersBySellerId(sellerId);
     }
 }

@@ -106,12 +106,20 @@ export default function Navbar({
                 📍 Addresses
               </button>
               {isSeller && (
-                <button
-                  onClick={() => handleNavClick('upload')}
-                  className={`nav-button ${currentPage === 'upload' ? 'active' : ''}`}
-                >
-                  📤 Upload
-                </button>
+                <>
+                  <button
+                    onClick={() => handleNavClick('sellerDashboard')}
+                    className={`nav-button ${currentPage === 'sellerDashboard' ? 'active' : ''}`}
+                  >
+                    📊 Dashboard
+                  </button>
+                  <button
+                    onClick={() => handleNavClick('upload')}
+                    className={`nav-button ${currentPage === 'upload' ? 'active' : ''}`}
+                  >
+                    📤 Upload
+                  </button>
+                </>
               )}
               <span className="user-role-badge">{currentUser.roleName}</span>
               <button onClick={handleLogout} className="logout-button">

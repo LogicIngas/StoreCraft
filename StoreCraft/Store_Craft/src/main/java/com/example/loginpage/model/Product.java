@@ -32,6 +32,9 @@ public class Product {
     @Column(name = "category")
     private String category;
 
+    @Column(name = "seller_id")
+    private String sellerId;
+
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 
@@ -118,6 +121,14 @@ public class Product {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getSellerId() {
+        return sellerId;
+    }
+
+    public void setSellerId(String sellerId) {
+        this.sellerId = sellerId;
     }
 
     public Boolean getIsActive() {

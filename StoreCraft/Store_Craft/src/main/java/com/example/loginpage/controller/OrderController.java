@@ -15,9 +15,23 @@ import java.util.stream.Collectors;
 public class OrderController {
 
     private final OrderService service;
+    private final com.example.loginpage.service.impl.UserService userService;
 
-    public OrderController(OrderService service) {
+    public OrderController(OrderService service, com.example.loginpage.service.impl.UserService userService) {
         this.service = service;
+        this.userService = userService;
+    }
+
+    @GetMapping("/seller")
+    public List<OrderDTO> getOrdersBySeller(java.security.Principal principal) {
+        if (principal == null) return List.of();
+        com.example.loginpage.model.User user = userService.findByEmail(principal.getName());
+        if (user == null) return List.of();
+        
+        List<Order> orders = service.getOrdersBySellerId(user.getUserId());
+        return orders.stream()
+                .map(this::convertToOrderDTO)
+                .collect(Collectors.toList());
     }
 
     @PostMapping("/create")

@@ -37,4 +37,9 @@ public interface IProductRepository extends JpaRepository<Product, String> {
     @Query("SELECT p FROM Product p WHERE p.price >= :minPrice AND p.price <= :maxPrice")
     List<Product> findByPriceRange(@Param("minPrice") java.math.BigDecimal minPrice,
                                    @Param("maxPrice") java.math.BigDecimal maxPrice);
+
+    /**
+     * A4 — Find products belonging to a specific seller
+     */
+    List<Product> findBySellerId(String sellerId);
 }

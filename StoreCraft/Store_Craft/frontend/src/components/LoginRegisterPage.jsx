@@ -100,21 +100,6 @@ export default function LoginRegisterPage({ onLogin, onRegister }) {
     }
   };
 
-  const handleSupabaseOtp = async () => {
-    if (!email) {
-      alert('Please enter your email for Magic Link');
-      return;
-    }
-    try {
-      const { error } = await supabase.auth.signInWithOtp({ email });
-      if (error) throw error;
-      alert('Check your email for the login link!');
-    } catch (error) {
-      console.error('Error sending magic link:', error.message);
-      alert(error.message);
-    }
-  };
-
   // ── Reset Password View ──────────────────────────────────────────────
   if (view === 'reset') {
     return (
@@ -312,14 +297,6 @@ export default function LoginRegisterPage({ onLogin, onRegister }) {
 
           <div className="supabase-auth-options" style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             <div style={{ textAlign: 'center', margin: '0.5rem 0', color: '#666' }}>OR</div>
-            <button
-              type="button"
-              onClick={handleSupabaseOtp}
-              className="auth-button"
-              style={{ backgroundColor: '#2b6cb0' }}
-            >
-              Continue with Email (Magic Link)
-            </button>
             <button
               type="button"
               onClick={handleSupabaseOAuth}
