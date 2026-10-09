@@ -24,4 +24,7 @@ public interface IUserRepository extends JpaRepository<User, String> {
      */
     @Query("SELECT u FROM User u WHERE u.resetToken = :token")
     User findByResetToken(@Param("token") String token);
+    
+    @Query("SELECT u FROM User u WHERE u.verificationToken = :token")
+    User findByVerificationToken(@Param("token") String token);
 }

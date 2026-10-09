@@ -44,6 +44,11 @@ public class PaymentService {
             throw new RuntimeException("Payment token is required");
         }
 
+        com.example.loginpage.model.User userCheck = userService.read(userId);
+        if (userCheck == null || Boolean.FALSE.equals(userCheck.getIsVerified())) {
+            throw new RuntimeException("Please verify your email address before checking out.");
+        }
+
         com.example.loginpage.model.Cart cart = cartService.getCartByUserId(userId);
         if (cart == null || cart.getCartItems().isEmpty()) {
             throw new RuntimeException("Cart is empty. Cannot process payment.");

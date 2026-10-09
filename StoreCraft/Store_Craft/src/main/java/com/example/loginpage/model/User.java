@@ -39,6 +39,15 @@ public class User {
 
     @Column(name = "reset_token_expiry")
     private java.time.LocalDateTime resetTokenExpiry;
+    
+    @Column(name = "is_verified")
+    private Boolean isVerified = false;
+    
+    @Column(name = "verification_token", length = 64)
+    private String verificationToken;
+    
+    @Column(name = "verification_token_expiry")
+    private java.time.LocalDateTime verificationTokenExpiry;
 
     public User() {}
 
@@ -74,6 +83,13 @@ public class User {
     public void setResetToken(String resetToken) { this.resetToken = resetToken; }
     public java.time.LocalDateTime getResetTokenExpiry() { return resetTokenExpiry; }
     public void setResetTokenExpiry(java.time.LocalDateTime resetTokenExpiry) { this.resetTokenExpiry = resetTokenExpiry; }
+
+    public Boolean getIsVerified() { return isVerified; }
+    public void setIsVerified(Boolean isVerified) { this.isVerified = isVerified; }
+    public String getVerificationToken() { return verificationToken; }
+    public void setVerificationToken(String verificationToken) { this.verificationToken = verificationToken; }
+    public java.time.LocalDateTime getVerificationTokenExpiry() { return verificationTokenExpiry; }
+    public void setVerificationTokenExpiry(java.time.LocalDateTime verificationTokenExpiry) { this.verificationTokenExpiry = verificationTokenExpiry; }
 
     public static class Builder {
         private String userId;

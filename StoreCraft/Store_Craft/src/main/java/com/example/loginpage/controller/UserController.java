@@ -79,6 +79,7 @@ public class UserController {
                         .body(Map.of("message", "Invalid role specified."));
             }
 
+            String vToken = UUID.randomUUID().toString().replace("-", "");
             User user = new User.Builder()
                     .setEmail(request.email)
                     .setPassword(passwordEncoder.encode(request.password))
@@ -86,11 +87,21 @@ public class UserController {
                     .setLastName(request.lastName)
                     .setRole(role)
                     .build();
+            user.setIsVerified(false);
+            user.setVerificationToken(vToken);
+            user.setVerificationTokenExpiry(LocalDateTime.now().plusHours(24));
 
             User saved = service.create(user);
 
             // Generate JWT token so the user is immediately authenticated
             String token = jwtService.generateToken(saved.getEmail());
+
+            // Dispatch verification email in the background (so it doesn't block response)
+            String baseUrl = frontendUrl.contains(",") ? frontendUrl.split(",")[0].trim() : frontendUrl.trim();
+            String verifyLink = baseUrl + "?verify_token=" + vToken;
+            new Thread(() -> {
+                emailService.sendVerificationEmail(saved.getEmail(), saved.getFirstName(), verifyLink);
+            }).start();
 
             Map<String, Object> response = new HashMap<>();
             response.put("userId", saved.getUserId());
@@ -99,6 +110,7 @@ public class UserController {
             response.put("lastName", saved.getLastName());
             response.put("roleName", saved.getRole().getName());
             response.put("isActive", saved.getIsActive());
+            response.put("isVerified", saved.getIsVerified());
             response.put("profileImageUrl", saved.getProfileImageUrl());
             response.put("token", token); // JWT token for subsequent requests
             response.put("success", true);
@@ -161,6 +173,7 @@ public class UserController {
             response.put("lastName", user.getLastName());
             response.put("roleName", user.getRole().getName());
             response.put("isActive", user.getIsActive());
+            response.put("isVerified", user.getIsVerified());
             response.put("profileImageUrl", user.getProfileImageUrl());
             response.put("token", token); // JWT token for subsequent requests
             response.put("success", true);
@@ -169,6 +182,34 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("message", "Login error: " + e.getMessage()));
+        }
+    }
+
+    @PostMapping("/verify-email")
+    public ResponseEntity<?> verifyEmail(@RequestBody Map<String, String> payload) {
+        try {
+            String token = payload.get("token");
+            if (token == null || token.isBlank()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("message", "Verification token is required."));
+            }
+            User user = userRepository.findByVerificationToken(token.trim());
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("message", "Invalid verification link."));
+            }
+            if (user.getVerificationTokenExpiry() != null && user.getVerificationTokenExpiry().isBefore(LocalDateTime.now())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("message", "This verification link has expired."));
+            }
+            user.setIsVerified(true);
+            user.setVerificationToken(null);
+            user.setVerificationTokenExpiry(null);
+            service.update(user);
+            return ResponseEntity.ok(Map.of("message", "Email verified successfully!", "success", true));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Verification failed: " + e.getMessage()));
         }
     }
 
@@ -245,6 +286,8 @@ public class UserController {
                         .setLastName(lastName)
                         .setRole(buyerRole)
                         .build();
+                // Google/Social accounts are pre-verified
+                user.setIsVerified(true);
                 user = service.create(user);
             }
 
@@ -258,6 +301,7 @@ public class UserController {
             response.put("lastName",        user.getLastName());
             response.put("roleName",        user.getRole().getName());
             response.put("isActive",        user.getIsActive());
+            response.put("isVerified",      user.getIsVerified());
             response.put("profileImageUrl", user.getProfileImageUrl());
             response.put("token",           token);
             response.put("success",         true);

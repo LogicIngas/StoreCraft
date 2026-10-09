@@ -64,7 +64,48 @@ export default function App() {
         setCurrentPage('admin');
       }
     }
+
+    // Check for verification token in URL
+    const params = new URLSearchParams(window.location.search);
+    const verifyToken = params.get('verify_token');
+    if (verifyToken) {
+      verifyEmailToken(verifyToken);
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
   }, []);
+
+  const verifyEmailToken = async (token) => {
+    try {
+      const response = await fetch(apiUrl('/user/verify-email'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token })
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setStatusMessage('✅ Email verified successfully! You can now check out.');
+        setStatusType('success');
+        setTimeout(() => setStatusMessage(''), 4000);
+        // Update current user state if already logged in
+        setCurrentUser(prev => {
+          if (prev) {
+            const updated = { ...prev, isVerified: true };
+            localStorage.setItem('currentUser', JSON.stringify(updated));
+            return updated;
+          }
+          return prev;
+        });
+      } else {
+        setStatusMessage(`❌ ${data.message || 'Verification failed'}`);
+        setStatusType('error');
+        setTimeout(() => setStatusMessage(''), 4000);
+      }
+    } catch (err) {
+      setStatusMessage('❌ Error verifying email.');
+      setStatusType('error');
+      setTimeout(() => setStatusMessage(''), 4000);
+    }
+  };
 
   // Load products on mount
   useEffect(() => {
@@ -446,6 +487,10 @@ export default function App() {
   const handleCheckout = async (cardToken, cardLast4, cardHolderName, saveAddress, addressData) => {
     if (!currentUser || !cart) {
       showStatus('❌ Cart is empty', 'error');
+      return;
+    }
+    if (!currentUser.isVerified) {
+      showStatus('❌ Please check your email and verify your account before checking out.', 'error');
       return;
     }
     if (!shippingAddress.trim()) {
