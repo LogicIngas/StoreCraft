@@ -3,7 +3,7 @@ import Logo1 from '../assets/Logo1.jpg';
 import { supabase } from '../supabaseClient';
 import { apiUrl } from '../api.js';
 
-export default function LoginRegisterPage({ onLogin, onRegister }) {
+export default function LoginRegisterPage({ onLogin, onRegister, initialResetToken, onResetDone }) {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,25 +13,22 @@ export default function LoginRegisterPage({ onLogin, onRegister }) {
   const [selectedRole, setSelectedRole] = useState('BUYER');
 
   // Forgot / Reset password state
-  const [view, setView] = useState('auth'); // 'auth' | 'forgot' | 'reset'
+  // If a reset token was passed from App (via the email link), start in 'reset' view
+  const [view, setView] = useState(initialResetToken ? 'reset' : 'auth');
   const [forgotEmail, setForgotEmail] = useState('');
   const [forgotMsg, setForgotMsg] = useState('');
-  const [resetToken, setResetToken] = useState('');
+  const [resetToken, setResetToken] = useState(initialResetToken || '');
   const [newPassword, setNewPassword] = useState('');
   const [resetMsg, setResetMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Detect ?reset_token= in URL on mount
+  // If App.jsx passes a new token after mount, pick it up
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('reset_token');
-    if (token) {
-      setResetToken(token);
+    if (initialResetToken) {
+      setResetToken(initialResetToken);
       setView('reset');
-      // Clean URL without reload
-      window.history.replaceState({}, document.title, window.location.pathname);
     }
-  }, []);
+  }, [initialResetToken]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -78,6 +75,7 @@ export default function LoginRegisterPage({ onLogin, onRegister }) {
       const data = await res.json();
       setResetMsg(data.message || 'Done!');
       if (res.ok) {
+        if (onResetDone) onResetDone();
         setTimeout(() => setView('auth'), 2500);
       }
     } catch {

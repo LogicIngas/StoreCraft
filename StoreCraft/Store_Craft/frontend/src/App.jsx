@@ -36,6 +36,7 @@ export default function App() {
   const [statusMessage, setStatusMessage] = useState('');
   const [statusType, setStatusType] = useState('');
   const [shippingAddress, setShippingAddress] = useState('');
+  const [initialResetToken, setInitialResetToken] = useState(null);
   // Cookie consent state
   const [cookieAccepted, setCookieAccepted] = useState(
     localStorage.getItem('cookieConsentAccepted') === 'accepted'
@@ -65,8 +66,17 @@ export default function App() {
       }
     }
 
-    // Check for verification token in URL
     const params = new URLSearchParams(window.location.search);
+
+    // Check for password reset token in URL — open the modal immediately
+    const resetToken = params.get('reset_token');
+    if (resetToken) {
+      setInitialResetToken(resetToken);
+      setCurrentPage('login');
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    // Check for email verification token in URL
     const verifyToken = params.get('verify_token');
     if (verifyToken) {
       verifyEmailToken(verifyToken);
@@ -589,10 +599,15 @@ export default function App() {
         <StatusBanner message={statusMessage} type={statusType} />
         <LandingPage onLoginClick={() => setCurrentPage('login')} products={products} />
         {currentPage === 'login' && (
-          <div className="modal-overlay" onClick={() => setCurrentPage('landing')}>
+          <div className="modal-overlay" onClick={() => { setCurrentPage('landing'); setInitialResetToken(null); }}>
             <div className="modal-content" onClick={e => e.stopPropagation()}>
-              <button className="modal-close" onClick={() => setCurrentPage('landing')}>✕</button>
-              <LoginRegisterPage onLogin={handleLogin} onRegister={handleRegister} />
+              <button className="modal-close" onClick={() => { setCurrentPage('landing'); setInitialResetToken(null); }}>✕</button>
+              <LoginRegisterPage
+                onLogin={handleLogin}
+                onRegister={handleRegister}
+                initialResetToken={initialResetToken}
+                onResetDone={() => setInitialResetToken(null)}
+              />
             </div>
           </div>
         )}
