@@ -78,13 +78,14 @@ export default function ClaimCouponButton({ product, currentUser }) {
     try {
       let claimed = false;
       let codeObtained = null;
+      const cleanEmail = email.trim().toLowerCase();
 
       // 1. Try Supabase Edge Function first
       try {
         const { data, error } = await supabase.functions.invoke('claim-coupon', {
           body: {
             product_id: product.productId,
-            email: email.trim().toLowerCase(),
+            email: cleanEmail,
             user_id: currentUser?.userId || null,
           },
         });
@@ -101,10 +102,8 @@ export default function ClaimCouponButton({ product, currentUser }) {
         console.warn('Edge function unavailable, using direct fallback:', edgeErr);
       }
 
-      // 2. Direct database + Brevo fallback if Edge Function is not deployed
+      // 2. Direct database fallback if Edge Function is not deployed
       if (!claimed) {
-        const cleanEmail = email.trim().toLowerCase();
-
         // Check for duplicate claim
         const { data: existing } = await supabase
           .from('product_coupons')
@@ -171,13 +170,14 @@ export default function ClaimCouponButton({ product, currentUser }) {
             console.warn('Failed to insert notification record (non-fatal):', notifErr);
           }
         }
+      }
 
-        // Send confirmation email via Brevo HTTP API
+      // 3. ALWAYS send confirmation email via Brevo (runs after BOTH paths)
+      if (codeObtained) {
         const brevoKey = import.meta.env.VITE_BREVO_API_KEY;
-
         if (brevoKey) {
           try {
-            await fetch('https://api.brevo.com/v3/smtp/email', {
+            const res = await fetch('https://api.brevo.com/v3/smtp/email', {
               method: 'POST',
               headers: {
                 'api-key': brevoKey,
@@ -212,9 +212,14 @@ export default function ClaimCouponButton({ product, currentUser }) {
                 </div>`,
               }),
             });
+            if (!res.ok) {
+              console.warn('Brevo API returned non-OK:', res.status, await res.text());
+            }
           } catch (mailErr) {
             console.warn('Brevo email attempt (non-fatal):', mailErr);
           }
+        } else {
+          console.warn('VITE_BREVO_API_KEY not set — email not sent');
         }
       }
 
