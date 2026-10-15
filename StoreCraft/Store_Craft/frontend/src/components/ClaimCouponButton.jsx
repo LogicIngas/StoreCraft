@@ -122,9 +122,10 @@ export default function ClaimCouponButton({ product, currentUser }) {
         codeObtained = 'SAVE-' + randomSuffix();
         const couponId = crypto.randomUUID();
         const now = new Date();
-        const validTo = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+        const nowIso = now.toISOString();
+        const validToIso = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
 
-        // Insert into coupons table
+        // Insert into coupons table (with created_at and updated_at explicitly populated)
         const { error: cErr } = await supabase.from('coupons').insert({
           coupon_id: couponId,
           code: codeObtained,
@@ -134,8 +135,10 @@ export default function ClaimCouponButton({ product, currentUser }) {
           is_active: true,
           usage_count: 0,
           usage_limit: 1,
-          valid_from: now.toISOString(),
-          valid_to: validTo.toISOString(),
+          valid_from: nowIso,
+          valid_to: validToIso,
+          created_at: nowIso,
+          updated_at: nowIso,
         });
         if (cErr) throw cErr;
 
@@ -147,11 +150,31 @@ export default function ClaimCouponButton({ product, currentUser }) {
           user_id: currentUser?.userId || null,
           email: cleanEmail,
           status: 'claimed',
+          claimed_at: nowIso,
         });
         if (pcErr) throw pcErr;
 
-        // Send confirmation email via Brevo HTTP API if key is present in env
+        // Insert into notifications table
+        if (currentUser?.userId) {
+          try {
+            await supabase.from('notifications').insert({
+              notification_id: crypto.randomUUID(),
+              user_id: currentUser.userId,
+              title: '🏷️ 10% Coupon Claimed!',
+              message: `You claimed a 10% discount coupon (${codeObtained}) for ${product.name}. Valid for 30 days!`,
+              type: 'COUPON',
+              link: `/product/${product.productId}`,
+              is_read: false,
+              created_at: nowIso,
+            });
+          } catch (notifErr) {
+            console.warn('Failed to insert notification record (non-fatal):', notifErr);
+          }
+        }
+
+        // Send confirmation email via Brevo HTTP API
         const brevoKey = import.meta.env.VITE_BREVO_API_KEY;
+
         if (brevoKey) {
           try {
             await fetch('https://api.brevo.com/v3/smtp/email', {
@@ -163,14 +186,29 @@ export default function ClaimCouponButton({ product, currentUser }) {
               body: JSON.stringify({
                 sender: { name: 'StoreCraft', email: 'mboboinga12@gmail.com' },
                 to: [{ email: cleanEmail }],
-                subject: `Your 10% Coupon for ${product.name}`,
-                htmlContent: `<div style="font-family:sans-serif;max-width:560px;margin:auto;padding:24px;border:1px solid #e2e8f0;border-radius:12px;">
-                  <h2 style="color:#0f766e;">Here is your coupon!</h2>
-                  <p>Enjoy 10% off <strong>${product.name}</strong> at StoreCraft.</p>
-                  <div style="background:#f0fdf4;border:2px dashed #059669;padding:16px;text-align:center;border-radius:8px;margin:20px 0;">
-                    <span style="font-size:28px;font-weight:bold;letter-spacing:4px;color:#059669;">${codeObtained}</span>
+                subject: `🏷️ Your 10% Coupon for ${product.name} [${codeObtained}]`,
+                htmlContent: `<div style="font-family:Segoe UI,Roboto,sans-serif;max-width:580px;margin:20px auto;padding:32px;border:1px solid #e2e8f0;border-radius:16px;background:#ffffff;box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+                  <div style="text-align:center;margin-bottom:24px;">
+                    <span style="font-size:40px;">🏷️</span>
+                    <h1 style="color:#0f766e;font-size:24px;margin:8px 0;">Here is Your 10% Discount Coupon!</h1>
+                    <p style="color:#64748b;font-size:15px;margin:0;">Thank you for shopping with StoreCraft.</p>
                   </div>
-                  <p style="color:#64748b;font-size:13px;">Valid for 30 days. Single-use only. Show this code in-store or mention on delivery.</p>
+                  <div style="background:#f8fafc;border-radius:12px;padding:20px;margin:20px 0;border:1px solid #e2e8f0;">
+                    <div style="font-size:14px;color:#64748b;margin-bottom:4px;">Product Discount:</div>
+                    <div style="font-size:18px;font-weight:600;color:#0f172a;">${product.name}</div>
+                  </div>
+                  <div style="background:#f0fdf4;border:2px dashed #059669;padding:20px;text-align:center;border-radius:12px;margin:24px 0;">
+                    <div style="font-size:12px;color:#047857;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">Your Coupon Code</div>
+                    <div style="font-size:32px;font-weight:800;letter-spacing:6px;color:#059669;">${codeObtained}</div>
+                    <div style="font-size:13px;color:#16a34a;margin-top:6px;">10% OFF • Single-Use Only</div>
+                  </div>
+                  <p style="color:#475569;font-size:14px;line-height:1.6;">
+                    Present this code at physical store checkout or mention it upon delivery. This code is valid for <strong>30 days</strong>.
+                  </p>
+                  <hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0;" />
+                  <p style="color:#94a3b8;font-size:12px;text-align:center;margin:0;">
+                    StoreCraft E-Marketplace • If you did not request this coupon, please ignore this email.
+                  </p>
                 </div>`,
               }),
             });
