@@ -31,34 +31,98 @@ export default function StaffRedeemPage({ currentUser }) {
     setErrorMsg('');
 
     try {
-      const { data, error } = await supabase.functions.invoke('redeem-coupon', {
-        body: {
-          code: trimmedCode,
-          staff_id: currentUser?.userId || 'unknown',
-        },
-      });
+      let redeemed = false;
+      let redemptionData = null;
 
-      if (error || !data?.ok) {
-        setStatus('error');
-        setErrorMsg(data?.error || error?.message || 'Redemption failed.');
-        setHistory((h) => [
-          { code: trimmedCode, success: false, time: new Date() },
-          ...h.slice(0, 19),
-        ]);
-        return;
+      // 1. Try Supabase Edge Function first
+      try {
+        const { data, error } = await supabase.functions.invoke('redeem-coupon', {
+          body: {
+            code: trimmedCode,
+            staff_id: currentUser?.userId || 'unknown',
+          },
+        });
+
+        if (!error && data?.ok) {
+          redeemed = true;
+          redemptionData = data.redemption;
+        } else if (data?.error) {
+          setStatus('error');
+          setErrorMsg(data.error);
+          setHistory((h) => [
+            { code: trimmedCode, success: false, time: new Date() },
+            ...h.slice(0, 19),
+          ]);
+          return;
+        }
+      } catch (edgeErr) {
+        console.warn('Edge function unavailable, using direct fallback:', edgeErr);
+      }
+
+      // 2. Direct database fallback if Edge Function is not deployed
+      if (!redeemed) {
+        // Find coupon by code
+        const { data: coupon, error: cErr } = await supabase
+          .from('coupons')
+          .select('coupon_id, code, is_active, usage_count, usage_limit')
+          .eq('code', trimmedCode)
+          .maybeSingle();
+
+        if (cErr) throw cErr;
+        if (!coupon) {
+          setStatus('error');
+          setErrorMsg('Coupon code not found.');
+          setHistory((h) => [
+            { code: trimmedCode, success: false, time: new Date() },
+            ...h.slice(0, 19),
+          ]);
+          return;
+        }
+
+        // Update product_coupons row to redeemed
+        const { data: updated, error: pcErr } = await supabase
+          .from('product_coupons')
+          .update({
+            status: 'redeemed',
+            redeemed_at: new Date().toISOString(),
+            redeemed_by: currentUser?.userId || 'staff',
+          })
+          .eq('coupon_id', coupon.coupon_id)
+          .eq('status', 'claimed')
+          .select()
+          .maybeSingle();
+
+        if (pcErr) throw pcErr;
+        if (!updated) {
+          setStatus('error');
+          setErrorMsg('Coupon is already redeemed, expired, or invalid.');
+          setHistory((h) => [
+            { code: trimmedCode, success: false, time: new Date() },
+            ...h.slice(0, 19),
+          ]);
+          return;
+        }
+
+        // Increment usage count and mark coupon inactive
+        await supabase
+          .from('coupons')
+          .update({ usage_count: (coupon.usage_count || 0) + 1, is_active: false })
+          .eq('coupon_id', coupon.coupon_id);
+
+        redemptionData = updated;
       }
 
       setStatus('success');
-      setResult(data.redemption);
+      setResult(redemptionData);
       setCode('');
       setHistory((h) => [
-        { code: trimmedCode, success: true, time: new Date(), data: data.redemption },
+        { code: trimmedCode, success: true, time: new Date(), data: redemptionData },
         ...h.slice(0, 19),
       ]);
     } catch (err) {
       console.error('redeem-coupon error:', err);
       setStatus('error');
-      setErrorMsg('Network error. Please try again.');
+      setErrorMsg(err?.message || 'Network error. Please try again.');
     }
   };
 

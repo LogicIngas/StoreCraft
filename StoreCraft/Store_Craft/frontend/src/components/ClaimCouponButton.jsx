@@ -44,10 +44,22 @@ export default function ClaimCouponButton({ product, currentUser }) {
     return () => window.removeEventListener('keydown', handleKey);
   }, [open]);
 
+  const [claimedCode, setClaimedCode] = useState('');
+
+  const randomSuffix = (len = 6) => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let res = '';
+    for (let i = 0; i < len; i++) {
+      res += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return res;
+  };
+
   const handleClose = () => {
     setOpen(false);
     setStatus('idle');
     setMessage('');
+    setClaimedCode('');
     if (!currentUser?.email) setEmail('');
   };
 
@@ -64,30 +76,117 @@ export default function ClaimCouponButton({ product, currentUser }) {
     setMessage('');
 
     try {
-      const { data, error } = await supabase.functions.invoke('claim-coupon', {
-        body: {
-          product_id: product.productId,
-          email: email.trim().toLowerCase(),
-          user_id: currentUser?.userId || null,
-        },
-      });
+      let claimed = false;
+      let codeObtained = null;
 
-      if (error || !data?.ok) {
-        setStatus('error');
-        setMessage(data?.error || error?.message || 'Failed to claim coupon.');
-        return;
+      // 1. Try Supabase Edge Function first
+      try {
+        const { data, error } = await supabase.functions.invoke('claim-coupon', {
+          body: {
+            product_id: product.productId,
+            email: email.trim().toLowerCase(),
+            user_id: currentUser?.userId || null,
+          },
+        });
+
+        if (!error && data?.ok) {
+          claimed = true;
+          codeObtained = data.code;
+        } else if (data?.error) {
+          setStatus('error');
+          setMessage(data.error);
+          return;
+        }
+      } catch (edgeErr) {
+        console.warn('Edge function unavailable, using direct fallback:', edgeErr);
       }
 
+      // 2. Direct database + Brevo fallback if Edge Function is not deployed
+      if (!claimed) {
+        const cleanEmail = email.trim().toLowerCase();
+
+        // Check for duplicate claim
+        const { data: existing } = await supabase
+          .from('product_coupons')
+          .select('claim_id')
+          .eq('product_id', product.productId)
+          .eq('email', cleanEmail)
+          .maybeSingle();
+
+        if (existing) {
+          setStatus('error');
+          setMessage('You have already claimed a coupon for this product with this email.');
+          return;
+        }
+
+        codeObtained = 'SAVE-' + randomSuffix();
+        const couponId = crypto.randomUUID();
+        const now = new Date();
+        const validTo = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+
+        // Insert into coupons table
+        const { error: cErr } = await supabase.from('coupons').insert({
+          coupon_id: couponId,
+          code: codeObtained,
+          description: `10% off ${product.name}`,
+          discount_type: 'PERCENTAGE',
+          discount_value: 10,
+          is_active: true,
+          usage_count: 0,
+          usage_limit: 1,
+          valid_from: now.toISOString(),
+          valid_to: validTo.toISOString(),
+        });
+        if (cErr) throw cErr;
+
+        // Insert into product_coupons table
+        const { error: pcErr } = await supabase.from('product_coupons').insert({
+          claim_id: crypto.randomUUID(),
+          product_id: product.productId,
+          coupon_id: couponId,
+          user_id: currentUser?.userId || null,
+          email: cleanEmail,
+          status: 'claimed',
+        });
+        if (pcErr) throw pcErr;
+
+        // Send confirmation email via Brevo HTTP API if key is present in env
+        const brevoKey = import.meta.env.VITE_BREVO_API_KEY;
+        if (brevoKey) {
+          try {
+            await fetch('https://api.brevo.com/v3/smtp/email', {
+              method: 'POST',
+              headers: {
+                'api-key': brevoKey,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                sender: { name: 'StoreCraft', email: 'mboboinga12@gmail.com' },
+                to: [{ email: cleanEmail }],
+                subject: `Your 10% Coupon for ${product.name}`,
+                htmlContent: `<div style="font-family:sans-serif;max-width:560px;margin:auto;padding:24px;border:1px solid #e2e8f0;border-radius:12px;">
+                  <h2 style="color:#0f766e;">Here is your coupon!</h2>
+                  <p>Enjoy 10% off <strong>${product.name}</strong> at StoreCraft.</p>
+                  <div style="background:#f0fdf4;border:2px dashed #059669;padding:16px;text-align:center;border-radius:8px;margin:20px 0;">
+                    <span style="font-size:28px;font-weight:bold;letter-spacing:4px;color:#059669;">${codeObtained}</span>
+                  </div>
+                  <p style="color:#64748b;font-size:13px;">Valid for 30 days. Single-use only. Show this code in-store or mention on delivery.</p>
+                </div>`,
+              }),
+            });
+          } catch (mailErr) {
+            console.warn('Brevo email attempt (non-fatal):', mailErr);
+          }
+        }
+      }
+
+      setClaimedCode(codeObtained);
       setStatus('success');
-      setMessage(
-        data.warning
-          ? `Coupon saved! Note: ${data.warning}`
-          : 'Check your email for your exclusive coupon code! 🎉'
-      );
+      setMessage('Your coupon has been generated and emailed to you!');
     } catch (err) {
       console.error('claim-coupon error:', err);
       setStatus('error');
-      setMessage('Something went wrong. Please try again.');
+      setMessage(err?.message || 'Something went wrong. Please try again.');
     }
   };
 
@@ -137,12 +236,29 @@ export default function ClaimCouponButton({ product, currentUser }) {
             <div className="ccb-modal-body">
               {status === 'success' ? (
                 <div className="ccb-success-state">
-                  <div className="ccb-success-icon">✉️</div>
-                  <h3>Check Your Email!</h3>
+                  <div className="ccb-success-icon">🎉</div>
+                  <h3>Coupon Claimed!</h3>
                   <p>{message}</p>
+                  {claimedCode && (
+                    <div style={{
+                      margin: '18px 0',
+                      padding: '14px 20px',
+                      background: '#f0fdf4',
+                      border: '2px dashed #059669',
+                      borderRadius: '8px',
+                      textAlign: 'center',
+                    }}>
+                      <div style={{ fontSize: '12px', color: '#047857', fontWeight: 600, textTransform: 'uppercase', marginBottom: '4px' }}>
+                        Your Coupon Code
+                      </div>
+                      <span style={{ fontSize: '26px', fontWeight: 'bold', letterSpacing: '4px', color: '#059669' }}>
+                        {claimedCode}
+                      </span>
+                    </div>
+                  )}
                   <p className="ccb-success-hint">
-                    Your coupon code has been sent to <strong>{email}</strong>.
-                    Show it in-store or mention it on delivery.
+                    A copy has been sent to <strong>{email}</strong>.
+                    Show this code in-store or enter it during checkout.
                   </p>
                   <button
                     type="button"

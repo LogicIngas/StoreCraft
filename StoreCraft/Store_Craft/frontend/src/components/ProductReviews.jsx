@@ -83,19 +83,44 @@ function ReviewForm({ productId, currentUser, onReviewSubmitted }) {
 
     setSubmitting(true);
     try {
-      const { data, error } = await supabase.functions.invoke('submit-review', {
-        body: {
-          product_id: productId,
-          rating,
-          comment: comment.trim() || undefined,
-          reviewer_name: reviewerName.trim() || undefined,
-          user_id: currentUser?.userId || null,
-        },
-      });
+      let inserted = false;
+      try {
+        const { data, error } = await supabase.functions.invoke('submit-review', {
+          body: {
+            product_id: productId,
+            rating,
+            comment: comment.trim() || undefined,
+            reviewer_name: reviewerName.trim() || undefined,
+            user_id: currentUser?.userId || null,
+          },
+        });
+        if (!error && data?.ok) {
+          inserted = true;
+        }
+      } catch (edgeErr) {
+        console.warn('Edge function unavailable, using direct database fallback:', edgeErr);
+      }
 
-      if (error || !data?.ok) {
-        showToast(data?.error || error?.message || 'Failed to submit review.', 'error');
-        return;
+      if (!inserted) {
+        const cleanComment = comment.trim() || null;
+        const displayName = reviewerName.trim() || (currentUser?.userId ? null : 'Anonymous');
+        const { error: insertErr } = await supabase
+          .from('product_reviews')
+          .insert({
+            product_id: productId,
+            rating,
+            comment: cleanComment,
+            review_text: cleanComment,
+            reviewer_name: displayName,
+            is_anonymous: !currentUser?.userId,
+            user_id: currentUser?.userId || null,
+          });
+
+        if (insertErr) {
+          console.error('Direct insert error:', insertErr);
+          showToast(insertErr.message || 'Failed to submit review.', 'error');
+          return;
+        }
       }
 
       showToast('Your review has been submitted! Thank you 🎉', 'success');
