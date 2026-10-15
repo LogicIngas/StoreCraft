@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../supabaseClient';
+import { apiUrl } from '../api';
 import './ClaimCouponButton.css';
 
 function isValidEmail(email) {
@@ -172,10 +173,31 @@ export default function ClaimCouponButton({ product, currentUser }) {
         }
       }
 
-      // 3. ALWAYS send confirmation email via Brevo (runs after BOTH paths)
+      // 3. ALWAYS send confirmation email (via Spring Boot backend using Render BREVO env vars, with direct Brevo fallback)
       if (codeObtained) {
+        let sentViaBackend = false;
+        try {
+          const res = await fetch(apiUrl('/coupon/send-claim-email'), {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: cleanEmail,
+              couponCode: codeObtained,
+              productName: product.name,
+            }),
+          });
+          if (res.ok) {
+            sentViaBackend = true;
+          }
+        } catch (beErr) {
+          console.warn('Backend coupon email dispatch attempt failed, trying fallback:', beErr);
+        }
+
+        // Direct Brevo API fallback if backend call did not succeed or if direct key is available
         const brevoKey = import.meta.env.VITE_BREVO_API_KEY;
-        if (brevoKey) {
+        if (!sentViaBackend && brevoKey) {
           try {
             const res = await fetch('https://api.brevo.com/v3/smtp/email', {
               method: 'POST',
@@ -218,8 +240,6 @@ export default function ClaimCouponButton({ product, currentUser }) {
           } catch (mailErr) {
             console.warn('Brevo email attempt (non-fatal):', mailErr);
           }
-        } else {
-          console.warn('VITE_BREVO_API_KEY not set — email not sent');
         }
       }
 

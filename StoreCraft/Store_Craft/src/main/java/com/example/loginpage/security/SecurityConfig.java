@@ -54,6 +54,7 @@ public class SecurityConfig {
                         "/user/social-login", "/user/forgot-password", "/user/reset-password",
                         "/uploads/**", "/images/**",
                         "/product/**",          // all product reading (write ops secured at method level)
+                        "/coupon/**",           // allow coupon validation, applying, and claiming email dispatch
                         "/actuator/health", "/actuator/health/**", "/actuator/info",
                         "/error"
                 ).permitAll()
