@@ -1,0 +1,233 @@
+/* ============================================================================
+   ProductDetailModal.css
+   Full-screen overlay, two-column top section, scrollable inner card.
+   ============================================================================ */
+
+/* ── Overlay ─────────────────────────────────────────────────────────────── */
+.pdm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 1500;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 32px 16px 48px;
+  animation: fadeIn 0.2s ease;
+}
+
+/* ── Card ────────────────────────────────────────────────────────────────── */
+.pdm-card {
+  position: relative;
+  background: var(--bg-base);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  width: 100%;
+  max-width: 900px;
+  padding: 40px;
+  animation: slideUp 0.25s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+/* ── Close button ────────────────────────────────────────────────────────── */
+.pdm-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  width: 36px;
+  height: 36px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: background var(--transition-base), color var(--transition-base);
+  z-index: 10;
+}
+
+.pdm-close:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+/* ── Top: image + info ───────────────────────────────────────────────────── */
+.pdm-top {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 40px;
+  align-items: start;
+  margin-bottom: 40px;
+}
+
+@media (max-width: 700px) {
+  .pdm-top {
+    grid-template-columns: 1fr;
+  }
+
+  .pdm-card {
+    padding: 24px 16px;
+  }
+}
+
+/* ── Image ───────────────────────────────────────────────────────────────── */
+.pdm-image-wrap {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-secondary);
+  aspect-ratio: 4/3;
+}
+
+.pdm-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.pdm-out-of-stock {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--error);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+}
+
+/* ── Info panel ──────────────────────────────────────────────────────────── */
+.pdm-info {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pdm-category {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--primary);
+  background: var(--primary-lighter);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+.pdm-title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.25;
+  letter-spacing: -0.5px;
+}
+
+.pdm-price-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pdm-price {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -0.5px;
+}
+
+.pdm-low-stock {
+  font-size: 12px;
+  font-weight: 600;
+  color: #92400e;
+  background: #fef3c7;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+.pdm-description {
+  margin: 0;
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+.pdm-stock-count {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+/* ── Action buttons ──────────────────────────────────────────────────────── */
+.pdm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.pdm-cart-btn {
+  flex: 1;
+  min-width: 140px;
+  padding: 13px 20px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity var(--transition-base), transform var(--transition-base),
+    box-shadow var(--transition-base);
+  letter-spacing: 0.2px;
+}
+
+.pdm-cart-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(15, 118, 110, 0.35);
+}
+
+.pdm-cart-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pdm-wishlist-btn {
+  padding: 13px 16px;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  white-space: nowrap;
+}
+
+.pdm-wishlist-btn:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--border-dark);
+}
+
+.pdm-wishlist-btn--active {
+  background: #fce7f3;
+  border-color: #f9a8d4;
+  color: #9d174d;
+}
+
+/* ── Reviews section separator ───────────────────────────────────────────── */
+.pdm-reviews {
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+}

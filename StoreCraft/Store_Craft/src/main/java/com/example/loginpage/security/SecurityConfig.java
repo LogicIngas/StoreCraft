@@ -48,13 +48,12 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                 // Permit all CORS pre-flight requests so OPTIONS never gets a 401/403
                 .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
-                // Public: login, register, static assets, all product browsing, websockets
+                // Public: login, register, static assets, all product browsing
                 .requestMatchers(
                         "/user/login", "/user/create", "/user/logout",
                         "/user/social-login", "/user/forgot-password", "/user/reset-password",
                         "/uploads/**", "/images/**",
                         "/product/**",          // all product reading (write ops secured at method level)
-                        "/ws/**", "/chat/**",   // WebSocket handshake endpoints
                         "/actuator/health", "/actuator/health/**", "/actuator/info",
                         "/error"
                 ).permitAll()

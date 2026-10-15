@@ -21,6 +21,8 @@ import AdminDashboard from './AdminDashboard';
 import SellerDashboard from './components/SellerDashboard';
 import ProfilePage from './components/ProfilePage';
 import CookieConsent from './components/CookieConsent';
+import ProductDetailModal from './components/ProductDetailModal';
+import StaffRedeemPage from './components/StaffRedeemPage';
 
 export default function App() {
   // State
@@ -37,6 +39,7 @@ export default function App() {
   const [statusType, setStatusType] = useState('');
   const [shippingAddress, setShippingAddress] = useState('');
   const [initialResetToken, setInitialResetToken] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   // Cookie consent state
   const [cookieAccepted, setCookieAccepted] = useState(
     localStorage.getItem('cookieConsentAccepted') === 'accepted'
@@ -664,7 +667,12 @@ export default function App() {
             onRemoveFromWishlist={handleRemoveFromWishlist}
             wishlist={wishlist}
             isAdmin={isAdmin}
+            onViewProduct={setSelectedProduct}
           />
+        )}
+
+        {currentPage === 'redeem' && (isAdmin || isSeller) && (
+          <StaffRedeemPage currentUser={currentUser} />
         )}
 
         {currentPage === 'cart' && !isAdmin && (
@@ -722,6 +730,20 @@ export default function App() {
         )}
       </main>
       <Footer />
+
+      {/* Product detail modal — renders on top of everything */}
+      {selectedProduct && (
+        <ProductDetailModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+          onAddToCart={handleAddToCart}
+          onAddToWishlist={handleAddToWishlist}
+          onRemoveFromWishlist={handleRemoveFromWishlist}
+          isInWishlist={wishlist.some(w => w.productId === selectedProduct.productId)}
+          isAdmin={isAdmin}
+          currentUser={currentUser}
+        />
+      )}
     </div>
   );
 }

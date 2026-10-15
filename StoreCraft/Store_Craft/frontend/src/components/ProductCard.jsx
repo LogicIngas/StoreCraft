@@ -15,6 +15,7 @@ export default function ProductCard({
   isInWishlist = false,
   showRemoveFromWishlist = false,
   isAdmin = false,
+  onViewProduct,
 }) {
   const [isHovered, setIsHovered] = useState(false);
   const [isRemoving, setIsRemoving] = useState(false);
@@ -42,11 +43,21 @@ export default function ProductCard({
     }
   };
 
+  const handleCardClick = () => {
+    onViewProduct?.(product);
+  };
+
   return (
     <div
       className="product-card"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleCardClick}
+      style={{ cursor: onViewProduct ? 'pointer' : 'default' }}
+      role={onViewProduct ? 'button' : undefined}
+      tabIndex={onViewProduct ? 0 : undefined}
+      onKeyDown={(e) => e.key === 'Enter' && handleCardClick()}
+      aria-label={onViewProduct ? `View details for ${product.name || 'product'}` : undefined}
     >
       <div className="product-image-container">
         <img
@@ -61,12 +72,21 @@ export default function ProductCard({
         {isHovered && !isAdmin && (
           <div className="product-quick-actions">
             <button
-              onClick={handleAddToCartClick}
+              onClick={(e) => { e.stopPropagation(); onAddToCart?.(product.productId); }}
               className="quick-add-button"
               disabled={product.stockQuantity == null || Number(product.stockQuantity) <= 0 || isAdmin}
             >
               🛒 Quick Add
             </button>
+            {onViewProduct && (
+              <button
+                onClick={(e) => { e.stopPropagation(); onViewProduct(product); }}
+                className="quick-add-button"
+                style={{ background: 'rgba(99,102,241,0.88)', marginTop: '6px' }}
+              >
+                🔍 View Details
+              </button>
+            )}
           </div>
         )}
         {product.stockQuantity != null && Number(product.stockQuantity) <= 0 && (

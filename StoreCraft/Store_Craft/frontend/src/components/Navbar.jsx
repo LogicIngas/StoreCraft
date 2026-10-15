@@ -61,6 +61,12 @@ export default function Navbar({
               >
                 📍 Addresses
               </button>
+              <button
+                onClick={() => handleNavClick('redeem')}
+                className={`nav-button ${currentPage === 'redeem' ? 'active' : ''}`}
+              >
+                🏷️ Redeem
+              </button>
               <span className="user-role-badge">ADMIN</span>
               <button onClick={handleLogout} className="logout-button">
                 🚪 Logout
@@ -118,6 +124,12 @@ export default function Navbar({
                     className={`nav-button ${currentPage === 'upload' ? 'active' : ''}`}
                   >
                     📤 Upload
+                  </button>
+                  <button
+                    onClick={() => handleNavClick('redeem')}
+                    className={`nav-button ${currentPage === 'redeem' ? 'active' : ''}`}
+                  >
+                    🏷️ Redeem
                   </button>
                 </>
               )}

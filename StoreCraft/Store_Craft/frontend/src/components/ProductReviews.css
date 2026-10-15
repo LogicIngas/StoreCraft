@@ -1,0 +1,340 @@
+/* ============================================================================
+   ProductReviews.css
+   Styles for: StarPicker, StarDisplay, ReviewForm, ReviewsList, ProductReviews
+   Uses the App.css CSS variable system for design consistency.
+   ============================================================================ */
+
+/* ── Section wrapper ─────────────────────────────────────────────────────── */
+.pr-section {
+  padding: 48px 0 32px;
+  border-top: 1px solid var(--border);
+}
+
+.pr-section-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 28px;
+  letter-spacing: -0.3px;
+}
+
+/* Two-column layout: list on left, form on right */
+.pr-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 40px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .pr-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Summary bar ─────────────────────────────────────────────────────────── */
+.pr-summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #f0fdf4, #eff6ff);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin-bottom: 20px;
+}
+
+.pr-avg-score {
+  font-size: 52px;
+  font-weight: 800;
+  color: var(--primary);
+  line-height: 1;
+  min-width: 68px;
+  text-align: center;
+}
+
+.pr-avg-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pr-star-display {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.pr-review-count {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* ── Review cards ────────────────────────────────────────────────────────── */
+.pr-cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pr-card {
+  background: var(--bg-base);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  transition: box-shadow var(--transition-base), transform var(--transition-base);
+}
+
+.pr-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.pr-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.pr-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pr-card-author {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.pr-card-date {
+  font-size: 12px;
+  color: var(--text-light);
+  white-space: nowrap;
+}
+
+.pr-card-comment {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+.pr-empty {
+  text-align: center;
+  padding: 48px 24px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--border-dark);
+}
+
+.pr-empty-icon {
+  font-size: 40px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.pr-empty p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+/* ── Skeleton loading ────────────────────────────────────────────────────── */
+.pr-list-loading {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pr-skeleton {
+  height: 80px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+.pr-skeleton--short {
+  height: 48px;
+}
+
+.pr-list-error {
+  color: var(--error);
+  font-size: 14px;
+  padding: 16px;
+  background: var(--error-light);
+  border-radius: var(--radius-md);
+}
+
+/* ── ReviewForm ──────────────────────────────────────────────────────────── */
+.pr-form-wrapper {
+  background: var(--bg-base);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 80px;
+}
+
+.pr-form-title {
+  margin: 0 0 4px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.pr-form-subtitle {
+  margin: 0 0 20px;
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+/* Toast */
+.pr-toast {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  animation: slideIn 0.2s ease;
+}
+
+.pr-toast--success {
+  background: var(--success-light);
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+}
+
+.pr-toast--error {
+  background: var(--error-light);
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+/* Form fields */
+.pr-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pr-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pr-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.pr-optional {
+  font-weight: 400;
+  color: var(--text-light);
+}
+
+.pr-input,
+.pr-textarea {
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  background: var(--bg-base);
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  resize: vertical;
+  outline: none;
+}
+
+.pr-input:focus,
+.pr-textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+}
+
+.pr-char-count {
+  font-size: 11px;
+  color: var(--text-light);
+  text-align: right;
+}
+
+/* Star picker */
+.pr-star-picker {
+  display: flex;
+  gap: 4px;
+}
+
+.pr-star-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  color: #e2e8f0;
+  line-height: 1;
+  transition: color var(--transition-base), transform var(--transition-base);
+}
+
+.pr-star-btn:hover,
+.pr-star-btn.active {
+  color: #f59e0b;
+  transform: scale(1.15);
+}
+
+.pr-rating-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  margin-top: 2px;
+}
+
+/* Submit button */
+.pr-submit-btn {
+  padding: 12px 20px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: var(--text-white);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base);
+  margin-top: 4px;
+  letter-spacing: 0.2px;
+}
+
+.pr-submit-btn:hover:not(:disabled) {
+  opacity: 0.92;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(15, 118, 110, 0.35);
+}
+
+.pr-submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.pr-submit-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.pr-spinner {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}

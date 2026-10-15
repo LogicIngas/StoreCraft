@@ -15,6 +15,7 @@ export default function Storefront({
   onRemoveFromWishlist,
   wishlist,
   isAdmin = false,
+  onViewProduct,
 }) {
   return (
     <section className="section">
@@ -65,6 +66,7 @@ export default function Storefront({
               onRemoveFromWishlist={onRemoveFromWishlist}
               isInWishlist={wishlist.some(w => w.productId === product.productId)}
               isAdmin={isAdmin}
+              onViewProduct={onViewProduct}
             />
           ))}
         </div>

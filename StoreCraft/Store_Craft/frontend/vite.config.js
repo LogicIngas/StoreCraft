@@ -23,8 +23,6 @@ export default defineConfig(({ mode }) => {
     '/review',
     '/admin',
     '/api',
-    '/chat',
-    '/ws',
     '/images',
     '/uploads',
   ]
@@ -35,8 +33,6 @@ export default defineConfig(({ mode }) => {
       {
         target: devApiTarget,
         changeOrigin: true,
-        // Required for the SockJS/Stomp endpoints on /ws and /chat.
-        ws: true,
       },
     ])
   )
